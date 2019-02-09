@@ -1,4 +1,4 @@
-#include "NlpSolver.cc"
+#include "NlpSolver.h"
 #include <gtest/gtest.h>
  
 TEST(testNlpSolver, Constructor) { 

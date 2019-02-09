@@ -4,7 +4,7 @@
 namespace ocl {
 	
 
-	int NlpSolver(float T, OclSystem system, OclOcp ocp, OclOptions options);
+	int NlpSolver();
 
 
 } // namespace ocl 

@@ -1,7 +1,8 @@
 
 namespace ocl {
 
-  void NlpSolver() {
+  int NlpSolver() {
+  	return 0;
   }
 
 
