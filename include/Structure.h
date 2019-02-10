@@ -10,6 +10,12 @@
 namespace ocl 
 {
 
+  struct SlicedStructure
+  {
+    Structure structure;
+    IntTensor selection;
+  }
+
   class Structure
   {
 
@@ -20,8 +26,8 @@ namespace ocl
     IntTensor merge(const IntTensor& p1, const IntTensor& p2);
 
   public:
-    Structure()
-    std::tuple<Structure, IntTensor> get(const std::string& id, const IntTensor& positions);
+    Structure();
+    SlicedStructure get(const std::string& id, const IntTensor& positions);
     Size size();
 
 } // namespace ocl 
