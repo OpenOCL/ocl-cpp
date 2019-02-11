@@ -9,30 +9,30 @@
 namespace ocl 
 {
 
-  struct ChildStructure
-  {
-    Structure structure;
-    PositionArray positions;
-  }
+struct ChildStructure
+{
+  Structure structure;
+  PositionArray positions;
+}
 
-  class Structure
-  {
+class Structure
+{
 
-  private:
-    // length of the structure
-    int len;
-    // map to the children
-    std::map<std::string, ChildStructure> children;
+ private:
+  // length of the structure
+  int len;
+  // map to the children
+  std::map<std::string, ChildStructure> children;
 
-    // merges two position arrays
-    static PositionArray merge(const PositionArray& p1, 
-      const PositionArray& p2);
+  // merges two position arrays
+  static PositionArray merge(const PositionArray& p1, 
+    const PositionArray& p2);
 
-  public:
-    Structure();
-    ChildStructure get(const std::string& id, 
-      const PositionArray& positions);
-    Size size();
+ public:
+  Structure();
+  ChildStructure get(const std::string& id, 
+    const PositionArray& positions);
+  Size size();
 
 } // namespace ocl 
 

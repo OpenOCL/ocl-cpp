@@ -5,8 +5,8 @@
 
 namespace ocl 
 {
-  typedef std::vector<std::vector<int>> PositionArray;
-  typedef Eigen::ArrayXf Array;    
+typedef std::vector<std::vector<int>> PositionArray;
+typedef Eigen::ArrayXf Array;    
 }
 
 #endif // OCPCPP_OCL_TYPEDEFS_H_
