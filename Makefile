@@ -11,6 +11,7 @@ SRC = ./src
 INCLUDE = ./include
 TEST = ./test
 LIB = ./lib
+EXTERN = ./extern
 
 BIN = ./build/bin
 OBJ = ./build/obj
@@ -19,6 +20,9 @@ OBJ = ./build/obj
 # the compiler doesn't generate warnings in Google Test headers.
 CPPFLAGS += -isystem $(GTEST)/include
 CXXFLAGS += -g -Wall -Wextra -std=c++11
+
+INCLUDES_EIGEN = -I $(EXTERN)/eigen
+INCLUDES = -I$(SRC) -I$(INCLUDE)  $(INCLUDES_EIGEN)
 
 GTEST_STATIC = $(GTEST_LIB)/libgtest.a
 
@@ -49,10 +53,10 @@ $(GTEST_LIB)/libgtest_main.a : $(OBJ)/gtest-all.o $(OBJ)/gtest_main.o
 
 # builds OclSolver
 $(OBJ)/NlpSolver.o : $(SRC)/NlpSolver.cc $(INCLUDE)/NlpSolver.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I$(SRC) -I$(INCLUDE) -c $< -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 $(OBJ)/testNlpSolver.o : $(TEST)/testNlpSolver.cc $(INCLUDE)/NlpSolver.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I$(SRC) -I$(INCLUDE) -c $< -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 $(BIN)/testNlpSolver : $(OBJ)/NlpSolver.o $(OBJ)/testNlpSolver.o $(GTEST_STATIC)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -lgtest_main -lpthread $^ -o $@

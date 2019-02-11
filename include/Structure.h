@@ -4,30 +4,34 @@
 #include <tuple>
 #include <map>
 
-#include "IntTensor.h"
 #include "typedefs.h"
 
 namespace ocl 
 {
 
-  struct SlicedStructure
+  struct ChildStructure
   {
     Structure structure;
-    IntTensor selection;
+    PositionArray positions;
   }
 
   class Structure
   {
 
   private:
-    std::map<std::string, IntTensor> children;
+    // length of the structure
     int len;
+    // map to the children
+    std::map<std::string, ChildStructure> children;
 
-    IntTensor merge(const IntTensor& p1, const IntTensor& p2);
+    // merges two position arrays
+    static PositionArray merge(const PositionArray& p1, 
+      const PositionArray& p2);
 
   public:
     Structure();
-    SlicedStructure get(const std::string& id, const IntTensor& positions);
+    ChildStructure get(const std::string& id, 
+      const PositionArray& positions);
     Size size();
 
 } // namespace ocl 
