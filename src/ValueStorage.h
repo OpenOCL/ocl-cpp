@@ -74,5 +74,8 @@ class ValueStorage
   T storage;
 };
 
+template<>
+std::vector<casadi.MX>
+
 } // namespace ocl
 #endif  // OCLCPP_OCL_VALUESTORAGE_H_

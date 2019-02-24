@@ -21,7 +21,7 @@
 #ifndef OCLCPP_OCL_TYPEDEFS_H_
 #define OCLCPP_OCL_TYPEDEFS_H_
 
-#include <unsupported/Eigen/CXX11/Tensor>
+
 
 namespace ocl
 {
