@@ -36,18 +36,9 @@ typedef std::string String;
 
 class RootNode
 {
-
- private:
-  // length of the structure
-  const Shape shape;
-  // map to the children
-  const Branches branches;
-  // vector of indizes
-  const IndizesArray indizes;
-
  public:
 
-  Structure(const Branches branches, const Shape shape, const IndizesArray indizes);
+  RootNode(const Branches branches, const Shape shape, const IndizesArray indizes);
 
   const boolean hasBranches() const;
 
@@ -63,6 +54,13 @@ class RootNode
   static IndizesArray mergeArrays(const IndizesArray& p1,
     const IndizesArray& p2);
 
+ private:
+   // length of the structure
+   const Shape shape;
+   // map to the children
+   const Branches branches;
+   // vector of indizes
+   const IndizesArray indizes;
 };
 
 } // namespace ocl

@@ -23,6 +23,36 @@
 namespace ocl
 {
 
+
+
+  RootNode(const Branches branches, const Shape shape, const IndizesArray indizes)
+      : branches(branches), shape(shape), indizes(indizes)
+  {
+  }
+
+  const boolean hasBranches() const
+  {
+    
+  }
+
+
+  ChildStructure get(const std::string& id,
+      const PositionArray& positions)
+  {
+    child = children[id];
+
+    c = ChildStructure();
+    c.positions = Structure.merge(positions,child.positions);
+    c.structure = child.structure;
+    return c;
+  }
+
+  Size size()
+  {
+    return Size({len});
+  }
+
+
   static IndizesArray RootNode::mergeArrays(const IndizesArray &p1,
       const IndizesArray &p2);
   {
@@ -44,28 +74,6 @@ namespace ocl
       }
     }
 
-  } // merge
-
-  Structure()
-  {
-    len = 0;
-    children = std::map<std::string, ChildStructure>();
-  }
-
-  ChildStructure get(const std::string& id,
-      const PositionArray& positions)
-  {
-    child = children[id];
-
-    c = ChildStructure();
-    c.positions = Structure.merge(positions,child.positions);
-    c.structure = child.structure;
-    return c;
-  }
-
-  Size size()
-  {
-    return Size({len});
-  }
+  } // mergeArrays
 
 } // namespace ocl
