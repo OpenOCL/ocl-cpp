@@ -18,27 +18,20 @@
  *    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-#include "Value.h"
+#ifndef OCPCPP_OCL_TENSOR_H_
+#define OCPCPP_OCL_TENSOR_H_
 
-namespace ocl {
-
-template<class T>
-static Value<T> Value::create(const Structure &structure,
-    const T &value)
+namespace ocl
 {
-  s = structure->size();
-  PositionArray positions(s);
-  positions = value;
-  oclValue = Value<T>(structure, positions, value);
-}
 
-// constructor
-template<class T>
-Value(const Structure &structure, const PositionArray &positions, const T &value)
-{
-  structure = structure;
-  positions = positions;
-  value = value;
-}
+  class Tensor
+  {
 
-} // namespace
+  private:
+    int[] dims;
+    int[] values;
+
+} // namespace ocl
+
+
+#endif  // OCPCPP_OCL_TENSOR_H_

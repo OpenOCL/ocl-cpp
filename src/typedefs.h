@@ -18,27 +18,15 @@
  *    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-#include "Value.h"
+#ifndef OCPCPP_OCL_TYPEDEFS_H_
+#define OCPCPP_OCL_TYPEDEFS_H_
 
-namespace ocl {
+#include <unsupported/Eigen/CXX11/Tensor>
 
-template<class T>
-static Value<T> Value::create(const Structure &structure,
-    const T &value)
+namespace ocl
 {
-  s = structure->size();
-  PositionArray positions(s);
-  positions = value;
-  oclValue = Value<T>(structure, positions, value);
+typedef std::vector<std::vector<int>> PositionArray;
+typedef Eigen::ArrayXf Array;
 }
 
-// constructor
-template<class T>
-Value(const Structure &structure, const PositionArray &positions, const T &value)
-{
-  structure = structure;
-  positions = positions;
-  value = value;
-}
-
-} // namespace
+#endif // OCPCPP_OCL_TYPEDEFS_H_
