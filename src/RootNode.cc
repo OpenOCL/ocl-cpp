@@ -20,6 +20,8 @@
  */
 #include "RootNode.h"
 
+#include <numeric>
+
 namespace ocl
 {
 
@@ -30,26 +32,38 @@ namespace ocl
   {
   }
 
-  const boolean hasBranches() const
+  boolean hasBranches() const
   {
-    
+    return branches.empty();
+  }
+
+  int length() const
+  {
+    return indizes.size();
+  }
+
+  Size size() const
+  {
+    Size s = shape;
+    if (shape.size() == 0 || this->length() > 1)
+    {
+      s.append(this->length());
+    }
+    return s;
+  }
+
+  int nel() const
+  {
+    Size s = this->size;
+    return std::accumulate(s.begin(), s.end(), 0);
   }
 
 
-  ChildStructure get(const std::string& id,
-      const PositionArray& positions)
+  RootNode get(const std::string& id) const
   {
-    child = children[id];
-
-    c = ChildStructure();
-    c.positions = Structure.merge(positions,child.positions);
-    c.structure = child.structure;
-    return c;
-  }
-
-  Size size()
-  {
-    return Size({len});
+    auto b = branches[id];
+    IndizesArray idz = Structure.mergeArrays(indizes, b.indizes);
+    return RootNode(b.branches, b.shape, idz);
   }
 
 
