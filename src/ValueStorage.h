@@ -75,7 +75,7 @@ class ValueStorage
 };
 
 template<>
-std::vector<casadi.MX>
+std::vector<casadi.MX> ValueStorage<vasadi.MX>
 
 } // namespace ocl
 #endif  // OCLCPP_OCL_VALUESTORAGE_H_
