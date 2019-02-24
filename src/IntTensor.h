@@ -18,20 +18,19 @@
  *    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-#ifndef OCPCPP_OCL_TENSOR_H_
-#define OCPCPP_OCL_TENSOR_H_
+#ifndef OCLCPP_OCL_INTTENSOR_H_
+#define OCLCPP_OCL_INTTENSOR_H_
 
 namespace ocl
 {
 
-  class Tensor
-  {
+class Tensor
+{
 
-  private:
-    int[] dims;
-    int[] values;
+private:
+  int[] dims;
+  int[] values;
+};
 
 } // namespace ocl
-
-
-#endif  // OCPCPP_OCL_TENSOR_H_
+#endif  // OCLCPP_OCL_INTTENSOR_H_

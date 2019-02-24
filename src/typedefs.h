@@ -18,8 +18,8 @@
  *    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-#ifndef OCPCPP_OCL_TYPEDEFS_H_
-#define OCPCPP_OCL_TYPEDEFS_H_
+#ifndef OCLCPP_OCL_TYPEDEFS_H_
+#define OCLCPP_OCL_TYPEDEFS_H_
 
 #include <unsupported/Eigen/CXX11/Tensor>
 
@@ -27,6 +27,7 @@ namespace ocl
 {
 typedef std::vector<std::vector<int>> PositionArray;
 typedef Eigen::ArrayXf Array;
+typedef std::string String;
 }
 
-#endif // OCPCPP_OCL_TYPEDEFS_H_
+#endif // OCLCPP_OCL_TYPEDEFS_H_

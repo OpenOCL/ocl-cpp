@@ -18,8 +18,8 @@
  *    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-#ifndef OCPCPP_OCL_NUMERICVALUE_H_
-#define OCPCPP_OCL_NUMERICVALUE_H_
+#ifndef OCLCPP_OCL_NUMERICVALUE_H_
+#define OCLCPP_OCL_NUMERICVALUE_H_
 
 #include "typedefs.h"
 
@@ -97,8 +97,9 @@ class Value
   T reshape(int[]);
   T repmat(int[]);
 
+}; // class Value
 
 } // namespace ocl
 
 
-#endif  // OCPCPP_OCL_NUMERICVALUE_H_
+#endif  // OCLCPP_OCL_NUMERICVALUE_H_

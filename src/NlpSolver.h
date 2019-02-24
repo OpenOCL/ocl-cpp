@@ -18,8 +18,8 @@
  *    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-#ifndef OCPCPP_OCL_NLPSOLVER_H_
-#define OCPCPP_OCL_NLPSOLVER_H_
+#ifndef OCLCPP_OCL_NLPSOLVER_H_
+#define OCLCPP_OCL_NLPSOLVER_H_
 
 namespace ocl {
 
@@ -28,6 +28,4 @@ namespace ocl {
 
 
 } // namespace ocl
-
-
-#endif  // OCPCPP_OCL_NLPSOLVER_H_
+#endif  // OCLCPP_OCL_NLPSOLVER_H_

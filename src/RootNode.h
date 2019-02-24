@@ -18,8 +18,8 @@
  *    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-#ifndef OCPCPP_OCL_STRUCTURE_H_
-#define OCPCPP_OCL_STRUCTURE_H_
+#ifndef OCLCPP_OCL_ROOTNODE_H_
+#define OCLCPP_OCL_ROOTNODE_H_
 
 #include <tuple>
 #include <map>
@@ -32,7 +32,12 @@ namespace ocl
 typedef std::map<const std::string&, const RootNode> Branches;
 typedef std::vector<int> Shape;
 typedef std::vector<std::vector<int>> IndizesArray;
-typedef std::string String;
+
+
+class TensorStructure : public RootNode
+{
+  TensorStructure(shape) : branches(Branches()), shape(shape), indizes(IndizesArray()) { }
+}
 
 class RootNode
 {
@@ -64,6 +69,4 @@ class RootNode
 };
 
 } // namespace ocl
-
-
-#endif  // OCPCPP_OCL_STRUCTURE_H_
+#endif  // OCLCPP_OCL_ROOTNODE_H_

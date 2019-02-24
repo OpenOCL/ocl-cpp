@@ -18,8 +18,8 @@
  *    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-#ifndef OCL_TREEBUILDER_H_
-#define OCL_TREEBUILDER_H_
+#ifndef OCLCPP_OCL_TREEBUILDER_H_
+#define OCLCPP_OCL_TREEBUILDER_H_
 
 namespace ocl {
 
@@ -36,8 +36,7 @@ class TreeBuilder : public RootNode
 
  private:
   int len;
-}
+};
 
 } // namespace ocl
-
-#endOCL TREEBUILDER
+#endif OCLCPP_OCL_TREEBUILDER_H_
