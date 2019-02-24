@@ -33,13 +33,37 @@ typedef std::map<const std::string&, const RootNode> Branches;
 typedef std::vector<int> Shape;
 typedef std::vector<std::vector<int>> IndizesArray;
 
-
-class TensorStructure : public RootNode
+static RootNode flattenTree(const RootNode& tree)
 {
-  TensorStructure(shape) : branches(Branches()), shape(shape), indizes(IndizesArray()) { }
+  TreeBuilder tout = TreeBuilder();
+  flattenTreeIterate(tree, &tout);
+  return tout;
 }
 
-class RootNode
+static void flattenTreeIterate(const RootNode& tree, RootNode* tout)
+{
+  for (const auto& b : tree.branches) {
+    RootNode child = tree.get(b.first);
+    if (child.hasBranches()) {
+      flattenTreeIterate(child, tout);
+    } else {
+      tout->add(b, child);
+    }
+  } // end for
+}
+
+class Structure
+{
+  virtual const int length() = 0;
+  virtual const int size() = 0;
+  virtual const int nel() = 0;
+};
+
+class TensorStructure : public RootNode {
+  TensorStructure(shape) : branches(Branches()), shape(shape), indizes(IndizesArray()) { }
+};
+
+class RootNode : public Structure
 {
  public:
 
