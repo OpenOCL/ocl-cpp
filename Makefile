@@ -26,17 +26,18 @@ INCLUDES = -I$(SRC) -I$(INCLUDE)  $(INCLUDES_EIGEN)
 
 GTEST_STATIC = $(GTEST_LIB)/libgtest.a
 
-TESTS = $(BIN)/testNlpSolver
+TESTS = 
 
 GTEST_HEADERS = $(GTEST)/include/gtest/*.h \
                 $(GTEST)/include/gtest/internal/*.h
 
-all : $(GTEST_LIBS) $(TESTS)
+all : $(GTEST_LIBS) $(TESTS) $(OBJ)/testEigenTensor.o
 gtest: $(GTEST_LIBS)
 clean:
-	rm -f $(TESTS) $(OBJ)/*.o	
+	rm -f $(TESTS) $(OBJ)/*.o	$(LIB)/*.a
 clean-all :
-	rm -f $(GTEST_LIBS) $(TESTS) $(OBJ)/*.o
+	rm -f $(GTEST_LIBS) $(TESTS) $(OBJ)/*.o $(LIB)/*.a
+
 
 # Builds gtest.a and gtest_main.a.
 GTEST_SRCS_ = $(GTEST)/src/*.cc $(GTEST)/src/*.h $(GTEST_HEADERS)
@@ -51,14 +52,7 @@ $(GTEST_LIB)/libgtest.a : $(OBJ)/gtest-all.o
 $(GTEST_LIB)/libgtest_main.a : $(OBJ)/gtest-all.o $(OBJ)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
-# builds OclSolver
-$(OBJ)/NlpSolver.o : $(SRC)/NlpSolver.cc $(INCLUDE)/NlpSolver.h $(GTEST_HEADERS)
+# builds Eigen Tensor
+$(OBJ)/testEigenTensor.o : $(TEST)/testEigenTensor.cc $(SRC)/EigenTensor.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
-
-$(OBJ)/testNlpSolver.o : $(TEST)/testNlpSolver.cc $(INCLUDE)/NlpSolver.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
-
-$(BIN)/testNlpSolver : $(OBJ)/NlpSolver.o $(OBJ)/testNlpSolver.o $(GTEST_STATIC)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -lgtest_main -lpthread $^ -o $@
-
 
