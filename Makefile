@@ -19,14 +19,14 @@ OBJ = ./build/obj
 # Set Google Test's header directory as a system directory, such that
 # the compiler doesn't generate warnings in Google Test headers.
 CPPFLAGS += -isystem $(GTEST)/include
-CXXFLAGS += -g -Wall -Wextra -std=c++11
+CXXFLAGS += -g -Wall -Wextra -std=c++14
 
 INCLUDES_EIGEN = -I $(EXTERN)/eigen
 INCLUDES = -I$(SRC) -I$(INCLUDE)  $(INCLUDES_EIGEN)
 
 GTEST_STATIC = $(GTEST_LIB)/libgtest.a
 
-TESTS = 
+TESTS =
 
 GTEST_HEADERS = $(GTEST)/include/gtest/*.h \
                 $(GTEST)/include/gtest/internal/*.h
@@ -55,4 +55,3 @@ $(GTEST_LIB)/libgtest_main.a : $(OBJ)/gtest-all.o $(OBJ)/gtest_main.o
 # builds Eigen Tensor
 $(OBJ)/testEigenTensor.o : $(TEST)/testEigenTensor.cc $(SRC)/EigenTensor.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
-
