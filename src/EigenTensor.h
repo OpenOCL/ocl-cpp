@@ -39,11 +39,98 @@ double mysin(double x)
 }
 
 
-class Tensor
+
+class TensorValue
 {
 public:
-  virtual Tensor uplus() { return Tensor(); };
+  virtual void data(void* vout) = 0;
+}
+
+class EigenTensorValue : public TensorValue
+{
+public: 
+  virtual void data(void* vout)
+  {
+
+  }
+private:
+  Eigen::Operator<> v;
+}
+
+
+
+class TensorOperator
+{
+public:
+  virtual TensorValue eval() = 0;
 };
+
+class TensorConstant : TensorOperator
+{
+public:
+  double eval() override
+}
+
+class EigenTensorConstant : TensorConstant
+{
+public:
+  EigenNativeOperator eval() override 
+  {
+    return Eigen::Tensor();
+  }
+}
+
+class EigenTensorOperator : public TensorOperator
+{
+public:
+  
+};
+
+class EigenUnaryOperator : public EigenTensorOperator
+{
+public:
+  EigenUnaryOperator(TensorOperator input)
+      : input(input.v) { }
+
+private:
+  TensorOperator input;
+};
+
+class EigenBinaryOperator : public EigenTensorOperator
+{
+public:
+  EigenBinaryOperator(TensorOperator input1, TensorOperator input2)
+      : input1(input1.v), input2(input2.v) { }
+
+private:
+  TensorOperator input1;
+  TensorOperator input1;
+};
+
+class EigenUplus : public EigenUnaryOperator
+{
+  EigenUplus(TensorOperator input): EigenUnaryOperator(input) { }
+  TensorValue eval() { return EigenTensorValue(input.eval().value()); }
+
+  Eigen::Operator<> getOp1()
+  {
+    Eigen::Operator<> op1;
+    input1.eval().data(op1);
+    return op1;
+  }
+}
+
+class EigenPlus : public EigenBinaryOperator
+{
+  EigenPlus(TensorOperator input1, TensorOperator input2): EigenBinaryOperator(input1, input2) { }
+  TensorValue eval() overwrite { 
+
+    Eigen::Operator<> op1 = getOp1();
+    Eigen::Operator<> op2 = getOp2();
+    return EigenTensorValue(op1 + op2);
+  }
+}
+
 
 
 
