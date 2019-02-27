@@ -45,16 +45,23 @@ class Tensor
   typedef Eigen::array<Eigen::DenseIndex, R> Sizes;
   typedef Eigen::array<bool, R> ReverseDimensions;
 
+  // static constructors
+  Tensor FromTensorRX(const EigenTensorRX& tensor) {
+    Tensor t = Tensor();
+    t.tensor = tensor;
+    return t;
+  }
+
   // Constructor
-  // Tensor(EigenTensorRX tensor) : tensor(tensor) { }
-  Tensor(Sizes dims) : tensor(EigenTensorRX(dims).setZero()) { }
+  Tensor(const Sizes& dims) : tensor(EigenTensorRX(dims).setZero()) { }
+  Tensor() { }
 
   // Returns the underlying value
   EigenTensorRX value();
   // Return a string representation
   std::string str();
   // Sets a value, supports broadcasting
-  void set(std::initializer_list<double> values) { tensor.setValues(values); }
+  void set(const typename Eigen::internal::Initializer<EigenTensorRX, R>::InitList& values) { tensor.setValues(values); }
   // Slices value
   EigenTensorRX slice(String slice1=":", String slice2=":", String slice3=":");
 
@@ -62,63 +69,63 @@ class Tensor
   EigenTensorRX linspace(const Tensor& other);
 
   // operators - unary element wise
-  Tensor uplus() { return Tensor(tensor); }
-  Tensor uminus() { return Tensor(-tensor); }
-  Tensor square() { return Tensor(tensor.square()); }
-  Tensor inv() { return Tensor(tensor.inverse()); }
-  Tensor abs() { return Tensor(tensor.abs()); }
-  Tensor sqrt() { return Tensor(tensor.sqrt()); }
-  Tensor sin() { return Tensor(tensor.unaryExpr(Eigen::internal::scalar_sin_op<EigenScalar>())); }
-  Tensor cos() { return Tensor(tensor.unaryExpr(Eigen::internal::scalar_cos_op<EigenScalar>())); }
-  Tensor tan() { return Tensor(tensor.unaryExpr(Eigen::internal::scalar_tan_op<EigenScalar>())); }
-  Tensor atan() { return Tensor(tensor.unaryExpr(Eigen::internal::scalar_atan_op<EigenScalar>())); }
-  Tensor asin() { return Tensor(tensor.unaryExpr(Eigen::internal::scalar_asin_op<EigenScalar>())); }
-  Tensor acos() { return Tensor(tensor.unaryExpr(Eigen::internal::scalar_acos_op<EigenScalar>())); }
-  Tensor tanh() { return Tensor(tensor.unaryExpr(Eigen::internal::scalar_tanh_op<EigenScalar>())); }
-  Tensor cosh() { return Tensor(tensor.unaryExpr(Eigen::internal::scalar_cosh_op<EigenScalar>())); }
-  Tensor sinh() { return Tensor(tensor.unaryExpr(Eigen::internal::scalar_sinh_op<EigenScalar>())); }
+  Tensor uplus() { return Tensor::FromTensorRX(tensor); }
+  Tensor uminus() { return Tensor::FromTensorRX(-tensor); }
+  Tensor square() { return Tensor::FromTensorRX(tensor.square()); }
+  Tensor inv() { return Tensor::FromTensorRX(tensor.inverse()); }
+  Tensor abs() { return Tensor::FromTensorRX(tensor.abs()); }
+  Tensor sqrt() { return Tensor::FromTensorRX(tensor.sqrt()); }
+  Tensor sin() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_sin_op<EigenScalar>())); }
+  Tensor cos() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_cos_op<EigenScalar>())); }
+  Tensor tan() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_tan_op<EigenScalar>())); }
+  Tensor atan() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_atan_op<EigenScalar>())); }
+  Tensor asin() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_asin_op<EigenScalar>())); }
+  Tensor acos() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_acos_op<EigenScalar>())); }
+  Tensor tanh() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_tanh_op<EigenScalar>())); }
+  Tensor cosh() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_cosh_op<EigenScalar>())); }
+  Tensor sinh() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_sinh_op<EigenScalar>())); }
   Tensor acosh() { throw NotImplemented("No Eigen acosh support."); return Tensor({0,0,0}); }
-  Tensor exp() { return Tensor(tensor.exp()); }
-  Tensor log() { return Tensor(tensor.log()); }
+  Tensor exp() { return Tensor::FromTensorRX(tensor.exp()); }
+  Tensor log() { return Tensor::FromTensorRX(tensor.log()); }
 
   // operators - unary element wise + constant
-  Tensor pow(double exponent)  { return Tensor(tensor.pow(exponent)); }
+  Tensor pow(double exponent)  { return Tensor::FromTensorRX(tensor.pow(exponent)); }
 
   // operators - reduction
-  Tensor sum() { return Tensor(tensor.sum()); }
-  Tensor sum(const Dimensions& dims) { return Tensor(tensor.sum(dims)); }
-  Tensor max() { return Tensor(tensor.maximum()); }
-  Tensor max(const Dimensions& dims) { return Tensor(tensor.maximum(dims)); }
-  Tensor min() { return Tensor(tensor.minimum()); }
-  Tensor min(const Dimensions& dims) { return Tensor(tensor.minimum(dims)); }
-  Tensor prod() { return Tensor(tensor.prod()); }
-  Tensor prod(const Dimensions& dims) { return Tensor(tensor.prod(dims)); }
+  Tensor sum() { return Tensor::FromTensorRX(tensor.sum()); }
+  Tensor sum(const Dimensions& dims) { return Tensor::FromTensorRX(tensor.sum(dims)); }
+  Tensor max() { return Tensor::FromTensorRX(tensor.maximum()); }
+  Tensor max(const Dimensions& dims) { return Tensor::FromTensorRX(tensor.maximum(dims)); }
+  Tensor min() { return Tensor::FromTensorRX(tensor.minimum()); }
+  Tensor min(const Dimensions& dims) { return Tensor::FromTensorRX(tensor.minimum(dims)); }
+  Tensor prod() { return Tensor::FromTensorRX(tensor.prod()); }
+  Tensor prod(const Dimensions& dims) { return Tensor::FromTensorRX(tensor.prod(dims)); }
 
   // operators - geometrical
-  Tensor reshape(const Dimensions& dims) { return Tensor(tensor.reshape(dims)); }
-  Tensor transpose(const Dimensions& dims) { return Tensor(tensor.shuffle(dims)); }
+  Tensor reshape(const Dimensions& dims) { return Tensor::FromTensorRX(tensor.reshape(dims)); }
+  Tensor transpose(const Dimensions& dims) { return Tensor::FromTensorRX(tensor.shuffle(dims)); }
   Tensor slice(const StartIndices& offsets, const Sizes& extends) {
-    return Tensor(tensor.slice(offsets,extends));
+    return Tensor::FromTensorRX(tensor.slice(offsets,extends));
   }
   Tensor reverse(const ReverseDimensions& dims) {
-    return Tensor(tensor.reverse(dims));
+    return Tensor::FromTensorRX(tensor.reverse(dims));
   }
   Tensor repeat(const Dimensions& dims) {
-    return Tensor(tensor.broadcast(dims));
+    return Tensor::FromTensorRX(tensor.broadcast(dims));
   }
 
   // operators - binary element wise
   Tensor operator+(const Tensor& other) {
-    return Tensor(tensor+other.tensor);
+    return Tensor::FromTensorRX(tensor+other.tensor);
   }
   Tensor operator-(const Tensor& other) {
-    return Tensor(tensor-other.tensor);
+    return Tensor::FromTensorRX(tensor-other.tensor);
   }
   Tensor operator*(const Tensor& other) {
-    return Tensor(tensor*other.tensor);
+    return Tensor::FromTensorRX(tensor*other.tensor);
   }
   Tensor operator/(const Tensor& other) {
-    return Tensor(tensor/other.tensor);
+    return Tensor::FromTensorRX(tensor/other.tensor);
   }
 
   // operators - binary

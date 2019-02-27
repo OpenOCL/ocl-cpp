@@ -19,7 +19,7 @@ OBJ = ./build/obj
 # Set Google Test's header directory as a system directory, such that
 # the compiler doesn't generate warnings in Google Test headers.
 CPPFLAGS += -isystem $(GTEST)/include
-CXXFLAGS += -g -Wall -Wextra -std=c++14
+CXXFLAGS += -g -Wall -Wextra -std=c++14 -Wno-ignored-attributes
 
 INCLUDES_EIGEN = -I $(EXTERN)/eigen
 INCLUDES = -I$(SRC) -I$(INCLUDE)  $(INCLUDES_EIGEN)

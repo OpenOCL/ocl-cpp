@@ -7,7 +7,7 @@ TEST(testGeneralTensor, Constructor) {
   a.set({{1,2,3,4},{2,3,4,5},{3,4,5,6}});
 
   auto b = ocl::Tensor<2>({4,3});
-  b.set({3});
+  b.set({{3}});
 
   auto c = a+b;
 
