@@ -23,8 +23,10 @@
 
 #include <cmath>
 #include <functional>
+#include <algorithm>
+#include <vector>
 
-#include <unsupported/Eigen/CXX11/Tensor>
+#include <Eigen/Geometry>
 
 #include "typedefs.h"
 #include "exceptions.h"
@@ -33,100 +35,198 @@
 namespace ocl
 {
 
-template<int R>
+// Tensor class for 3rd order tensors represented as a vector matrizes
 class Tensor
 {
 
  public:
-  typedef Eigen::Tensor<float, R> EigenTensorRX;
-  typedef typename EigenTensorRX::Dimensions Dimensions; // need to add keyword typename because it is a dependent type
-  typedef float EigenScalar;
-  typedef Eigen::array<Eigen::DenseIndex, R> StartIndices;
-  typedef Eigen::array<Eigen::DenseIndex, R> Sizes;
-  typedef Eigen::array<bool, R> ReverseDimensions;
+  typedef Eigen::MatrixXf EigenMatrix;
+  typedef Eigen::Vector3f EigenVector3;
+  typedef Eigen::VectorXf EigenVector;
+  typedef float Scalar;
+
+  // typedef typename EigenTensorRX::Dimensions Dimensions; // need to add keyword typename because it is a dependent type
+  // typedef float EigenScalar;
+  // typedef Eigen::array<Eigen::DenseIndex, R> StartIndices;
+  // typedef Eigen::array<Eigen::DenseIndex, R> Sizes;
+  // typedef Eigen::array<bool, R> ReverseDimensions;
 
   // static constructors
-  Tensor FromTensorRX(const EigenTensorRX& tensor) {
+  Tensor FromEigenMatrix(const EigenMatrix& mat) {
     Tensor t = Tensor();
-    t.tensor = tensor;
+    t.tensor = {mat};
     return t;
   }
 
   // Constructor
-  Tensor(const Sizes& dims) : tensor(EigenTensorRX(dims).setZero()) { }
+  Tensor(Eigen::Index rows, Eigen::Index cols) : tensor(1, EigenMatrix::Zero(rows,cols)) { }
   Tensor() { }
 
   // Returns the underlying value
-  EigenTensorRX value();
+  std::vector<EigenMatrix> value();
+
   // Return a string representation
   std::string str();
+
   // Sets a value, supports broadcasting
-  void set(const typename Eigen::internal::Initializer<EigenTensorRX, R>::InitList& values) { tensor.setValues(values); }
+  // void set(std::initializer_list<std::initializer_list<double> > values) { tensor.setValues(values); }
+
   // Slices value
-  EigenTensorRX slice(String slice1=":", String slice2=":", String slice3=":");
+  std::vector<EigenMatrix> slice();
 
   // linspace operator
-  EigenTensorRX linspace(const Tensor& other);
+  // EigenTensorRX linspace(const Tensor& other);
+
+
+  // General functions to operate on vector of matrizes
+
+  // Function pointer to static unary functions
+  typedef EigenMatrix (*UnaryOpFcn)(const EigenMatrix& m);
+
+  // Apply unary operator function to all matrizes in the vector
+  Tensor unaryVecOperation(UnaryOpFcn fcn_ptr) const
+  {
+    Tensor t = Tensor();
+    for(unsigned int i=0; i<tensor.size(); i++) {
+      t.tensor.push_back( fcn_ptr(tensor[i]) );
+    }
+    return t;
+  }
+
+  //
+  // Define functions on matrizes
+
+  // unary element wise
+  static EigenMatrix m_uplus(const EigenMatrix& m) { return m; }
+  static EigenMatrix m_uminus(const EigenMatrix& m) { return -m; }
+  static EigenMatrix m_square(const EigenMatrix& m) { return Eigen::square(m.array()); }
+  static EigenMatrix m_inverse(const EigenMatrix& m) { return Eigen::inverse(m.array()); }
+  static EigenMatrix m_abs(const EigenMatrix& m) { return Eigen::abs(m.array()); }
+  static EigenMatrix m_sqrt(const EigenMatrix& m) { return Eigen::sqrt(m.array()); }
+  static EigenMatrix m_sin(const EigenMatrix& m) { return Eigen::sin(m.array()); }
+  static EigenMatrix m_cos(const EigenMatrix& m) { return Eigen::cos(m.array()); }
+  static EigenMatrix m_tan(const EigenMatrix& m) { return Eigen::tan(m.array()); }
+  static EigenMatrix m_atan(const EigenMatrix& m) { return Eigen::atan(m.array()); }
+  static EigenMatrix m_asin(const EigenMatrix& m) { return Eigen::asin(m.array()); }
+  static EigenMatrix m_acos(const EigenMatrix& m) { return Eigen::acos(m.array()); }
+  static EigenMatrix m_tanh(const EigenMatrix& m) { return Eigen::tanh(m.array()); }
+  static EigenMatrix m_sinh(const EigenMatrix& m) { return Eigen::sinh(m.array()); }
+  static EigenMatrix m_cosh(const EigenMatrix& m) { return Eigen::cosh(m.array()); }
+  static EigenMatrix m_exp(const EigenMatrix& m) { return Eigen::exp(m.array()); }
+  static EigenMatrix m_log(const EigenMatrix& m) { return Eigen::log(m.array()); }
+
+  // unary element wise + constant
+  static EigenMatrix m_pow(const EigenMatrix& m, const Scalar exponent) { return m.array().pow(exponent); }
+
+  // reduction
+  static Scalar m_norm(const EigenMatrix& m) { return m.norm(); }
+  static Scalar m_sum(const EigenMatrix& m) { return m.sum(); }
+  static Scalar m_min(const EigenMatrix& m) { return m.minCoeff(); }
+  static Scalar m_max(const EigenMatrix& m) { return m.maxCoeff(); }
+  static Scalar m_mean(const EigenMatrix& m) { return m.mean(); }
+  static Scalar m_trace(const EigenMatrix& m) { return m.trace(); }
+  static Scalar m_prod(const EigenMatrix& m) { return m.prod(); }
+
+  // geometrical
+  static EigenMatrix m_reshape(const EigenMatrix& m, int rows, int cols) {
+    // create copy of matrix data, and create map with new dimensions but same data
+    Scalar data_copy[m.size()];
+    std::copy(m.data(), m.data() + m.size(), data_copy);
+    Eigen::Map<EigenMatrix> res(data_copy, rows, cols);
+    return res;
+  }
+  static EigenMatrix m_transpose(const EigenMatrix& m) { return m.transpose(); }
+  // get block slice of cols (i:j) and rows (k:l)
+  static EigenMatrix m_block(const EigenMatrix& m, int i, int j, int k, int l) { return m.block(i,k-i+1,j,l-j+1); }
+  // get element at (i,k)
+  static EigenMatrix m_slice(const EigenMatrix& m, int i, int j) { return m.block(i,j,1,1); }
+
+  // binary coefficient wise
+  static EigenMatrix m_cmul(const EigenMatrix& m1, const EigenMatrix& m2) { return m1.array() * m2.array(); }
+  static EigenMatrix m_cadd(const EigenMatrix& m1, const EigenMatrix& m2) { return m1.array() + m2.array(); }
+  static EigenMatrix m_cdiv(const EigenMatrix& m1, const EigenMatrix& m2) { return m1.array() / m2.array(); }
+  static EigenMatrix m_cminus(const EigenMatrix& m1, const EigenMatrix& m2) { return m1.array() - m2.array(); }
+
+  static EigenMatrix m_cmul(const EigenMatrix& m, const Scalar& s) { return m.array() * s; }
+  static EigenMatrix m_cadd(const EigenMatrix& m, const Scalar& s) { return m.array() + s; }
+  static EigenMatrix m_cdiv(const EigenMatrix& m, const Scalar& s) { return m.array() / s; }
+  static EigenMatrix m_cminus(const EigenMatrix& m, const Scalar& s) { return m.array() - s; }
+
+  static EigenMatrix m_cmul(const Scalar& s, const EigenMatrix& m) { return s * m.array(); }
+  static EigenMatrix m_cadd(const Scalar& s, const EigenMatrix& m) { return s + m.array(); }
+  static EigenMatrix m_cdiv(const Scalar& s, const EigenMatrix& m) { return s / m.array(); }
+  static EigenMatrix m_cminus(const Scalar& s, const EigenMatrix& m) { return s - m.array(); }
+
+  // binary operations
+  static EigenMatrix m_mul(const EigenMatrix& m1, const EigenMatrix& m2) { return m1 * m2; }
+
+  static EigenMatrix m_cross(const EigenMatrix& m1, const EigenMatrix& m2) {
+    // convert matrizes to vectors
+    Scalar m1_data[m1.size()];
+    std::copy(m1.data(), m1.data() + m1.size(), m1_data);
+
+    Scalar m2_data[m2.size()];
+    std::copy(m2.data(), m2.data() + m2.size(), m2_data);
+
+    Eigen::Map<EigenVector3> v1(m1_data);
+    Eigen::Map<EigenVector3> v2(m2_data);
+    return v1.cross(v2);
+  }
+
+  static Scalar m_dot(const EigenMatrix& m1, const EigenMatrix& m2) {
+    // convert matrizes to vectors
+    Scalar m1_data[m1.size()];
+    std::copy(m1.data(), m1.data() + m1.size(), m1_data);
+
+    Scalar m2_data[m2.size()];
+    std::copy(m2.data(), m2.data() + m2.size(), m2_data);
+
+    Eigen::Map<EigenVector> v1(m1_data, m1.size());
+    Eigen::Map<EigenVector> v2(m2_data, m2.size());
+    return v1.dot(v2);
+  }
+
+
+
+
+  //
+  // Define tensor operations
 
   // operators - unary element wise
-  Tensor uplus() { return Tensor::FromTensorRX(tensor); }
-  Tensor uminus() { return Tensor::FromTensorRX(-tensor); }
-  Tensor square() { return Tensor::FromTensorRX(tensor.square()); }
-  Tensor inv() { return Tensor::FromTensorRX(tensor.inverse()); }
-  Tensor abs() { return Tensor::FromTensorRX(tensor.abs()); }
-  Tensor sqrt() { return Tensor::FromTensorRX(tensor.sqrt()); }
-  Tensor sin() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_sin_op<EigenScalar>())); }
-  Tensor cos() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_cos_op<EigenScalar>())); }
-  Tensor tan() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_tan_op<EigenScalar>())); }
-  Tensor atan() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_atan_op<EigenScalar>())); }
-  Tensor asin() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_asin_op<EigenScalar>())); }
-  Tensor acos() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_acos_op<EigenScalar>())); }
-  Tensor tanh() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_tanh_op<EigenScalar>())); }
-  Tensor cosh() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_cosh_op<EigenScalar>())); }
-  Tensor sinh() { return Tensor::FromTensorRX(tensor.unaryExpr(Eigen::internal::scalar_sinh_op<EigenScalar>())); }
-  Tensor acosh() { throw NotImplemented("No Eigen acosh support."); return Tensor({0,0,0}); }
-  Tensor exp() { return Tensor::FromTensorRX(tensor.exp()); }
-  Tensor log() { return Tensor::FromTensorRX(tensor.log()); }
+  Tensor uplus() const { return unaryVecOperation(&Tensor::m_uplus); }
+  Tensor uminus() const { return unaryVecOperation(&Tensor::m_uminus); }
+  Tensor square() const { return unaryVecOperation(&Tensor::m_square); }
+  Tensor inverse() const { return unaryVecOperation(&Tensor::m_inverse); }
+  Tensor abs() const { return unaryVecOperation(&Tensor::m_abs); }
+  Tensor sqrt() const { return unaryVecOperation(&Tensor::m_sqrt); }
+  Tensor sin() const { return unaryVecOperation(&Tensor::m_sin); }
+  Tensor cos() const { return unaryVecOperation(&Tensor::m_cos); }
+  Tensor tan() const { return unaryVecOperation(&Tensor::m_tan); }
+  Tensor atan() const { return unaryVecOperation(&Tensor::m_atan); }
+  Tensor asin() const { return unaryVecOperation(&Tensor::m_asin); }
+  Tensor acos() const { return unaryVecOperation(&Tensor::m_acos); }
+  Tensor tanh() const { return unaryVecOperation(&Tensor::m_tanh); }
+  Tensor cosh() const { return unaryVecOperation(&Tensor::m_cosh); }
+  Tensor sinh() const { return unaryVecOperation(&Tensor::m_sinh); }
+  Tensor exp() const { return unaryVecOperation(&Tensor::m_exp); }
+  Tensor log() const { return unaryVecOperation(&Tensor::m_log); }
 
-  // operators - unary element wise + constant
-  Tensor pow(double exponent)  { return Tensor::FromTensorRX(tensor.pow(exponent)); }
 
-  // operators - reduction
-  Tensor sum() { return Tensor::FromTensorRX(tensor.sum()); }
-  Tensor sum(const Dimensions& dims) { return Tensor::FromTensorRX(tensor.sum(dims)); }
-  Tensor max() { return Tensor::FromTensorRX(tensor.maximum()); }
-  Tensor max(const Dimensions& dims) { return Tensor::FromTensorRX(tensor.maximum(dims)); }
-  Tensor min() { return Tensor::FromTensorRX(tensor.minimum()); }
-  Tensor min(const Dimensions& dims) { return Tensor::FromTensorRX(tensor.minimum(dims)); }
-  Tensor prod() { return Tensor::FromTensorRX(tensor.prod()); }
-  Tensor prod(const Dimensions& dims) { return Tensor::FromTensorRX(tensor.prod(dims)); }
 
-  // operators - geometrical
-  Tensor reshape(const Dimensions& dims) { return Tensor::FromTensorRX(tensor.reshape(dims)); }
-  Tensor transpose(const Dimensions& dims) { return Tensor::FromTensorRX(tensor.shuffle(dims)); }
-  Tensor slice(const StartIndices& offsets, const Sizes& extends) {
-    return Tensor::FromTensorRX(tensor.slice(offsets,extends));
-  }
-  Tensor reverse(const ReverseDimensions& dims) {
-    return Tensor::FromTensorRX(tensor.reverse(dims));
-  }
-  Tensor repeat(const Dimensions& dims) {
-    return Tensor::FromTensorRX(tensor.broadcast(dims));
-  }
-
-  // operators - binary element wise
-  Tensor operator+(const Tensor& other) {
-    return Tensor::FromTensorRX(tensor+other.tensor);
-  }
-  Tensor operator-(const Tensor& other) {
-    return Tensor::FromTensorRX(tensor-other.tensor);
-  }
-  Tensor operator*(const Tensor& other) {
-    return Tensor::FromTensorRX(tensor*other.tensor);
-  }
-  Tensor operator/(const Tensor& other) {
-    return Tensor::FromTensorRX(tensor/other.tensor);
-  }
+  //
+  // // operators - binary element wise
+  // Tensor operator+(const Tensor& other) {
+  //   return Tensor::FromTensorRX(tensor+other.tensor);
+  // }
+  // Tensor operator-(const Tensor& other) {
+  //   return Tensor::FromTensorRX(tensor-other.tensor);
+  // }
+  // Tensor operator*(const Tensor& other) {
+  //   return Tensor::FromTensorRX(tensor*other.tensor);
+  // }
+  // Tensor operator/(const Tensor& other) {
+  //   return Tensor::FromTensorRX(tensor/other.tensor);
+  // }
 
   // operators - binary
 
@@ -144,7 +244,7 @@ class Tensor
   // Tensor det();
 
  private:
-  EigenTensorRX tensor;
+  std::vector<EigenMatrix> tensor;
 
 }; // class EigenTensor
 
