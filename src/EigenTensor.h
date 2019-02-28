@@ -161,7 +161,7 @@ class Tensor
   static EigenMatrix m_mul(const EigenMatrix& m1, const EigenMatrix& m2) { return m1 * m2; }
 
   static EigenMatrix m_cross(const EigenMatrix& m1, const EigenMatrix& m2) {
-    // convert matrizes to vectors
+    // convert matrizes to vectors of length 3
     Scalar m1_data[m1.size()];
     std::copy(m1.data(), m1.data() + m1.size(), m1_data);
 
@@ -185,8 +185,6 @@ class Tensor
     Eigen::Map<EigenVector> v2(m2_data, m2.size());
     return v1.dot(v2);
   }
-
-
 
 
   //
