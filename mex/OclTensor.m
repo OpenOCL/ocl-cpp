@@ -20,7 +20,7 @@ classdef OclTensor < handle
     function self = OclTensor(dims)
       if nargin == 1
         % Construct the object in the c program
-        self.idx = oclTensorMex('create', -1, dims);
+        self.idx = oclTensorMex('create', dims);
       end
     end
 
@@ -36,6 +36,11 @@ classdef OclTensor < handle
 
     function r = pow(self, exponent)
       idx = oclTensorMex('pow', self.idx, exponent);
+      r = OclTensor.create(idx);
+    end
+
+    function r = reshape(self, cols, rows)
+      idx = oclTensorMex('reshape', self.idx, cols, rows);
       r = OclTensor.create(idx);
     end
 

@@ -12,11 +12,6 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    General Public License for more details.
  *
- *    You should have received a copy of the GNU General Public
- *    License along with this program;
- *    if not, write to the Free Software
- *    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
  */
 #ifndef OCLCPP_OCL_EIGENTENSOR_H_
 #define OCLCPP_OCL_EIGENTENSOR_H_
@@ -281,7 +276,7 @@ class Tensor
   }
 
   // get block slice of cols (i:j) and rows (k:l)
-  Tensor block(Integer i, Integer j, Integer k, Integer l) const {
+  Tensor slice(Integer i, Integer j, Integer k, Integer l) const {
     return unaryVecOperationWithInteger4(&Tensor::m_block, i, j, k, l);
   }
 
