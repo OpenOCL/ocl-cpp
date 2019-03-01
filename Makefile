@@ -31,7 +31,7 @@ TESTS =
 GTEST_HEADERS = $(GTEST)/include/gtest/*.h \
                 $(GTEST)/include/gtest/internal/*.h
 
-all : $(GTEST_LIBS) $(TESTS) $(OBJ)/testEigenTensor.o
+all : $(GTEST_LIBS) $(TESTS) $(OBJ)/testTensor.o
 gtest: $(GTEST_LIBS)
 clean:
 	rm -f $(TESTS) $(OBJ)/*.o	$(LIB)/*.a
@@ -53,5 +53,5 @@ $(GTEST_LIB)/libgtest_main.a : $(OBJ)/gtest-all.o $(OBJ)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
 # builds Eigen Tensor
-$(OBJ)/testEigenTensor.o : $(TEST)/testEigenTensor.cc $(SRC)/EigenTensor.h
+$(OBJ)/testTensor.o : $(TEST)/testTensor.cc $(SRC)/Tensor.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@

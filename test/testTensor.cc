@@ -1,11 +1,16 @@
-#include "EigenTensor.h"
 #include <gtest/gtest.h>
+
+#include "Tensor.h"
+#include "NumericMatrix.h"
+
 
 TEST(testGeneralTensor, Constructor) {
 
-  auto a = ocl::Tensor(4,3);
+  ocl::Tensor<ocl::NumericMatrix> a = ocl::Tensor<ocl::NumericMatrix>(4,3);
+  ocl::cos(a);
+  a.cos();
 
-  auto b = ocl::Tensor(4,3);
+  auto b = ocl::Tensor<ocl::NumericMatrix>(4,3);
 
   //auto c = a+b;
 
@@ -14,7 +19,7 @@ TEST(testGeneralTensor, Constructor) {
 
 TEST(testEigenTensor, Constructor) {
 
-  auto T = ocl::Tensor(4,3);
+  auto T = ocl::Tensor<ocl::NumericMatrix>(4,3);
   ASSERT_EQ(6, 6);
 }
 

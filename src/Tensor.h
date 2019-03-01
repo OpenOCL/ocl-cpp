@@ -25,19 +25,31 @@
 
 #include "typedefs.h"
 #include "exceptions.h"
+#include "NumericMatrix.h"
 
 
 namespace ocl
 {
 
-// Tensor class for 3rd order tensors represented as a vector matrizes
+// forward declarations (defined below Tensor class)
+template<class M>
+class Tensor;
+
+template<class M>
+static inline Tensor<M> cos(const Tensor<M>& t);
+
+// Tensor class is dependent of Matrix type M.
 template<class M>
 class Tensor
 {
-
+  // Use shortcut T for Tensor<M>
   typedef Tensor<M> T;
+  typedef float Scalar;
+  typedef int Integer;
 
  public:
+
+
 
   // static constructors
   static T FromMatrix(const M& mat) {
@@ -72,51 +84,51 @@ class Tensor
   typedef M (*UnaryOpFcnWithInteger4)(const M& m, Integer s1, Integer s2, Integer s3, Integer s4);
   typedef M (*UnaryReductionOpFcn)(const M& m);
 
-  typedef M (*BinaryOpFcn)(const M& m1, const MatrixType& m2);
+  typedef M (*BinaryOpFcn)(const M& m1, const M& m2);
 
 
   // Apply unary operator function to all matrizes in the vector
-  static T unaryVecOperation(const T& tensor, UnaryOpFcn fcn_ptr) const
+  static T unaryVecOperation(const T& tensor, UnaryOpFcn fcn_ptr)
   {
     T t = T();
-    for(unsigned int i=0; i<tensor.size(); i++) {
-      t.data.push_back( fcn_ptr(tensor[i]) );
+    for(unsigned int i=0; i<tensor.data.size(); i++) {
+      t.data.push_back( fcn_ptr(tensor.data[i]) );
     }
     return t;
   }
 
-  static T unaryVecOperationWithScalar(const T& tensor, static UnaryOpFcnWithScalar fcn_ptr, Scalar s) const
+  static T unaryVecOperationWithScalar(const T& tensor, UnaryOpFcnWithScalar fcn_ptr, Scalar s)
   {
     T t = T();
-    for(unsigned int i=0; i<tensor.size(); i++) {
-      t.data.push_back( fcn_ptr(tensor[i], s) );
+    for(unsigned int i=0; i<tensor.data.size(); i++) {
+      t.data.push_back( fcn_ptr(tensor.data[i], s) );
     }
     return t;
   }
 
-  static T unaryVecOperationWithInteger2(const T& tensor, UnaryOpFcnWithInteger2 fcn_ptr, Integer s1, Integer s2) const
+  static T unaryVecOperationWithInteger2(const T& tensor, UnaryOpFcnWithInteger2 fcn_ptr, Integer s1, Integer s2)
   {
     T t = T();
-    for(unsigned int i=0; i<tensor.size(); i++) {
-      t.data.push_back( fcn_ptr(tensor[i], s1, s2) );
+    for(unsigned int i=0; i<tensor.data.size(); i++) {
+      t.data.push_back( fcn_ptr(tensor.data[i], s1, s2) );
     }
     return t;
   }
 
-  static T unaryVecOperationWithInteger4(const T& tensor, UnaryOpFcnWithInteger4 fcn_ptr, Integer s1, Integer s2, Integer s3, Integer s4) const
+  static T unaryVecOperationWithInteger4(const T& tensor, UnaryOpFcnWithInteger4 fcn_ptr, Integer s1, Integer s2, Integer s3, Integer s4)
   {
     T t = T();
-    for(unsigned int i=0; i<tensor.size(); i++) {
-      t.data.push_back( fcn_ptr(tensor[i], s1, s2, s3, s4) );
+    for(unsigned int i=0; i<tensor.data.size(); i++) {
+      t.data.push_back( fcn_ptr(tensor.data[i], s1, s2, s3, s4) );
     }
     return t;
   }
 
-  static T unaryReductionOperation(const T& tensor, UnaryReductionOpFcn fcn_ptr) const
+  static T unaryReductionOperation(const T& tensor, UnaryReductionOpFcn fcn_ptr)
   {
     T t = Tensor();
-    for(unsigned int i=0; i<tensor.size(); i++) {
-      Scalar s = fcn_ptr(tensor[i]);
+    for(unsigned int i=0; i<tensor.data.size(); i++) {
+      Scalar s = fcn_ptr(tensor.data[i]);
       M m;
       m << s;
       t.data.push_back( m );
@@ -124,13 +136,13 @@ class Tensor
     return t;
   }
 
-  static T binaryVecOperation(const T& tensor, BinaryOpFcn fcn_ptr, const T& other) const
+  static T binaryVecOperation(const T& tensor, BinaryOpFcn fcn_ptr, const T& other)
   {
     // TODO: implement broadcasting
     //assertEqual(other.data.size(), 1);
 
     T t = T();
-    for(unsigned int i=0; i<tensor.size(); i++) {
+    for(unsigned int i=0; i<tensor.data.size(); i++) {
       t.data.push_back( fcn_ptr(tensor.data[i], other.data[0]) );
     }
     return t;
@@ -147,7 +159,7 @@ class Tensor
   T abs() const { return unaryVecOperation(&M::abs); }
   T sqrt() const { return unaryVecOperation(&M::sqrt); }
   T sin() const { return unaryVecOperation(&M::sin); }
-  T cos() const { return unaryVecOperation(&M::cos); }
+  T cos() const { return cos(*this); }
   T tan() const { return unaryVecOperation(&M::tan); }
   T atan() const { return unaryVecOperation(&M::atan); }
   T asin() const { return unaryVecOperation(&M::asin); }
@@ -218,6 +230,9 @@ class Tensor
   std::vector<M> data;
 
 }; // class Tensor<M>
+
+template<class M>
+static inline Tensor<M> cos(const Tensor<M>& t) { return Tensor<M>::unaryVecOperation(t, &M::cos); }
 
 } // namespace ocl
 #endif  // OCLCPP_OCL_EIGENTENSOR_H_
