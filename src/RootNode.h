@@ -84,10 +84,10 @@ class RootNode : public Structure
     const IndizesArray& p2);
 
  private:
-   // length of the structure
-   const Shape shape;
    // map to the children
    const Branches branches;
+   // length of the structure
+   const Shape shape;
    // vector of indizes
    const IndizesArray indizes;
 };

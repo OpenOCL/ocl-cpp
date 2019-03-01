@@ -31,7 +31,7 @@ namespace ocl
 {
 
 // Tensor class for 3rd order tensors represented as a vector matrizes
-class Tensor
+class EigenTensor
 {
 
  public:
@@ -49,8 +49,8 @@ class Tensor
   }
 
   // Constructor
-  Tensor(Eigen::Index rows, Eigen::Index cols) : tensor(1, EigenMatrix::Zero(rows,cols)) { }
-  Tensor() { }
+  EigenTensor(Eigen::Index rows, Eigen::Index cols) : tensor(1, EigenMatrix::Zero(rows,cols)) { }
+  EigenTensor() { }
 
   // Returns the underlying value
   std::vector<EigenMatrix> value();
@@ -80,27 +80,27 @@ class Tensor
   typedef EigenMatrix (*BinaryOpFcn)(const EigenMatrix& m1, const EigenMatrix& m2);
 
   // Apply unary operator function to all matrizes in the vector
-  Tensor unaryVecOperation(UnaryOpFcn fcn_ptr) const
+  EigenTensor unaryVecOperation(UnaryOpFcn fcn_ptr) const
   {
-    Tensor t = Tensor();
+    EigenTensor t = EigenTensor();
     for(unsigned int i=0; i<tensor.size(); i++) {
       t.tensor.push_back( fcn_ptr(tensor[i]) );
     }
     return t;
   }
 
-  Tensor unaryVecOperationWithScalar(UnaryOpFcnWithScalar fcn_ptr, Scalar s) const
+  EigenTensor unaryVecOperationWithScalar(UnaryOpFcnWithScalar fcn_ptr, Scalar s) const
   {
-    Tensor t = Tensor();
+    EigenTensor t = EigenTensor();
     for(unsigned int i=0; i<tensor.size(); i++) {
       t.tensor.push_back( fcn_ptr(tensor[i], s) );
     }
     return t;
   }
 
-  Tensor unaryVecOperationWithInteger2(UnaryOpFcnWithInteger2 fcn_ptr, Integer s1, Integer s2) const
+  EigenTensor unaryVecOperationWithInteger2(UnaryOpFcnWithInteger2 fcn_ptr, Integer s1, Integer s2) const
   {
-    Tensor t = Tensor();
+    EigenTensor t = EigenTensor();
     for(unsigned int i=0; i<tensor.size(); i++) {
       t.tensor.push_back( fcn_ptr(tensor[i], s1, s2) );
     }
@@ -109,16 +109,16 @@ class Tensor
 
   Tensor unaryVecOperationWithInteger4(UnaryOpFcnWithInteger4 fcn_ptr, Integer s1, Integer s2, Integer s3, Integer s4) const
   {
-    Tensor t = Tensor();
+    EigenTensor t = EigenTensor();
     for(unsigned int i=0; i<tensor.size(); i++) {
       t.tensor.push_back( fcn_ptr(tensor[i], s1, s2, s3, s4) );
     }
     return t;
   }
 
-  Tensor unaryReductionOperation(UnaryReductionOpFcn fcn_ptr) const
+  EigenTensor unaryReductionOperation(UnaryReductionOpFcn fcn_ptr) const
   {
-    Tensor t = Tensor();
+    EigenTensor t = Tensor();
     for(unsigned int i=0; i<tensor.size(); i++) {
       Scalar s = fcn_ptr(tensor[i]);
       EigenMatrix m;
@@ -128,12 +128,12 @@ class Tensor
     return t;
   }
 
-  Tensor binaryVecOperation(BinaryOpFcn fcn_ptr, const Tensor& other) const
+  EigenTensor binaryVecOperation(BinaryOpFcn fcn_ptr, const Tensor& other) const
   {
     // TODO: implement broadcasting
     //assertEqual(other.tensor.size(), 1);
 
-    Tensor t = Tensor();
+    EigenTensor t = EigenTensor();
     for(unsigned int i=0; i<tensor.size(); i++) {
       t.tensor.push_back( fcn_ptr(tensor[i], other.tensor[0]) );
     }
@@ -231,77 +231,77 @@ class Tensor
   // Define tensor operations
 
   // operators - unary element wise
-  Tensor uplus() const { return unaryVecOperation(&Tensor::m_uplus); }
-  Tensor uminus() const { return unaryVecOperation(&Tensor::m_uminus); }
-  Tensor square() const { return unaryVecOperation(&Tensor::m_square); }
-  Tensor inverse() const { return unaryVecOperation(&Tensor::m_inverse); }
-  Tensor abs() const { return unaryVecOperation(&Tensor::m_abs); }
-  Tensor sqrt() const { return unaryVecOperation(&Tensor::m_sqrt); }
-  Tensor sin() const { return unaryVecOperation(&Tensor::m_sin); }
-  Tensor cos() const { return unaryVecOperation(&Tensor::m_cos); }
-  Tensor tan() const { return unaryVecOperation(&Tensor::m_tan); }
-  Tensor atan() const { return unaryVecOperation(&Tensor::m_atan); }
-  Tensor asin() const { return unaryVecOperation(&Tensor::m_asin); }
-  Tensor acos() const { return unaryVecOperation(&Tensor::m_acos); }
-  Tensor tanh() const { return unaryVecOperation(&Tensor::m_tanh); }
-  Tensor cosh() const { return unaryVecOperation(&Tensor::m_cosh); }
-  Tensor sinh() const { return unaryVecOperation(&Tensor::m_sinh); }
-  Tensor exp() const { return unaryVecOperation(&Tensor::m_exp); }
-  Tensor log() const { return unaryVecOperation(&Tensor::m_log); }
+  EigenTensor uplus() const { return unaryVecOperation(&EigenTensor::m_uplus); }
+  EigenTensor uminus() const { return unaryVecOperation(&EigenTensor::m_uminus); }
+  EigenTensor square() const { return unaryVecOperation(&EigenTensor::m_square); }
+  EigenTensor inverse() const { return unaryVecOperation(&EigenTensor::m_inverse); }
+  EigenTensor abs() const { return unaryVecOperation(&EigenTensor::m_abs); }
+  EigenTensor sqrt() const { return unaryVecOperation(&EigenTensor::m_sqrt); }
+  EigenTensor sin() const { return unaryVecOperation(&EigenTensor::m_sin); }
+  EigenTensor cos() const { return unaryVecOperation(&EigenTensor::m_cos); }
+  EigenTensor tan() const { return unaryVecOperation(&EigenTensor::m_tan); }
+  EigenTensor atan() const { return unaryVecOperation(&EigenTensor::m_atan); }
+  EigenTensor asin() const { return unaryVecOperation(&EigenTensor::m_asin); }
+  EigenTensor acos() const { return unaryVecOperation(&EigenTensor::m_acos); }
+  EigenTensor tanh() const { return unaryVecOperation(&EigenTensor::m_tanh); }
+  EigenTensor cosh() const { return unaryVecOperation(&EigenTensor::m_cosh); }
+  EigenTensor sinh() const { return unaryVecOperation(&EigenTensor::m_sinh); }
+  EigenTensor exp() const { return unaryVecOperation(&EigenTensor::m_exp); }
+  EigenTensor log() const { return unaryVecOperation(&EigenTensor::m_log); }
 
   // operators - unary element wise + scalar
-  Tensor pow(Scalar exponent) const {
-    return unaryVecOperationWithScalar(&Tensor::m_pow, exponent);
+  EigenTensor pow(Scalar exponent) const {
+    return unaryVecOperationWithScalar(&EigenTensor::m_pow, exponent);
   }
 
   // reduction operations
-  Tensor norm() const { return unaryReductionOperation(&Tensor::m_norm); }
-  Tensor sum() const { return unaryReductionOperation(&Tensor::m_sum); }
-  Tensor min() const { return unaryReductionOperation(&Tensor::m_min); }
-  Tensor max() const { return unaryReductionOperation(&Tensor::m_max); }
-  Tensor trace() const { return unaryReductionOperation(&Tensor::m_trace); }
-  Tensor mean() const { return unaryReductionOperation(&Tensor::m_mean); }
-  Tensor prod() const { return unaryReductionOperation(&Tensor::m_prod); }
+  EigenTensor norm() const { return unaryReductionOperation(&EigenTensor::m_norm); }
+  EigenTensor sum() const { return unaryReductionOperation(&EigenTensor::m_sum); }
+  EigenTensor min() const { return unaryReductionOperation(&EigenTensor::m_min); }
+  EigenTensor max() const { return unaryReductionOperation(&EigenTensor::m_max); }
+  EigenTensor trace() const { return unaryReductionOperation(&EigenTensor::m_trace); }
+  EigenTensor mean() const { return unaryReductionOperation(&EigenTensor::m_mean); }
+  EigenTensor prod() const { return unaryReductionOperation(&EigenTensor::m_prod); }
 
   // geometrical operations
-  Tensor transpose() const { return unaryVecOperation(&Tensor::m_transpose); }
+  EigenTensor transpose() const { return unaryVecOperation(&EigenTensor::m_transpose); }
 
-  Tensor reshape(Integer cols, Integer rows) const {
-    return unaryVecOperationWithInteger2(&Tensor::m_reshape, cols, rows);
+  EigenTensor reshape(Integer cols, Integer rows) const {
+    return unaryVecOperationWithInteger2(&EigenTensor::m_reshape, cols, rows);
   }
 
   // get slice (i:j)
-  Tensor slice(Integer i, Integer j) const {
-    return unaryVecOperationWithInteger2(&Tensor::m_slice, i, j);
+  EigenTensor slice(Integer i, Integer j) const {
+    return unaryVecOperationWithInteger2(&EigenTensor::m_slice, i, j);
   }
 
   // get block slice of cols (i:j) and rows (k:l)
-  Tensor slice(Integer i, Integer j, Integer k, Integer l) const {
-    return unaryVecOperationWithInteger4(&Tensor::m_block, i, j, k, l);
+  EigenTensor slice(Integer i, Integer j, Integer k, Integer l) const {
+    return unaryVecOperationWithInteger4(&EigenTensor::m_block, i, j, k, l);
   }
 
   // binary coefficient wise
-  Tensor plus(const Tensor& other) const { return binaryVecOperation(&Tensor::m_cplus, other); }
-  Tensor minus(const Tensor& other) const { return binaryVecOperation(&Tensor::m_cminus, other); }
-  Tensor ctimes(const Tensor& other) const { return binaryVecOperation(&Tensor::m_ctimes, other); }
-  Tensor cdivide(const Tensor& other) const { return binaryVecOperation(&Tensor::m_cdiv, other); }
+  EigenTensor plus(const Tensor& other) const { return binaryVecOperation(&EigenTensor::m_cplus, other); }
+  EigenTensor minus(const Tensor& other) const { return binaryVecOperation(&EigenTensor::m_cminus, other); }
+  EigenTensor ctimes(const Tensor& other) const { return binaryVecOperation(&EigenTensor::m_ctimes, other); }
+  EigenTensor cdivide(const Tensor& other) const { return binaryVecOperation(&EigenTensor::m_cdiv, other); }
 
   // binary matrix operations
-  Tensor times(const Tensor& other) const { return binaryVecOperation(&Tensor::m_times, other); }
-  Tensor cross(const Tensor& other) const { return binaryVecOperation(&Tensor::m_cross, other); }
-  Tensor dot(const Tensor& other) const { return binaryVecOperation(&Tensor::m_dot, other); }
+  EigenTensor times(const Tensor& other) const { return binaryVecOperation(&EigenTensor::m_times, other); }
+  EigenTensor cross(const Tensor& other) const { return binaryVecOperation(&EigenTensor::m_cross, other); }
+  EigenTensor dot(const Tensor& other) const { return binaryVecOperation(&EigenTensor::m_dot, other); }
 
   // operator overloading
-  Tensor operator+(const Tensor& other) {
+  EigenTensor operator+(const Tensor& other) {
     return this->plus(other);
   }
-  Tensor operator-(const Tensor& other) {
+  EigenTensor operator-(const Tensor& other) {
     return this->minus(other);
   }
-  Tensor operator*(const Tensor& other) {
+  EigenTensor operator*(const Tensor& other) {
     return this->times(other);
   }
-  Tensor operator/(const Tensor& other) {
+  EigenTensor operator/(const Tensor& other) {
     return this->cdivide(other);
   }
 
