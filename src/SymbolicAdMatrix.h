@@ -16,6 +16,8 @@
 #ifndef OCLCPP_OCL_SYMBOLIC_AD_MATRIX_H_
 #define OCLCPP_OCL_SYMBOLIC_AD_MATRIX_H_
 
+#include "casadi.h"
+
 namespace ocl
 {
 
@@ -26,9 +28,7 @@ class SymbolicAdMatrix
   typedef casadi::SX CasadiScalar;
   typedef int CasadiInteger;
 
-
   // native casadi type operations
-
   static CasadiMatrixNat m_uplus(const CasadiMatrixNat& m) { return m; }
   static CasadiMatrixNat m_uminus(const CasadiMatrixNat& m) { return -m; }
   static CasadiMatrixNat m_square(const CasadiMatrixNat& m) { return m.sq(); }
