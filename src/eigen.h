@@ -18,41 +18,41 @@
 
 namespace ocl {
 
-namespace eigen {
-
 typedef float Scalar;
 typedef int Integer;
 typedef Eigen::MatrixXf EigenMatrixX;
 typedef Eigen::Vector3f EigenVector3;
 typedef Eigen::VectorXf EigenVectorX;
 
-static EigenMatrixX fromScalar(Scalar s) {
+namespace eigen {
+
+static inline EigenMatrixX fromScalar(Scalar s) {
   EigenMatrixX m;
   m << s;
   return m;
 }
 
-static EigenMatrixX Zero(Eigen::Index rows, Eigen::Index cols) {
+static inline EigenMatrixX Zero(Eigen::Index rows, Eigen::Index cols) {
   return EigenMatrixX::Zero(rows,cols);
 }
 
-static EigenMatrixX uplus(const EigenMatrixX& m) { return m; }
-static EigenMatrixX uminus(const EigenMatrixX& m) { return -m; }
-static EigenMatrixX square(const EigenMatrixX& m) { return Eigen::square(m.array()); }
-static EigenMatrixX inverse(const EigenMatrixX& m) { return Eigen::inverse(m.array()); }
-static EigenMatrixX abs(const EigenMatrixX& m) { return Eigen::abs(m.array()); }
-static EigenMatrixX sqrt(const EigenMatrixX& m) { return Eigen::sqrt(m.array()); }
-static EigenMatrixX sin(const EigenMatrixX& m) { return Eigen::sin(m.array()); }
-static EigenMatrixX cos(const EigenMatrixX& m) { return Eigen::cos(m.array()); }
-static EigenMatrixX tan(const EigenMatrixX& m) { return Eigen::tan(m.array()); }
-static EigenMatrixX atan(const EigenMatrixX& m) { return Eigen::atan(m.array()); }
-static EigenMatrixX asin(const EigenMatrixX& m) { return Eigen::asin(m.array()); }
-static EigenMatrixX acos(const EigenMatrixX& m) { return Eigen::acos(m.array()); }
-static EigenMatrixX tanh(const EigenMatrixX& m) { return Eigen::tanh(m.array()); }
-static EigenMatrixX sinh(const EigenMatrixX& m) { return Eigen::sinh(m.array()); }
-static EigenMatrixX cosh(const EigenMatrixX& m) { return Eigen::cosh(m.array()); }
-static EigenMatrixX exp(const EigenMatrixX& m) { return Eigen::exp(m.array()); }
-static EigenMatrixX log(const EigenMatrixX& m) { return Eigen::log(m.array()); }
+static inline EigenMatrixX uplus(const EigenMatrixX& m) { return m; }
+static inline EigenMatrixX uminus(const EigenMatrixX& m) { return -m; }
+static inline EigenMatrixX square(const EigenMatrixX& m) { return Eigen::square(m.array()); }
+static inline EigenMatrixX inverse(const EigenMatrixX& m) { return Eigen::inverse(m.array()); }
+static inline EigenMatrixX abs(const EigenMatrixX& m) { return Eigen::abs(m.array()); }
+static inline EigenMatrixX sqrt(const EigenMatrixX& m) { return Eigen::sqrt(m.array()); }
+static inline EigenMatrixX sin(const EigenMatrixX& m) { return Eigen::sin(m.array()); }
+static inline EigenMatrixX cos(const EigenMatrixX& m) { return Eigen::cos(m.array()); }
+static inline EigenMatrixX tan(const EigenMatrixX& m) { return Eigen::tan(m.array()); }
+static inline EigenMatrixX atan(const EigenMatrixX& m) { return Eigen::atan(m.array()); }
+static inline EigenMatrixX asin(const EigenMatrixX& m) { return Eigen::asin(m.array()); }
+static inline EigenMatrixX acos(const EigenMatrixX& m) { return Eigen::acos(m.array()); }
+static inline EigenMatrixX tanh(const EigenMatrixX& m) { return Eigen::tanh(m.array()); }
+static inline EigenMatrixX sinh(const EigenMatrixX& m) { return Eigen::sinh(m.array()); }
+static inline EigenMatrixX cosh(const EigenMatrixX& m) { return Eigen::cosh(m.array()); }
+static inline EigenMatrixX exp(const EigenMatrixX& m) { return Eigen::exp(m.array()); }
+static inline EigenMatrixX log(const EigenMatrixX& m) { return Eigen::log(m.array()); }
 
 // unary element wise + constant
 static inline EigenMatrixX pow(const EigenMatrixX& m, const Scalar exponent) {

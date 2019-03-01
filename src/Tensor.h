@@ -148,6 +148,7 @@ class Tensor
     return t;
   }
 
+
   //
   // Define tensor operations
 
@@ -233,6 +234,7 @@ class Tensor
 
 template<class M>
 static inline Tensor<M> cos(const Tensor<M>& t) { return Tensor<M>::unaryVecOperation(t, &M::cos); }
+
 
 } // namespace ocl
 #endif  // OCLCPP_OCL_EIGENTENSOR_H_

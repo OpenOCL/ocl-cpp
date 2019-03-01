@@ -53,5 +53,5 @@ $(GTEST_LIB)/libgtest_main.a : $(OBJ)/gtest-all.o $(OBJ)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
 # builds Eigen Tensor
-$(OBJ)/testTensor.o : $(TEST)/testTensor.cc $(SRC)/Tensor.h
+$(OBJ)/testTensor.o : $(TEST)/testTensor.cc $(SRC)/Tensor.h $(SRC)/NumericMatrix.cc $(SRC)/NumericMatrix.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@

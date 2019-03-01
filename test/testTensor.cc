@@ -7,8 +7,8 @@
 TEST(testGeneralTensor, Constructor) {
 
   ocl::Tensor<ocl::NumericMatrix> a = ocl::Tensor<ocl::NumericMatrix>(4,3);
-  ocl::cos(a);
-  a.cos();
+  //ocl::cos(a);
+  //a.cos();
 
   auto b = ocl::Tensor<ocl::NumericMatrix>(4,3);
 
