@@ -24,7 +24,6 @@
 namespace ocl
 {
 
-template <class T>;
 class ValueStorage
 {
  public:
@@ -48,7 +47,7 @@ class ValueStorage
   }
 
   // set value
-  void set(const RootNode& structure, const T& value)
+  void set(const RootNode& structure, const Tensor& value)
   {
     for(int i=0; i < structure.length(); i++)
     {
@@ -57,7 +56,7 @@ class ValueStorage
     }
   }
 
-  std::vector<T> value(const RootNode$ structure)
+  Tensor value(const RootNode$ structure)
   {
     Shape s = structure.shape();
 
@@ -71,7 +70,7 @@ class ValueStorage
   }
 
  private:
-  T storage;
+  Tensor storage;
 };
 
 template<>

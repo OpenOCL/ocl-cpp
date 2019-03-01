@@ -18,34 +18,32 @@
  *    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-#ifndef OCLCPP_OCL_NUMERICVALUE_H_
-#define OCLCPP_OCL_NUMERICVALUE_H_
+#ifndef OCLCPP_OCL_STRUCTUREDTENSOR_H_
+#define OCLCPP_OCL_STRUCTUREDTENSOR_H_
 
 #include "typedefs.h"
 
 namespace ocl
 {
 
-template<class T>
-class Value
+class StructuredTensor
 {
 
  private:
-  const T &value;
+  const ValueStorage &value;
   const Structure &structure;
-  const PositionArray &positions;
 
  public:
 
   // Static factory methods
-  static Value<T> create(const Structure &structure, const T &value);
-  static Value<T> create(const Structure &structure, const float[] &value);
-  static Value<T> createFromValue(const Structure &structure,
-      const PositionArray &positions, const Value<T> &value);
-  static Value<T> Matrix(const float[] &value);
+  static StructuredTensor create(const Structure &structure, const Tensor &value);
+  static StructuredTensor create(const Structure &structure, const float[] &value);
+  static StructuredTensor createFromValue(const Structure &structure,
+      const PositionArray &positions, const ValueStorage &value);
+  static StructuredTensor Matrix(const float[] &value);
 
   // Constructor
-  Value(const Structure &structure, const PositionArray &positions, const T &value);
+  StructuredTensor(const Structure &structure, const ValueStorage &vs);
   // Returns the number of elements of the value
   int numel();
   // Returns the underlying value
@@ -97,9 +95,9 @@ class Value
   T reshape(int[]);
   T repmat(int[]);
 
-}; // class Value
+}; // class StructuredTensor
 
 } // namespace ocl
 
 
-#endif  // OCLCPP_OCL_NUMERICVALUE_H_
+#endif  // OCLCPP_OCL_STRUCTUREDTENSOR_H_
