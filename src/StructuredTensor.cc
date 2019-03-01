@@ -22,7 +22,7 @@
 
 namespace ocl {
 
-static StructuredTensor Value::create(const Structure &structure,
+static StructuredTensor StructuredTensor::create(const Structure &structure,
     const Tensor &tensor)
 {
   s = structure->size();
@@ -32,7 +32,7 @@ static StructuredTensor Value::create(const Structure &structure,
 }
 
 // constructor
-Value(const Structure &structure, const PositionArray &positions, const T &value)
+StructuredTensor(const Structure &structure, const PositionArray &positions, const T &value)
 {
   structure = structure;
   positions = positions;
