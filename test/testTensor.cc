@@ -2,15 +2,19 @@
 
 #include "Tensor.h"
 #include "NumericMatrix.h"
+#include "SymbolicAdMatrix.h"
 
 
 TEST(testGeneralTensor, Constructor) {
 
   ocl::Tensor<ocl::NumericMatrix> a = ocl::Tensor<ocl::NumericMatrix>(4,3);
+
+  ocl::Tensor<ocl::SymbolicAdMatrix> b = ocl::Tensor<ocl::SymbolicAdMatrix>(4,3);
+
   //ocl::cos(a);
   //a.cos();
 
-  auto b = ocl::Tensor<ocl::NumericMatrix>(4,3);
+  auto c = ocl::Tensor<ocl::NumericMatrix>(4,3);
 
   //auto c = a+b;
 
