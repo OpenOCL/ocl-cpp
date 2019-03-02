@@ -27,8 +27,8 @@
 
 #include "typedefs.h"
 #include "exceptions.h"
-#include "Matrix/NumericMatrix.h"
-#include "Matrix/SymbolicAdMatrix.h"
+#include "matrix/numeric_matrix.h"
+#include "matrix/symbolic_ad_matrix.h"
 
 
 namespace ocl

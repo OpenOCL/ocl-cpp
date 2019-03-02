@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "Tensor.h"
-#include "Matrix/SymbolicAdMatrix.h"
+#include "tensor.h"
+#include "matrix/symbolic_ad_matrix.h"
 
 
 TEST(testGeneralTensor, Constructor) {

@@ -13,7 +13,7 @@
  *    General Public License for more details.
  *
  */
-#include "Value.h"
+#include "structured_tensor.h"
 
 namespace ocl {
 

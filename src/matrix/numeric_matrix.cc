@@ -1,4 +1,4 @@
-#include "NumericMatrix.h"
+#include "numeric_matrix.h"
 
 namespace ocl
 {

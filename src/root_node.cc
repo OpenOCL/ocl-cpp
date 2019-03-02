@@ -13,7 +13,7 @@
  *    General Public License for more details.
  *
  */
-#include "RootNode.h"
+#include "root_node.h"
 
 #include <numeric>
 

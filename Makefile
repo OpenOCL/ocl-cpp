@@ -31,18 +31,18 @@ COMMON_HEADERS = $(SRC)/exceptions.h $(SRC)/typedefs.h
 
 GTEST_STATIC = $(GTEST_LIB)/libgtest.a
 
-LIB_O = $(OBJ)/NumericMatrix.o $(OBJ)/Tensor.o
-TESTS = $(OBJ)/testTensor.o
+LIB_O = $(OBJ)/numeric_matrix.o $(OBJ)/tensor.o
+TESTS = $(OBJ)/test_tensor.o
 
 GTEST_HEADERS = $(GTEST)/include/gtest/*.h \
                 $(GTEST)/include/gtest/internal/*.h
 
-all : $(GTEST_LIBS) $(LIB_O) $(TESTS) $(BIN)/testTensor
+all : $(GTEST_LIBS) $(LIB_O) $(TESTS) $(BIN)/test_tensor
 gtest: $(GTEST_LIBS)
 clean:
 	rm -f $(TESTS) $(OBJ)/*.o	$(LIB)/*.a
 clean-all :
-	rm -f $(GTEST_LIBS) $(TESTS) $(OBJ)/*.o $(LIB)/*.a
+	rm -f $(GTEST_LIBS) $(TESTS) $(OBJ)/*.o $(LIB)/*.a $(BIN)/*
 
 
 # Builds gtest.a and gtest_main.a.
@@ -59,14 +59,14 @@ $(GTEST_LIB)/libgtest_main.a : $(OBJ)/gtest-all.o $(OBJ)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
 # builds Eigen Tensor
-$(OBJ)/NumericMatrix.o : $(SRC)/Matrix/NumericMatrix.cc $(SRC)/Matrix/NumericMatrix.h $(SRC)/Matrix/eigen.h $(COMMON_HEADERS)
+$(OBJ)/numeric_matrix.o : $(SRC)/matrix/numeric_matrix.cc $(SRC)/matrix/numeric_matrix.h $(SRC)/matrix/eigen.h $(COMMON_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJ)/Tensor.o : $(SRC)/Tensor.cc $(SRC)/Tensor.h $(SRC)/Matrix/NumericMatrix.h $(SRC)/Matrix/SymbolicAdMatrix.h $(COMMON_HEADERS)
+$(OBJ)/tensor.o : $(SRC)/tensor.cc $(SRC)/tensor.h $(SRC)/matrix/numeric_matrix.h $(SRC)/matrix/symbolic_ad_matrix.h $(COMMON_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJ)/testTensor.o : $(TEST)/testTensor.cc $(COMMON_HEADERS)
+$(OBJ)/test_tensor.o : $(TEST)/test_tensor.cc $(COMMON_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-$(BIN)/testTensor : $(OBJ)/NumericMatrix.o $(OBJ)/Tensor.o $(OBJ)/testTensor.o
+$(BIN)/test_tensor : $(OBJ)/numeric_matrix.o $(OBJ)/tensor.o $(OBJ)/test_tensor.o
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB) -lcasadi -lgtest_main  -lpthread $^ -o $@
