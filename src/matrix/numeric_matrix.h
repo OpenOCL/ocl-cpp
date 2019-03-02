@@ -20,51 +20,6 @@
 
 namespace ocl
 {
-// Forward declaration (class defined below)
-class NumericMatrix;
-
-// Function declarations (defined in cc)
-NumericMatrix uplus(const NumericMatrix& m);
-NumericMatrix uminus(const NumericMatrix& m);
-NumericMatrix square(const NumericMatrix& m);
-NumericMatrix inverse(const NumericMatrix& m);
-NumericMatrix abs(const NumericMatrix& m);
-NumericMatrix sqrt(const NumericMatrix& m);
-NumericMatrix sin(const NumericMatrix& m);
-NumericMatrix cos(const NumericMatrix& m);
-NumericMatrix tan(const NumericMatrix& m);
-NumericMatrix atan(const NumericMatrix& m);
-NumericMatrix asin(const NumericMatrix& m);
-NumericMatrix acos(const NumericMatrix& m);
-NumericMatrix tanh(const NumericMatrix& m);
-NumericMatrix sinh(const NumericMatrix& m);
-NumericMatrix cosh(const NumericMatrix& m);
-NumericMatrix exp(const NumericMatrix& m);
-NumericMatrix log(const NumericMatrix& m);
-
-NumericMatrix pow(const NumericMatrix& m, const Scalar exponent);
-
-NumericMatrix norm(const NumericMatrix& m) ;
-NumericMatrix sum(const NumericMatrix& m);
-NumericMatrix min(const NumericMatrix& m);
-NumericMatrix max(const NumericMatrix& m);
-NumericMatrix mean(const NumericMatrix& m);
-NumericMatrix trace(const NumericMatrix& m);
-NumericMatrix prod(const NumericMatrix& m);
-
-NumericMatrix reshape(const NumericMatrix& m, const Integer rows, const Integer cols);
-NumericMatrix transpose(const NumericMatrix& m);
-NumericMatrix block(const NumericMatrix& m, const Integer i, const Integer j, const Integer k, const Integer l);
-NumericMatrix slice(const NumericMatrix& m, const Integer i, const Integer k);
-
-NumericMatrix ctimes(const NumericMatrix& m1, const NumericMatrix& m2);
-NumericMatrix cplus(const NumericMatrix& m1, const NumericMatrix& m2);
-NumericMatrix cdiv(const NumericMatrix& m1, const NumericMatrix& m2);
-NumericMatrix cminus(const NumericMatrix& m1, const NumericMatrix& m2);
-
-NumericMatrix times(const NumericMatrix& m1, const NumericMatrix& m2);
-NumericMatrix cross(const NumericMatrix& m1, const NumericMatrix& m2);
-NumericMatrix dot(const NumericMatrix& m1, const NumericMatrix& m2);
 
 class NumericMatrix
 {
@@ -76,62 +31,154 @@ public:
 
   NumericMatrix(EigenMatrixX m) : m(m) { }
 
-  NumericMatrix uplus() { return ocl::uplus(*this); }
-  NumericMatrix uminus() { return ocl::uminus(*this); }
-  NumericMatrix square() { return ocl::square(*this); }
-  NumericMatrix inverse() { return ocl::inverse(*this); }
-  NumericMatrix abs() { return ocl::abs(*this); }
-  NumericMatrix sqrt() { return ocl::sqrt(*this); }
-  NumericMatrix sin() { return ocl::sin(*this); }
-  NumericMatrix cos() { return ocl::cos(*this); }
-  NumericMatrix tan() { return ocl::tan(*this); }
-  NumericMatrix atan() { return ocl::atan(*this); }
-  NumericMatrix asin() { return ocl::asin(*this); }
-  NumericMatrix acos() { return ocl::acos(*this); }
-  NumericMatrix tanh() { return ocl::tanh(*this); }
-  NumericMatrix sinh() { return ocl::sinh(*this); }
-  NumericMatrix cosh() { return ocl::cosh(*this); }
-  NumericMatrix exp() { return ocl::exp(*this); }
-  NumericMatrix log() { return ocl::log(*this); }
+  // Member functions are defined inline below class (after static functions).
+  NumericMatrix uplus();
+  NumericMatrix uminus();
+  NumericMatrix square();
+  NumericMatrix inverse();
+  NumericMatrix abs();
+  NumericMatrix sqrt();
+  NumericMatrix sin();
+  NumericMatrix cos();
+  NumericMatrix tan();
+  NumericMatrix atan();
+  NumericMatrix asin();
+  NumericMatrix acos();
+  NumericMatrix tanh();
+  NumericMatrix sinh();
+  NumericMatrix cosh();
+  NumericMatrix exp();
+  NumericMatrix log();
 
-  NumericMatrix pow(const Scalar exponent) {
-    return ocl::pow(*this, exponent);
-  }
+  NumericMatrix pow(const Scalar exponent);
 
-  NumericMatrix norm() { return ocl::norm(*this); }
-  NumericMatrix sum() { return ocl::sum(*this); }
-  NumericMatrix min() { return ocl::min(*this); }
-  NumericMatrix max() { return ocl::max(*this); }
-  NumericMatrix mean() { return ocl::mean(*this); }
-  NumericMatrix trace() { return ocl::trace(*this); }
-  NumericMatrix prod() { return ocl::prod(*this); }
+  NumericMatrix norm();
+  NumericMatrix sum();
+  NumericMatrix min();
+  NumericMatrix max();
+  NumericMatrix mean();
+  NumericMatrix trace();
+  NumericMatrix prod();
 
-  NumericMatrix reshape(const Integer rows, const Integer cols) {
-    return ocl::reshape(*this, rows, cols);
-  }
-  NumericMatrix transpose() { return ocl::transpose(*this); }
-  NumericMatrix block(const Integer i, const Integer j, const Integer k, const Integer l) {
-    return ocl::block(*this, i, j, k, l);
-  }
-  NumericMatrix slice(const Integer i, const Integer k) {
-    return ocl::slice(*this, i, k);
-  }
+  NumericMatrix reshape(const Integer rows, const Integer cols);
+  NumericMatrix transpose();
+  NumericMatrix block(const Integer i, const Integer j, const Integer k, const Integer l);
+  NumericMatrix slice(const Integer i, const Integer k);
 
-  NumericMatrix ctimes(const NumericMatrix& other) { return ocl::ctimes(*this, other); }
-  NumericMatrix cplus(const NumericMatrix& other) { return ocl::cplus(*this, other); }
-  NumericMatrix cdiv(const NumericMatrix& other) { return ocl::cdiv(*this, other); }
-  NumericMatrix cminus(const NumericMatrix& other) { return ocl::cminus(*this, other); }
+  NumericMatrix ctimes(const NumericMatrix& other);
+  NumericMatrix cplus(const NumericMatrix& other);
+  NumericMatrix cdiv(const NumericMatrix& other);
+  NumericMatrix cminus(const NumericMatrix& other);
 
-  NumericMatrix times(const NumericMatrix& other) { return ocl::times(*this, other); }
-  NumericMatrix cross(const NumericMatrix& other) { return ocl::cross(*this, other); }
-  NumericMatrix dot(const NumericMatrix& other) { return ocl::dot(*this, other); }
+  NumericMatrix times(const NumericMatrix& other);
+  NumericMatrix cross(const NumericMatrix& other);
+  NumericMatrix dot(const NumericMatrix& other);
 
   EigenMatrixX m;
 
 }; // class NumericMatrix
 
+// Static functions
+static inline NumericMatrix uplus(const NumericMatrix& m) { return NumericMatrix(eigen::uplus(m.m)); }
+static inline NumericMatrix uminus(const NumericMatrix& m) { return NumericMatrix(eigen::uminus(m.m)); }
+static inline NumericMatrix square(const NumericMatrix& m) { return NumericMatrix(eigen::square(m.m)); }
+static inline NumericMatrix inverse(const NumericMatrix& m) { return NumericMatrix(eigen::inverse(m.m)); }
+static inline NumericMatrix abs(const NumericMatrix& m) { return NumericMatrix(eigen::abs(m.m)); }
+static inline NumericMatrix sqrt(const NumericMatrix& m) { return NumericMatrix(eigen::sqrt(m.m)); }
+static inline NumericMatrix sin(const NumericMatrix& m) { return NumericMatrix(eigen::sin(m.m)); }
+static inline NumericMatrix cos(const NumericMatrix& m) { return NumericMatrix(eigen::cos(m.m)); }
+static inline NumericMatrix tan(const NumericMatrix& m) { return NumericMatrix(eigen::tan(m.m)); }
+static inline NumericMatrix atan(const NumericMatrix& m) { return NumericMatrix(eigen::atan(m.m)); }
+static inline NumericMatrix asin(const NumericMatrix& m) { return NumericMatrix(eigen::asin(m.m)); }
+static inline NumericMatrix acos(const NumericMatrix& m) { return NumericMatrix(eigen::acos(m.m)); }
+static inline NumericMatrix tanh(const NumericMatrix& m) { return NumericMatrix(eigen::tanh(m.m)); }
+static inline NumericMatrix sinh(const NumericMatrix& m) { return NumericMatrix(eigen::sinh(m.m)); }
+static inline NumericMatrix cosh(const NumericMatrix& m) { return NumericMatrix(eigen::cosh(m.m)); }
+static inline NumericMatrix exp(const NumericMatrix& m) { return NumericMatrix(eigen::exp(m.m)); }
+static inline NumericMatrix log(const NumericMatrix& m) { return NumericMatrix(eigen::log(m.m)); }
 
+static inline NumericMatrix pow(const NumericMatrix& m, const Scalar exponent) { return NumericMatrix(eigen::pow(m.m, exponent)); }
 
+static inline NumericMatrix norm(const NumericMatrix& m) { return NumericMatrix(eigen::norm(m.m)); }
+static inline NumericMatrix sum(const NumericMatrix& m) { return NumericMatrix(eigen::sum(m.m)); }
+static inline NumericMatrix min(const NumericMatrix& m) { return NumericMatrix(eigen::min(m.m)); }
+static inline NumericMatrix max(const NumericMatrix& m) { return NumericMatrix(eigen::max(m.m)); }
+static inline NumericMatrix mean(const NumericMatrix& m) { return NumericMatrix(eigen::mean(m.m)); }
+static inline NumericMatrix trace(const NumericMatrix& m) { return NumericMatrix(eigen::trace(m.m)); }
+static inline NumericMatrix prod(const NumericMatrix& m) { return NumericMatrix(eigen::prod(m.m)); }
+
+static inline NumericMatrix reshape(const NumericMatrix& m, const Integer rows, const Integer cols) {
+  return NumericMatrix(eigen::reshape(m.m, rows, cols));
+}
+static inline NumericMatrix transpose(const NumericMatrix& m) {
+  return NumericMatrix(eigen::transpose(m.m));
+}
+static inline NumericMatrix block(const NumericMatrix& m, const Integer i, const Integer j, const Integer k, const Integer l) {
+  return NumericMatrix(eigen::block(m.m, i, j, k, l));
+}
+static inline NumericMatrix slice(const NumericMatrix& m, const Integer i, const Integer k) {
+  return NumericMatrix(eigen::slice(m.m, i, k));
+}
+
+static inline NumericMatrix ctimes(const NumericMatrix& m1, const NumericMatrix& m2) { return NumericMatrix(eigen::ctimes(m1.m, m2.m)); }
+static inline NumericMatrix cplus(const NumericMatrix& m1, const NumericMatrix& m2) { return NumericMatrix(eigen::cplus(m1.m, m2.m)); }
+static inline NumericMatrix cdiv(const NumericMatrix& m1, const NumericMatrix& m2) { return NumericMatrix(eigen::cdiv(m1.m, m2.m)); }
+static inline NumericMatrix cminus(const NumericMatrix& m1, const NumericMatrix& m2) { return NumericMatrix(eigen::cminus(m1.m, m2.m)); }
+
+static inline NumericMatrix times(const NumericMatrix& m1, const NumericMatrix& m2) { return NumericMatrix(eigen::times(m1.m, m2.m)); }
+static inline NumericMatrix cross(const NumericMatrix& m1, const NumericMatrix& m2) { return NumericMatrix(eigen::cross(m1.m, m2.m)); }
+static inline NumericMatrix dot(const NumericMatrix& m1, const NumericMatrix& m2) { return NumericMatrix(eigen::dot(m1.m, m2.m)); }
+
+// Member functions (calling the static functions above)
+inline NumericMatrix NumericMatrix::uplus() { return ocl::uplus(*this); }
+inline NumericMatrix NumericMatrix::uminus() { return ocl::uminus(*this); }
+inline NumericMatrix NumericMatrix::square() { return ocl::square(*this); }
+inline NumericMatrix NumericMatrix::inverse() { return ocl::inverse(*this); }
+inline NumericMatrix NumericMatrix::abs() { return ocl::abs(*this); }
+inline NumericMatrix NumericMatrix::sqrt() { return ocl::sqrt(*this); }
+inline NumericMatrix NumericMatrix::sin() { return ocl::sin(*this); }
+inline NumericMatrix NumericMatrix::cos() { return ocl::cos(*this); }
+inline NumericMatrix NumericMatrix::tan() { return ocl::tan(*this); }
+inline NumericMatrix NumericMatrix::atan() { return ocl::atan(*this); }
+inline NumericMatrix NumericMatrix::asin() { return ocl::asin(*this); }
+inline NumericMatrix NumericMatrix::acos() { return ocl::acos(*this); }
+inline NumericMatrix NumericMatrix::tanh() { return ocl::tanh(*this); }
+inline NumericMatrix NumericMatrix::sinh() { return ocl::sinh(*this); }
+inline NumericMatrix NumericMatrix::cosh() { return ocl::cosh(*this); }
+inline NumericMatrix NumericMatrix::exp() { return ocl::exp(*this); }
+inline NumericMatrix NumericMatrix::log() { return ocl::log(*this); }
+
+inline NumericMatrix NumericMatrix::pow(const Scalar exponent) {
+  return ocl::pow(*this, exponent);
+}
+
+inline NumericMatrix NumericMatrix::norm() { return ocl::norm(*this); }
+inline NumericMatrix NumericMatrix::sum() { return ocl::sum(*this); }
+inline NumericMatrix NumericMatrix::min() { return ocl::min(*this); }
+inline NumericMatrix NumericMatrix::max() { return ocl::max(*this); }
+inline NumericMatrix NumericMatrix::mean() { return ocl::mean(*this); }
+inline NumericMatrix NumericMatrix::trace() { return ocl::trace(*this); }
+inline NumericMatrix NumericMatrix::prod() { return ocl::prod(*this); }
+
+inline NumericMatrix NumericMatrix::reshape(const Integer rows, const Integer cols) {
+  return ocl::reshape(*this, rows, cols);
+}
+inline NumericMatrix NumericMatrix::transpose() { return ocl::transpose(*this); }
+inline NumericMatrix NumericMatrix::block(const Integer i, const Integer j, const Integer k, const Integer l) {
+  return ocl::block(*this, i, j, k, l);
+}
+inline NumericMatrix NumericMatrix::slice(const Integer i, const Integer k) {
+  return ocl::slice(*this, i, k);
+}
+
+inline NumericMatrix NumericMatrix::ctimes(const NumericMatrix& other) { return ocl::ctimes(*this, other); }
+inline NumericMatrix NumericMatrix::cplus(const NumericMatrix& other) { return ocl::cplus(*this, other); }
+inline NumericMatrix NumericMatrix::cdiv(const NumericMatrix& other) { return ocl::cdiv(*this, other); }
+inline NumericMatrix NumericMatrix::cminus(const NumericMatrix& other) { return ocl::cminus(*this, other); }
+
+inline NumericMatrix NumericMatrix::times(const NumericMatrix& other) { return ocl::times(*this, other); }
+inline NumericMatrix NumericMatrix::cross(const NumericMatrix& other) { return ocl::cross(*this, other); }
+inline NumericMatrix NumericMatrix::dot(const NumericMatrix& other) { return ocl::dot(*this, other); }
 
 } // namespace ocl
 #endif // OCLCPP_OCL_EIGENMATRIX_H_

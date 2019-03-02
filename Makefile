@@ -59,8 +59,6 @@ $(GTEST_LIB)/libgtest_main.a : $(OBJ)/gtest-all.o $(OBJ)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
 # builds Eigen Tensor
-$(OBJ)/numeric_matrix.o : $(SRC)/matrix/numeric_matrix.cc $(SRC)/matrix/numeric_matrix.h $(SRC)/matrix/eigen.h $(COMMON_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 $(OBJ)/tensor.o : $(SRC)/tensor.cc $(SRC)/tensor.h $(SRC)/matrix/numeric_matrix.h $(SRC)/matrix/symbolic_ad_matrix.h $(COMMON_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
