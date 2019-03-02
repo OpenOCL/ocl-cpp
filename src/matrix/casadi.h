@@ -27,7 +27,7 @@ namespace casadi
 // native casadi type operations
 static inline CasadiMatrixNat uplus(const CasadiMatrixNat& m) { return m; }
 static inline CasadiMatrixNat uminus(const CasadiMatrixNat& m) { return -m; }
-static inline CasadiMatrixNat square(const CasadiMatrixNat& m) { return casadi::sq(m); }
+static inline CasadiMatrixNat square(const CasadiMatrixNat& m) { return CasadiMatrixNat::sq(m); }
 static inline CasadiMatrixNat inverse(const CasadiMatrixNat& m) { return CasadiMatrixNat::inv(m); }
 static inline CasadiMatrixNat abs(const CasadiMatrixNat& m) { return CasadiMatrixNat::abs(m); }
 static inline CasadiMatrixNat sqrt(const CasadiMatrixNat& m) { return CasadiMatrixNat::sqrt(m); }
@@ -47,10 +47,7 @@ static inline CasadiMatrixNat pow(const CasadiMatrixNat& m, const CasadiScalar e
   return CasadiMatrixNat::pow(m, exponent);
 }
 
-static SymbolicAdMatrix Sym(int rows, int cols) {
-  CasadiMatrixNat m = CasadiMatrixNat::sym("m", rows, cols);
-  return SymbolicAdMatrix(m);
-}
+
 
 // reduction
 // static inline CasadiMatrixNat m_norm(const CasadiMatrixNat& m) { return casadi::norm2(m); }

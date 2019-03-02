@@ -27,6 +27,11 @@ class SymbolicAdMatrix
 {
 public:
 
+  static SymbolicAdMatrix Sym(int rows, int cols) {
+    CasadiMatrixNat m = CasadiMatrixNat::sym("m", rows, cols);
+    return SymbolicAdMatrix(m);
+  }
+
   SymbolicAdMatrix(CasadiMatrixNat m) : m(m) { }
 
   // Member functions are defined inline below class (after static functions).
@@ -50,27 +55,27 @@ public:
 
   SymbolicAdMatrix pow(const Scalar exponent);
 
-  SymbolicAdMatrix norm();
-  SymbolicAdMatrix sum();
-  SymbolicAdMatrix min();
-  SymbolicAdMatrix max();
-  SymbolicAdMatrix mean();
-  SymbolicAdMatrix trace();
-  SymbolicAdMatrix prod();
-
-  SymbolicAdMatrix reshape(const Integer rows, const Integer cols);
-  SymbolicAdMatrix transpose();
-  SymbolicAdMatrix block(const Integer i, const Integer j, const Integer k, const Integer l);
-  SymbolicAdMatrix slice(const Integer i, const Integer k);
-
-  SymbolicAdMatrix ctimes(const SymbolicAdMatrix& other);
-  SymbolicAdMatrix cplus(const SymbolicAdMatrix& other);
-  SymbolicAdMatrix cdiv(const SymbolicAdMatrix& other);
-  SymbolicAdMatrix cminus(const SymbolicAdMatrix& other);
-
-  SymbolicAdMatrix times(const SymbolicAdMatrix& other);
-  SymbolicAdMatrix cross(const SymbolicAdMatrix& other);
-  SymbolicAdMatrix dot(const SymbolicAdMatrix& other);
+  // SymbolicAdMatrix norm();
+  // SymbolicAdMatrix sum();
+  // SymbolicAdMatrix min();
+  // SymbolicAdMatrix max();
+  // SymbolicAdMatrix mean();
+  // SymbolicAdMatrix trace();
+  // SymbolicAdMatrix prod();
+  //
+  // SymbolicAdMatrix reshape(const Integer rows, const Integer cols);
+  // SymbolicAdMatrix transpose();
+  // SymbolicAdMatrix block(const Integer i, const Integer j, const Integer k, const Integer l);
+  // SymbolicAdMatrix slice(const Integer i, const Integer k);
+  //
+  // SymbolicAdMatrix ctimes(const SymbolicAdMatrix& other);
+  // SymbolicAdMatrix cplus(const SymbolicAdMatrix& other);
+  // SymbolicAdMatrix cdiv(const SymbolicAdMatrix& other);
+  // SymbolicAdMatrix cminus(const SymbolicAdMatrix& other);
+  //
+  // SymbolicAdMatrix times(const SymbolicAdMatrix& other);
+  // SymbolicAdMatrix cross(const SymbolicAdMatrix& other);
+  // SymbolicAdMatrix dot(const SymbolicAdMatrix& other);
 
   CasadiMatrixNat m;
 };
@@ -96,35 +101,35 @@ static inline SymbolicAdMatrix log(const SymbolicAdMatrix& m) { return SymbolicA
 
 static inline SymbolicAdMatrix pow(const SymbolicAdMatrix& m, const Scalar exponent) { return SymbolicAdMatrix(casadi::pow(m.m, exponent)); }
 
-static inline SymbolicAdMatrix norm(const SymbolicAdMatrix& m) { return SymbolicAdMatrix(casadi::norm(m.m)); }
-static inline SymbolicAdMatrix sum(const SymbolicAdMatrix& m) { return SymbolicAdMatrix(casadi::sum(m.m)); }
-static inline SymbolicAdMatrix min(const SymbolicAdMatrix& m) { return SymbolicAdMatrix(casadi::min(m.m)); }
-static inline SymbolicAdMatrix max(const SymbolicAdMatrix& m) { return SymbolicAdMatrix(casadi::max(m.m)); }
-static inline SymbolicAdMatrix mean(const SymbolicAdMatrix& m) { return SymbolicAdMatrix(casadi::mean(m.m)); }
-static inline SymbolicAdMatrix trace(const SymbolicAdMatrix& m) { return SymbolicAdMatrix(casadi::trace(m.m)); }
-static inline SymbolicAdMatrix prod(const SymbolicAdMatrix& m) { return SymbolicAdMatrix(casadi::prod(m.m)); }
-
-static inline SymbolicAdMatrix reshape(const SymbolicAdMatrix& m, const Integer rows, const Integer cols) {
-  return SymbolicAdMatrix(casadi::reshape(m.m, rows, cols));
-}
-static inline SymbolicAdMatrix transpose(const SymbolicAdMatrix& m) {
-  return SymbolicAdMatrix(casadi::transpose(m.m));
-}
-static inline SymbolicAdMatrix block(const SymbolicAdMatrix& m, const Integer i, const Integer j, const Integer k, const Integer l) {
-  return SymbolicAdMatrix(casadi::block(m.m, i, j, k, l));
-}
-static inline SymbolicAdMatrix slice(const SymbolicAdMatrix& m, const Integer i, const Integer k) {
-  return SymbolicAdMatrix(casadi::slice(m.m, i, k));
-}
-
-static inline SymbolicAdMatrix ctimes(const SymbolicAdMatrix& m1, const SymbolicAdMatrix& m2) { return SymbolicAdMatrix(casadi::ctimes(m1.m, m2.m)); }
-static inline SymbolicAdMatrix cplus(const SymbolicAdMatrix& m1, const SymbolicAdMatrix& m2) { return SymbolicAdMatrix(casadi::cplus(m1.m, m2.m)); }
-static inline SymbolicAdMatrix cdiv(const SymbolicAdMatrix& m1, const SymbolicAdMatrix& m2) { return SymbolicAdMatrix(casadi::cdiv(m1.m, m2.m)); }
-static inline SymbolicAdMatrix cminus(const SymbolicAdMatrix& m1, const SymbolicAdMatrix& m2) { return SymbolicAdMatrix(casadi::cminus(m1.m, m2.m)); }
-
-static inline SymbolicAdMatrix times(const SymbolicAdMatrix& m1, const SymbolicAdMatrix& m2) { return SymbolicAdMatrix(casadi::times(m1.m, m2.m)); }
-static inline SymbolicAdMatrix cross(const SymbolicAdMatrix& m1, const SymbolicAdMatrix& m2) { return SymbolicAdMatrix(casadi::cross(m1.m, m2.m)); }
-static inline SymbolicAdMatrix dot(const SymbolicAdMatrix& m1, const SymbolicAdMatrix& m2) { return SymbolicAdMatrix(casadi::dot(m1.m, m2.m)); }
+// static inline SymbolicAdMatrix norm(const SymbolicAdMatrix& m) { return SymbolicAdMatrix(casadi::norm(m.m)); }
+// static inline SymbolicAdMatrix sum(const SymbolicAdMatrix& m) { return SymbolicAdMatrix(casadi::sum(m.m)); }
+// static inline SymbolicAdMatrix min(const SymbolicAdMatrix& m) { return SymbolicAdMatrix(casadi::min(m.m)); }
+// static inline SymbolicAdMatrix max(const SymbolicAdMatrix& m) { return SymbolicAdMatrix(casadi::max(m.m)); }
+// static inline SymbolicAdMatrix mean(const SymbolicAdMatrix& m) { return SymbolicAdMatrix(casadi::mean(m.m)); }
+// static inline SymbolicAdMatrix trace(const SymbolicAdMatrix& m) { return SymbolicAdMatrix(casadi::trace(m.m)); }
+// static inline SymbolicAdMatrix prod(const SymbolicAdMatrix& m) { return SymbolicAdMatrix(casadi::prod(m.m)); }
+//
+// static inline SymbolicAdMatrix reshape(const SymbolicAdMatrix& m, const Integer rows, const Integer cols) {
+//   return SymbolicAdMatrix(casadi::reshape(m.m, rows, cols));
+// }
+// static inline SymbolicAdMatrix transpose(const SymbolicAdMatrix& m) {
+//   return SymbolicAdMatrix(casadi::transpose(m.m));
+// }
+// static inline SymbolicAdMatrix block(const SymbolicAdMatrix& m, const Integer i, const Integer j, const Integer k, const Integer l) {
+//   return SymbolicAdMatrix(casadi::block(m.m, i, j, k, l));
+// }
+// static inline SymbolicAdMatrix slice(const SymbolicAdMatrix& m, const Integer i, const Integer k) {
+//   return SymbolicAdMatrix(casadi::slice(m.m, i, k));
+// }
+//
+// static inline SymbolicAdMatrix ctimes(const SymbolicAdMatrix& m1, const SymbolicAdMatrix& m2) { return SymbolicAdMatrix(casadi::ctimes(m1.m, m2.m)); }
+// static inline SymbolicAdMatrix cplus(const SymbolicAdMatrix& m1, const SymbolicAdMatrix& m2) { return SymbolicAdMatrix(casadi::cplus(m1.m, m2.m)); }
+// static inline SymbolicAdMatrix cdiv(const SymbolicAdMatrix& m1, const SymbolicAdMatrix& m2) { return SymbolicAdMatrix(casadi::cdiv(m1.m, m2.m)); }
+// static inline SymbolicAdMatrix cminus(const SymbolicAdMatrix& m1, const SymbolicAdMatrix& m2) { return SymbolicAdMatrix(casadi::cminus(m1.m, m2.m)); }
+//
+// static inline SymbolicAdMatrix times(const SymbolicAdMatrix& m1, const SymbolicAdMatrix& m2) { return SymbolicAdMatrix(casadi::times(m1.m, m2.m)); }
+// static inline SymbolicAdMatrix cross(const SymbolicAdMatrix& m1, const SymbolicAdMatrix& m2) { return SymbolicAdMatrix(casadi::cross(m1.m, m2.m)); }
+// static inline SymbolicAdMatrix dot(const SymbolicAdMatrix& m1, const SymbolicAdMatrix& m2) { return SymbolicAdMatrix(casadi::dot(m1.m, m2.m)); }
 
 // Member functions (calling the static functions above)
 inline SymbolicAdMatrix SymbolicAdMatrix::uplus() { return ocl::uplus(*this); }
@@ -149,33 +154,33 @@ inline SymbolicAdMatrix SymbolicAdMatrix::pow(const Scalar exponent) {
   return ocl::pow(*this, exponent);
 }
 
-inline SymbolicAdMatrix SymbolicAdMatrix::norm() { return ocl::norm(*this); }
-inline SymbolicAdMatrix SymbolicAdMatrix::sum() { return ocl::sum(*this); }
-inline SymbolicAdMatrix SymbolicAdMatrix::min() { return ocl::min(*this); }
-inline SymbolicAdMatrix SymbolicAdMatrix::max() { return ocl::max(*this); }
-inline SymbolicAdMatrix SymbolicAdMatrix::mean() { return ocl::mean(*this); }
-inline SymbolicAdMatrix SymbolicAdMatrix::trace() { return ocl::trace(*this); }
-inline SymbolicAdMatrix SymbolicAdMatrix::prod() { return ocl::prod(*this); }
-
-inline SymbolicAdMatrix SymbolicAdMatrix::reshape(const Integer rows, const Integer cols) {
-  return ocl::reshape(*this, rows, cols);
-}
-inline SymbolicAdMatrix SymbolicAdMatrix::transpose() { return ocl::transpose(*this); }
-inline SymbolicAdMatrix SymbolicAdMatrix::block(const Integer i, const Integer j, const Integer k, const Integer l) {
-  return ocl::block(*this, i, j, k, l);
-}
-inline SymbolicAdMatrix SymbolicAdMatrix::slice(const Integer i, const Integer k) {
-  return ocl::slice(*this, i, k);
-}
-
-inline SymbolicAdMatrix SymbolicAdMatrix::ctimes(const SymbolicAdMatrix& other) { return ocl::ctimes(*this, other); }
-inline SymbolicAdMatrix SymbolicAdMatrix::cplus(const SymbolicAdMatrix& other) { return ocl::cplus(*this, other); }
-inline SymbolicAdMatrix SymbolicAdMatrix::cdiv(const SymbolicAdMatrix& other) { return ocl::cdiv(*this, other); }
-inline SymbolicAdMatrix SymbolicAdMatrix::cminus(const SymbolicAdMatrix& other) { return ocl::cminus(*this, other); }
-
-inline SymbolicAdMatrix SymbolicAdMatrix::times(const SymbolicAdMatrix& other) { return ocl::times(*this, other); }
-inline SymbolicAdMatrix SymbolicAdMatrix::cross(const SymbolicAdMatrix& other) { return ocl::cross(*this, other); }
-inline SymbolicAdMatrix SymbolicAdMatrix::dot(const SymbolicAdMatrix& other) { return ocl::dot(*this, other); }
+// inline SymbolicAdMatrix SymbolicAdMatrix::norm() { return ocl::norm(*this); }
+// inline SymbolicAdMatrix SymbolicAdMatrix::sum() { return ocl::sum(*this); }
+// inline SymbolicAdMatrix SymbolicAdMatrix::min() { return ocl::min(*this); }
+// inline SymbolicAdMatrix SymbolicAdMatrix::max() { return ocl::max(*this); }
+// inline SymbolicAdMatrix SymbolicAdMatrix::mean() { return ocl::mean(*this); }
+// inline SymbolicAdMatrix SymbolicAdMatrix::trace() { return ocl::trace(*this); }
+// inline SymbolicAdMatrix SymbolicAdMatrix::prod() { return ocl::prod(*this); }
+//
+// inline SymbolicAdMatrix SymbolicAdMatrix::reshape(const Integer rows, const Integer cols) {
+//   return ocl::reshape(*this, rows, cols);
+// }
+// inline SymbolicAdMatrix SymbolicAdMatrix::transpose() { return ocl::transpose(*this); }
+// inline SymbolicAdMatrix SymbolicAdMatrix::block(const Integer i, const Integer j, const Integer k, const Integer l) {
+//   return ocl::block(*this, i, j, k, l);
+// }
+// inline SymbolicAdMatrix SymbolicAdMatrix::slice(const Integer i, const Integer k) {
+//   return ocl::slice(*this, i, k);
+// }
+//
+// inline SymbolicAdMatrix SymbolicAdMatrix::ctimes(const SymbolicAdMatrix& other) { return ocl::ctimes(*this, other); }
+// inline SymbolicAdMatrix SymbolicAdMatrix::cplus(const SymbolicAdMatrix& other) { return ocl::cplus(*this, other); }
+// inline SymbolicAdMatrix SymbolicAdMatrix::cdiv(const SymbolicAdMatrix& other) { return ocl::cdiv(*this, other); }
+// inline SymbolicAdMatrix SymbolicAdMatrix::cminus(const SymbolicAdMatrix& other) { return ocl::cminus(*this, other); }
+//
+// inline SymbolicAdMatrix SymbolicAdMatrix::times(const SymbolicAdMatrix& other) { return ocl::times(*this, other); }
+// inline SymbolicAdMatrix SymbolicAdMatrix::cross(const SymbolicAdMatrix& other) { return ocl::cross(*this, other); }
+// inline SymbolicAdMatrix SymbolicAdMatrix::dot(const SymbolicAdMatrix& other) { return ocl::dot(*this, other); }
 
 }
 #endif // OCLCPP_OCL_SYMBOLIC_AD_MATRIX_H_
