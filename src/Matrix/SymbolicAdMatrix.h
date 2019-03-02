@@ -33,22 +33,24 @@ public:
   static inline CasadiMatrixNat uplus(const CasadiMatrixNat& m) { return m; }
   static inline CasadiMatrixNat uminus(const CasadiMatrixNat& m) { return -m; }
   static inline CasadiMatrixNat square(const CasadiMatrixNat& m) { return casadi::sq(m); }
-  static inline CasadiMatrixNat m_inverse(const CasadiMatrixNat& m) { return inv(m); }
-  static inline CasadiMatrixNat m_abs(const CasadiMatrixNat& m) { return abs(m); }
-  static inline CasadiMatrixNat m_sqrt(const CasadiMatrixNat& m) { return sqrt(m); }
-  static inline CasadiMatrixNat m_sin(const CasadiMatrixNat& m) { return sin(m); }
-  static inline CasadiMatrixNat m_cos(const CasadiMatrixNat& m) { return cos(m); }
-  static inline CasadiMatrixNat m_tan(const CasadiMatrixNat& m) { return tan(m); }
-  static inline CasadiMatrixNat m_atan(const CasadiMatrixNat& m) { return atan(m); }
-  static inline CasadiMatrixNat m_asin(const CasadiMatrixNat& m) { return asin(m); }
-  static inline CasadiMatrixNat m_acos(const CasadiMatrixNat& m) { return acos(m); }
-  static inline CasadiMatrixNat m_tanh(const CasadiMatrixNat& m) { return tanh(m); }
-  static inline CasadiMatrixNat m_sinh(const CasadiMatrixNat& m) { return sinh(m); }
-  static inline CasadiMatrixNat m_cosh(const CasadiMatrixNat& m) { return cosh(m); }
-  static inline CasadiMatrixNat m_exp(const CasadiMatrixNat& m) { return exp(m); }
-  static inline CasadiMatrixNat m_log(const CasadiMatrixNat& m) { return log(m); }
+  static inline CasadiMatrixNat inverse(const CasadiMatrixNat& m) { return CasadiMatrixNat::inv(m); }
+  static inline CasadiMatrixNat abs(const CasadiMatrixNat& m) { return CasadiMatrixNat::abs(m); }
+  static inline CasadiMatrixNat sqrt(const CasadiMatrixNat& m) { return CasadiMatrixNat::sqrt(m); }
+  static inline CasadiMatrixNat sin(const CasadiMatrixNat& m) { return CasadiMatrixNat::sin(m); }
+  static inline CasadiMatrixNat cos(const CasadiMatrixNat& m) { return CasadiMatrixNat::cos(m); }
+  static inline CasadiMatrixNat tan(const CasadiMatrixNat& m) { return CasadiMatrixNat::tan(m); }
+  static inline CasadiMatrixNat atan(const CasadiMatrixNat& m) { return CasadiMatrixNat::atan(m); }
+  static inline CasadiMatrixNat asin(const CasadiMatrixNat& m) { return CasadiMatrixNat::asin(m); }
+  static inline CasadiMatrixNat acos(const CasadiMatrixNat& m) { return CasadiMatrixNat::acos(m); }
+  static inline CasadiMatrixNat tanh(const CasadiMatrixNat& m) { return CasadiMatrixNat::tanh(m); }
+  static inline CasadiMatrixNat sinh(const CasadiMatrixNat& m) { return CasadiMatrixNat::sinh(m); }
+  static inline CasadiMatrixNat cosh(const CasadiMatrixNat& m) { return CasadiMatrixNat::cosh(m); }
+  static inline CasadiMatrixNat exp(const CasadiMatrixNat& m) { return CasadiMatrixNat::exp(m); }
+  static inline CasadiMatrixNat log(const CasadiMatrixNat& m) { return CasadiMatrixNat::log(m); }
 
-  static inline CasadiMatrixNat m_pow(const CasadiMatrixNat& m, const CasadiScalar exponent) { return pow(m, exponent); }
+  static inline CasadiMatrixNat pow(const CasadiMatrixNat& m, const CasadiScalar exponent) {
+    return CasadiMatrixNat::pow(m, exponent);
+  }
 
   static SymbolicAdMatrix Sym(int rows, int cols) {
     CasadiMatrixNat m = CasadiMatrixNat::sym("m", rows, cols);

@@ -27,8 +27,8 @@
 
 #include "typedefs.h"
 #include "exceptions.h"
-#include "NumericMatrix.h"
-#include "SymbolicAdMatrix.h"
+#include "Matrix/NumericMatrix.h"
+#include "Matrix/SymbolicAdMatrix.h"
 
 
 namespace ocl
@@ -66,20 +66,13 @@ class Tensor
   // Returns the underlying value
   std::vector<M> value();
 
-  // Return a string representation
-  // std::string str()
-  // {
-  //   for (unsigned int i=0, i < data.size(); i++) {
-  //     std::cout << someString << "\n";
-  //   }
-  //
-  // }
-
   void disp()
   {
+    std::cout << "{" << std::endl;
     for (unsigned int i=0; i < data.size(); i++) {
-      std::cout << data[i].m << std::endl;
+      std::cout << data[i].m << std::endl << std::endl;
     }
+    std::cout << "}" << std::endl;
   }
 
   // Sets a value, supports broadcasting

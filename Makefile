@@ -27,6 +27,8 @@ CXXFLAGS += -g -Wall -Wextra -std=c++14 -Wno-ignored-attributes -Wfatal-errors
 INCLUDES_EIGEN = -I $(EXTERN)/eigen
 INCLUDES = -I$(SRC) -I$(INCLUDE)  $(INCLUDES_EIGEN) -I$(CASADI)
 
+COMMON_HEADERS = $(SRC)/exceptions.h $(SRC)/typedefs.h
+
 GTEST_STATIC = $(GTEST_LIB)/libgtest.a
 
 LIB_O = $(OBJ)/NumericMatrix.o $(OBJ)/Tensor.o
@@ -57,13 +59,13 @@ $(GTEST_LIB)/libgtest_main.a : $(OBJ)/gtest-all.o $(OBJ)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
 # builds Eigen Tensor
-$(OBJ)/NumericMatrix.o : $(SRC)/NumericMatrix.cc
+$(OBJ)/NumericMatrix.o : $(SRC)/Matrix/NumericMatrix.cc $(SRC)/Matrix/NumericMatrix.h $(SRC)/Matrix/eigen.h $(COMMON_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJ)/Tensor.o : $(SRC)/Tensor.cc $(SRC)/Tensor.h
+$(OBJ)/Tensor.o : $(SRC)/Tensor.cc $(SRC)/Tensor.h $(SRC)/Matrix/NumericMatrix.h $(SRC)/Matrix/SymbolicAdMatrix.h $(COMMON_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJ)/testTensor.o : $(TEST)/testTensor.cc
+$(OBJ)/testTensor.o : $(TEST)/testTensor.cc $(COMMON_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 $(BIN)/testTensor : $(OBJ)/NumericMatrix.o $(OBJ)/Tensor.o $(OBJ)/testTensor.o
