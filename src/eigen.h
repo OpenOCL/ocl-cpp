@@ -16,6 +16,8 @@
 #ifndef OCL_EIGEN_H_
 #define OCL_EIGEN_H_
 
+#include <Eigen/Dense>
+
 namespace ocl {
 
 typedef float Scalar;

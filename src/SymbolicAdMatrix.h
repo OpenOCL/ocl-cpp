@@ -50,9 +50,12 @@ public:
 
   static inline CasadiMatrixNat m_pow(const CasadiMatrixNat& m, const CasadiScalar exponent) { return pow(m, exponent); }
 
-  static SymbolicAdMatrix Zero(int rows, int cols) {
-    return SymbolicAdMatrix();
+  static SymbolicAdMatrix Sym(int rows, int cols) {
+    CasadiMatrixNat m = CasadiMatrixNat::sym("m", rows, cols);
+    return SymbolicAdMatrix(m);
   }
+
+  SymbolicAdMatrix(CasadiMatrixNat m) : m(m) { }
 
   CasadiMatrixNat m;
 

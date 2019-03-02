@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include "Tensor.h"
-#include "NumericMatrix.h"
 #include "SymbolicAdMatrix.h"
 
 
@@ -11,8 +10,10 @@ TEST(testGeneralTensor, Constructor) {
 
   ocl::Tensor<ocl::SymbolicAdMatrix> b = ocl::Tensor<ocl::SymbolicAdMatrix>(4,3);
 
-  //ocl::cos(a);
-  //a.cos();
+  ocl::cos(a).disp();
+  a.cos().disp();
+
+  b.disp();
 
   auto c = ocl::Tensor<ocl::NumericMatrix>(4,3);
 

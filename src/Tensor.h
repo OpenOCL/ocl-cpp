@@ -20,12 +20,15 @@
 #include <functional>
 #include <algorithm>
 #include <vector>
+#include <string>
+#include <iostream>
 
 #include <Eigen/Geometry>
 
 #include "typedefs.h"
 #include "exceptions.h"
 #include "NumericMatrix.h"
+#include "SymbolicAdMatrix.h"
 
 
 namespace ocl
@@ -49,8 +52,6 @@ class Tensor
 
  public:
 
-
-
   // static constructors
   static T FromMatrix(const M& mat) {
     T t = T();
@@ -59,14 +60,27 @@ class Tensor
   }
 
   // Constructor
-  Tensor<M>(Eigen::Index rows, Eigen::Index cols) : data(1, M::Zero(rows,cols)) { }
+  Tensor<M>(Eigen::Index rows, Eigen::Index cols);
   Tensor<M>() { }
 
   // Returns the underlying value
   std::vector<M> value();
 
   // Return a string representation
-  std::string str();
+  // std::string str()
+  // {
+  //   for (unsigned int i=0, i < data.size(); i++) {
+  //     std::cout << someString << "\n";
+  //   }
+  //
+  // }
+
+  void disp()
+  {
+    for (unsigned int i=0; i < data.size(); i++) {
+      std::cout << data[i].m << std::endl;
+    }
+  }
 
   // Sets a value, supports broadcasting
   // void set(std::initializer_list<std::initializer_list<double> > values) { tensor.setValues(values); }
@@ -148,28 +162,27 @@ class Tensor
     return t;
   }
 
-
   //
   // Define tensor operations
 
   // operators - unary element wise
-  T uplus() const { return unaryVecOperation(&M::uplus); }
-  T uminus() const { return unaryVecOperation(&M::uminus); }
-  T square() const { return unaryVecOperation(&M::square); }
-  T inverse() const { return unaryVecOperation(&M::inverse); }
-  T abs() const { return unaryVecOperation(&M::abs); }
-  T sqrt() const { return unaryVecOperation(&M::sqrt); }
-  T sin() const { return unaryVecOperation(&M::sin); }
-  T cos() const { return cos(*this); }
-  T tan() const { return unaryVecOperation(&M::tan); }
-  T atan() const { return unaryVecOperation(&M::atan); }
-  T asin() const { return unaryVecOperation(&M::asin); }
-  T acos() const { return unaryVecOperation(&M::acos); }
-  T tanh() const { return unaryVecOperation(&M::tanh); }
-  T cosh() const { return unaryVecOperation(&M::cosh); }
-  T sinh() const { return unaryVecOperation(&M::sinh); }
-  T exp() const { return unaryVecOperation(&M::exp); }
-  T log() const { return unaryVecOperation(&M::log); }
+  T uplus() const { return unaryVecOperation(&ocl::uplus); }
+  T uminus() const { return unaryVecOperation(&ocl::uminus); }
+  T square() const { return unaryVecOperation(&ocl::square); }
+  T inverse() const { return unaryVecOperation(&ocl::inverse); }
+  T abs() const { return unaryVecOperation(&ocl::abs); }
+  T sqrt() const { return unaryVecOperation(&ocl::sqrt); }
+  T sin() const { return unaryVecOperation(&ocl::sin); }
+  T cos() const { return ocl::cos(*this); }
+  T tan() const { return unaryVecOperation(&ocl::tan); }
+  T atan() const { return unaryVecOperation(&ocl::atan); }
+  T asin() const { return unaryVecOperation(&ocl::asin); }
+  T acos() const { return unaryVecOperation(&ocl::acos); }
+  T tanh() const { return unaryVecOperation(&ocl::tanh); }
+  T cosh() const { return unaryVecOperation(&ocl::cosh); }
+  T sinh() const { return unaryVecOperation(&ocl::sinh); }
+  T exp() const { return unaryVecOperation(&ocl::exp); }
+  T log() const { return unaryVecOperation(&ocl::log); }
 
   // operators - unary element wise + scalar
   T pow(M exponent) const {
@@ -232,9 +245,14 @@ class Tensor
 
 }; // class Tensor<M>
 
-template<class M>
-static inline Tensor<M> cos(const Tensor<M>& t) { return Tensor<M>::unaryVecOperation(t, &M::cos); }
+template<>
+inline Tensor<NumericMatrix>::Tensor(Eigen::Index rows, Eigen::Index cols) : data(1, NumericMatrix::Zero(rows,cols)) { }
 
+template<>
+inline Tensor<SymbolicAdMatrix>::Tensor(Eigen::Index rows, Eigen::Index cols) : data(1, SymbolicAdMatrix::Sym(rows,cols)) { }
+
+template<class M>
+static inline Tensor<M> cos(const Tensor<M>& t) { return Tensor<M>::unaryVecOperation(t, &ocl::cos); }
 
 } // namespace ocl
 #endif  // OCLCPP_OCL_EIGENTENSOR_H_
