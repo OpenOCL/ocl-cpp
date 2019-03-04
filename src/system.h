@@ -22,7 +22,7 @@ class NumericVector {
 
 }
 
-class SystemBuilder {
+class SystemHandler {
 
 public:
   void addState(const std::string& id, const Shape& shape = {1,1},
@@ -85,13 +85,13 @@ public:
       : states_struct(states_struct), algvars_struct(algvars_struct),
         controls_struct(controls_struct), parameters_struct(parameters_struct)
 
-    SystemBuilder sb;
-    variables.eval(sb);
+    SystemHandler sh;
+    variables.eval(sh);
 
-    states_struct = sb.getStatesStruct();
-    algvars_struct = sb.getAlgvarsStruct();
-    controls_struct = sb.getControlsStruct();
-    parameters_struct = sb.getParametersStruct();
+    states_struct = sh.getStatesStruct();
+    algvars_struct = sh.getAlgvarsStruct();
+    controls_struct = sh.getControlsStruct();
+    parameters_struct = sh.getParametersStruct();
 
     int sx = statesStruct.size();
     int sz = algVarsStruct.size();
