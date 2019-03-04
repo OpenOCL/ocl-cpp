@@ -23,6 +23,16 @@ class OcpHandler
 
 }
 
+class CostsHandler
+{
+
+}
+
+class ConstraintHandler
+{
+
+}
+
 class OCP
 {
 public:
@@ -67,22 +77,22 @@ public:
 
   CostTerm evalPathConstraints(const NumericVector& states, const NumericVector& parameters)
   {
-    CostHandler ch;
+    ConstraintHandler ch;
     x = TreeTensor.create(states_struct, states);
     p = TreeTensor.create(parameters_struct, parameters);
     path_constraints_fcn.eval(ch, x, p);
-    return ch.costs();
+    return ch.constraints();
   }
 
-  CostTerm evalPathConstraints(const NumericVector& states0, const NumericVector& statesF,
+  CostTerm evalBoundaryConditions(const NumericVector& states0, const NumericVector& statesF,
                                const NumericVector& parameters)
   {
-    CostHandler ch;
+    ConstraintHandler ch;
     x0 = TreeTensor.create(states_struct, states0);
     xF = TreeTensor.create(states_struct, statesF);
     p = TreeTensor.create(parameters_struct, parameters);
     boundary_conditions_fcn.eval(ch, x0, xF, p);
-    return ch.costs();
+    return ch.constraints();
   }
 
 private:
