@@ -2,8 +2,9 @@
 #include "matrix.h"
 
 
-static std::vector<mxArray*> rn_instances = {};
-static std::vector<mxArray*> st_instances = {};
+static std::vector<RootNode> rn_instances = {};
+static std::vector<StructuredTensor> st_instances = {};
+
 
 // Handle RootNode class functions
 void rnFunction(int nlhs, mxArray *plhs[],
