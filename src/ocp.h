@@ -75,7 +75,7 @@ public:
     return ch.costs();
   }
 
-  CostTerm evalPathConstraints(const NumericVector& states, const NumericVector& parameters)
+  Constraint evalPathConstraints(const NumericVector& states, const NumericVector& parameters)
   {
     ConstraintHandler ch;
     x = TreeTensor.create(states_struct, states);
@@ -84,7 +84,7 @@ public:
     return ch.constraints();
   }
 
-  CostTerm evalBoundaryConditions(const NumericVector& states0, const NumericVector& statesF,
+  Constraint evalBoundaryConditions(const NumericVector& states0, const NumericVector& statesF,
                                const NumericVector& parameters)
   {
     ConstraintHandler ch;
