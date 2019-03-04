@@ -18,12 +18,6 @@
 
 namespace ocl {
 
-  FunctionHandle path_costs;
-  FunctionHandle arrival_costs;
-  FunctionHandle path_constraints;
-  FunctionHandle boundary_conditions;
-
-
 class OcpHandler
 {
 
