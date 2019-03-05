@@ -16,7 +16,7 @@ TEST = ./test
 LIB = ./build/lib
 EXTERN = ./extern
 
-BIN = ./bin
+BIN = ./build/bin
 OBJ = ./build/obj
 
 # Set Google Test's header directory as a system directory, such that
@@ -44,7 +44,7 @@ gtest: $(GTEST_LIBS)
 clean:
 	rm -f $(TESTS) $(OBJ)/*.o
 clean-bin :
-	rm -f bin/test_tensor
+	rm -f build/bin/test_tensor
 clean-all : clean-bin
 	rm -f $(GTEST_LIBS) $(TESTS) $(OBJ)/*.o $(LIB)/*.a
 
