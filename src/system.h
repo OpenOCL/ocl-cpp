@@ -18,6 +18,10 @@
 
 namespace ocl {
 
+typedef SystemHandler SH;
+typedef ImplicitEquationsHandler IEH;
+typedef TreeTensor TT;
+
 class NumericVector {
 
 }
@@ -79,11 +83,8 @@ class System
 {
 public:
   System(const FunctionHandle variables, const FunctionHandle equations,
-         const FunctionHandle initial_conditions,
-         const RootNode& states_struct, const RootNode& algvars_struct,
-         const RootNode& controls_struct, const RootNode& parameters_struct)
-      : states_struct(states_struct), algvars_struct(algvars_struct),
-        controls_struct(controls_struct), parameters_struct(parameters_struct)
+         const FunctionHandle initial_conditions
+  {
 
     SystemHandler sh;
     variables.eval(sh);
