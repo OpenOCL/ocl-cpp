@@ -208,7 +208,6 @@ static inline Tensor binaryVecOperation(const Tensor& tensor, BinaryOpFcn fcn_pt
   }
   return t;
 }
-
 } // namespace tensor
 
 // static operator functions (calling vec operation with function pointer to Matrix functions)

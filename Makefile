@@ -8,12 +8,12 @@ CASADI = ../../Software/casadi-osx-matlabR2014b-v3.3.0/include/
 CASADI_LIB = ../../Software/casadi-osx-matlabR2014b-v3.3.0/
 
 GTEST = ../googletest/googletest
-GTEST_LIB = $(GTEST)/lib
+GTEST_LIB = ./build/lib
 
 SRC = ./src
 INCLUDE = ./include
 TEST = ./test
-LIB = ./lib
+LIB = ./build/lib
 EXTERN = ./extern
 
 BIN = ./bin
@@ -23,6 +23,8 @@ OBJ = ./build/obj
 # the compiler doesn't generate warnings in Google Test headers.
 CPPFLAGS += -isystem $(GTEST)/include -isystem $(CASADI)
 CXXFLAGS += -g -Wall -Wextra -std=c++14 -Wno-ignored-attributes -Wfatal-errors
+
+GTEST_LIBS = $(GTEST_LIB)/libgtest.a $(GTEST_LIB)/libgtest_main.a
 
 INCLUDES_EIGEN = -I $(EXTERN)/eigen
 INCLUDES = -I$(SRC) -I$(INCLUDE)  $(INCLUDES_EIGEN) -I$(CASADI)
@@ -40,7 +42,7 @@ GTEST_HEADERS = $(GTEST)/include/gtest/*.h \
 all : $(GTEST_LIBS) $(LIB_O) $(TESTS) $(BIN)/test_tensor
 gtest: $(GTEST_LIBS)
 clean:
-	rm -f $(TESTS) $(OBJ)/*.o	$(LIB)/*.a
+	rm -f $(TESTS) $(OBJ)/*.o
 clean-all :
 	rm -f $(GTEST_LIBS) $(TESTS) $(OBJ)/*.o $(LIB)/*.a $(BIN)/*
 
@@ -59,8 +61,8 @@ $(GTEST_LIB)/libgtest_main.a : $(OBJ)/gtest-all.o $(OBJ)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
 # builds Eigen Tensor
-$(OBJ)/test_tensor.o : $(TEST)/test_tensor.cc $(SRC)/tree_tensor/tensor.h $(SRC)/tree_tensor/matrix.h $(SRC)/tree_tensor/casadi.h $(COMMON_HEADERS)
+$(OBJ)/test_tensor.o : $(TEST)/test_tensor.cc $(SRC)/tree_tensor/tensor.h $(SRC)/tree_tensor/matrix.h $(SRC)/tree_tensor/casadi.h $(COMMON_HEADERS) $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 $(BIN)/test_tensor : $(OBJ)/test_tensor.o
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB) -lcasadi -lgtest_main  -lpthread $^ -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB) -lcasadi  -lgtest_main -lpthread $^ -o $@
