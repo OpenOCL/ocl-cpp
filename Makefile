@@ -43,7 +43,8 @@ all : $(GTEST_LIBS) $(LIB_O) $(TESTS) $(BIN)/test_tensor
 gtest: $(GTEST_LIBS)
 clean:
 	rm -f $(TESTS) $(OBJ)/*.o
-clean-all :
+clean-bin : 
+clean-all : clean-bin
 	rm -f $(GTEST_LIBS) $(TESTS) $(OBJ)/*.o $(LIB)/*.a $(BIN)/*
 
 
