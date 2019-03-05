@@ -47,62 +47,61 @@ static inline CasadiMatrixNat pow(const CasadiMatrixNat& m, const CasadiScalar e
   return CasadiMatrixNat::pow(m, exponent);
 }
 
-
-
 // reduction
-// static inline CasadiMatrixNat m_norm(const CasadiMatrixNat& m) { return casadi::norm2(m); }
-// static inline CasadiMatrixNat m_sum(const CasadiMatrixNat& m) { return m.sum(); }
-// static inline CasadiMatrixNat m_min(const CasadiMatrixNat& m) { return m.fmin(); }
-// static inline CasadiMatrixNat m_max(const CasadiMatrixNat& m) { return m.fmax(); }
-// static inline CasadiMatrixNat m_mean(const CasadiMatrixNat& m) { return m.mean(); }
-// static inline CasadiMatrixNat m_trace(const CasadiMatrixNat& m) { return m.trace(); }
-// static inline CasadiMatrixNat m_prod(const CasadiMatrixNat& m) { return m.prod(); }
-//
-// // geometrical
-// static inline CasadiMatrixNat m_reshape(const CasadiMatrixNat& m, CasadiInteger rows, CasadiInteger cols) {
-//   return m.reshape(rows,cols);
-// }
-// static inline CasadiMatrixNat m_transpose(const CasadiMatrixNat& m) { return m.transpose(); }
-//
-// // get block slice of cols (i:j) and rows (k:l)
-// static inline CasadiMatrixNat m_block(const CasadiMatrixNat& m, CasadiInteger i, CasadiInteger j, CasadiInteger k, CasadiInteger l) {
-//   casadi.Slice s1(i,j);
-//   casado.Slice s2(k,l);
-//   CasadiMatrixNat ret;
-//   m.get(ret, false, s1, s2)
-//   return ret;
-// }
-// // get element at (i,k)
-// static inline CasadiMatrixNat m_slice(const CasadiMatrixNat& m, CasadiInteger i, CasadiInteger k) {
-//   return m_block(m,i,i,k,k);
-// }
-//
-// // binary coefficient wise
-// static inline CasadiMatrixNat m_ctimes(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
-//   return CasadiMatrixNat::times(m1, m2);
-// }
-// static inline CasadiMatrixNat m_cplus(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
-//   return m1 + m2;
-// }
-// static inline CasadiMatrixNat m_cdiv(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
-//   return CasadiMatrixNat::mrdivide(m1,m2);
-// }
-// static inline CasadiMatrixNat m_cminus(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
-//   return m1 - m2;
-// }
-//
-// // binary operations
-// static inline CasadiMatrixNat m_times(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
-//   return CasadiMatrixNat::mtimes(m1,m2);
-// }
-//
-// static inline CasadiMatrixNat m_cross(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
-//   return CasadiMatrixNat::cross(m1, m2);
-// }
-//
-// static inline CasadiMatrixNat m_dot(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
-//   return CasadiMatrixNat::dot(m1, m2);
-// }
+static inline CasadiMatrixNat norm(const CasadiMatrixNat& m) {
+  return CasadiMatrixNat::norm_2(m);
+}
+static inline CasadiMatrixNat sum(const CasadiMatrixNat& m) { return CasadiMatrixNat::sum1(CasadiMatrixNat::sum2(m)); }
+static inline CasadiMatrixNat min(const CasadiMatrixNat& m) { return CasadiMatrixNat::mmin(m); }
+static inline CasadiMatrixNat max(const CasadiMatrixNat& m) { return CasadiMatrixNat::mmax(m); }
+static inline CasadiMatrixNat mean(const CasadiMatrixNat& m) { return sum(m)/(m.rows()*m.columns()); }
+static inline CasadiMatrixNat trace(const CasadiMatrixNat& m) { return CasadiMatrixNat::trace(m); }
+
+// geometrical
+static inline CasadiMatrixNat reshape(const CasadiMatrixNat& m, CasadiInteger rows, CasadiInteger cols) {
+  return CasadiMatrixNat::reshape(m, rows, cols);
+}
+static inline CasadiMatrixNat transpose(const CasadiMatrixNat& m) { return m.T(); }
+
+// get block slice of cols (i:j) and rows (k:l)
+static inline CasadiMatrixNat block(const CasadiMatrixNat& m, CasadiInteger i, CasadiInteger j, CasadiInteger k, CasadiInteger l) {
+  ::casadi::Slice s1(i,j);
+  ::casadi::Slice s2(k,l);
+  CasadiMatrixNat ret;
+  m.get(ret, false, s1, s2);
+  return ret;
+}
+// get element at (i,k)
+static inline CasadiMatrixNat slice(const CasadiMatrixNat& m, CasadiInteger i, CasadiInteger k) {
+  return block(m,i,i,k,k);
+}
+
+// binary coefficient wise
+static inline CasadiMatrixNat ctimes(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
+  return CasadiMatrixNat::times(m1, m2);
+}
+static inline CasadiMatrixNat cplus(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
+  return m1 + m2;
+}
+static inline CasadiMatrixNat cdiv(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
+  return CasadiMatrixNat::mrdivide(m1,m2);
+}
+static inline CasadiMatrixNat cminus(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
+  return m1 - m2;
+}
+
+// binary operations
+static inline CasadiMatrixNat times(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
+  return CasadiMatrixNat::mtimes(m1,m2);
+}
+
+static inline CasadiMatrixNat cross(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
+  return CasadiMatrixNat::cross(m1, m2);
+}
+
+static inline CasadiMatrixNat dot(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
+  return CasadiMatrixNat::dot(m1, m2);
+}
 
 }
 } // namespace ocl

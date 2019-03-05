@@ -16,7 +16,7 @@ TEST = ./test
 LIB = ./lib
 EXTERN = ./extern
 
-BIN = ./build/bin
+BIN = ./bin
 OBJ = ./build/obj
 
 # Set Google Test's header directory as a system directory, such that
@@ -31,7 +31,7 @@ COMMON_HEADERS = $(SRC)/exceptions.h $(SRC)/typedefs.h
 
 GTEST_STATIC = $(GTEST_LIB)/libgtest.a
 
-LIB_O = $(OBJ)/numeric_matrix.o $(OBJ)/tensor.o
+LIB_O =
 TESTS = $(OBJ)/test_tensor.o
 
 GTEST_HEADERS = $(GTEST)/include/gtest/*.h \
@@ -59,12 +59,8 @@ $(GTEST_LIB)/libgtest_main.a : $(OBJ)/gtest-all.o $(OBJ)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
 # builds Eigen Tensor
-
-$(OBJ)/tensor.o : $(SRC)/tensor.cc $(SRC)/tensor.h $(SRC)/matrix/numeric_matrix.h $(SRC)/matrix/symbolic_ad_matrix.h $(COMMON_HEADERS)
+$(OBJ)/test_tensor.o : $(TEST)/test_tensor.cc $(SRC)/tree_tensor/tensor.h $(SRC)/tree_tensor/matrix.h $(SRC)/tree_tensor/casadi.h $(COMMON_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJ)/test_tensor.o : $(TEST)/test_tensor.cc $(COMMON_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
-
-$(BIN)/test_tensor : $(OBJ)/numeric_matrix.o $(OBJ)/tensor.o $(OBJ)/test_tensor.o
+$(BIN)/test_tensor : $(OBJ)/test_tensor.o
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB) -lcasadi -lgtest_main  -lpthread $^ -o $@

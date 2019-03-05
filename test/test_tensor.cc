@@ -1,21 +1,19 @@
 #include <gtest/gtest.h>
 
-#include "tensor.h"
-#include "matrix/symbolic_ad_matrix.h"
+#include "tree_tensor/tensor.h"
 
 
 TEST(testGeneralTensor, Constructor) {
 
-  ocl::Tensor<ocl::NumericMatrix> a = ocl::Tensor<ocl::NumericMatrix>(4,3);
-
-  ocl::Tensor<ocl::SymbolicAdMatrix> b = ocl::Tensor<ocl::SymbolicAdMatrix>(4,3);
+  ocl::Tensor a = ocl::Tensor(4,3);
+  ocl::Tensor b = ocl::Tensor(4,3);
 
   ocl::cos(a).disp();
   a.cos().disp();
 
   b.disp();
 
-  auto c = ocl::Tensor<ocl::NumericMatrix>(4,3);
+  auto c = ocl::Tensor(4,3);
 
   //auto c = a+b;
 
@@ -24,7 +22,7 @@ TEST(testGeneralTensor, Constructor) {
 
 TEST(testEigenTensor, Constructor) {
 
-  auto T = ocl::Tensor<ocl::NumericMatrix>(4,3);
+  auto T = ocl::Tensor(4,3);
   ASSERT_EQ(6, 6);
 }
 
