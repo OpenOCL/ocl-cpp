@@ -7,7 +7,7 @@
 CASADI_INCLUDE_PATH = ${CASADI_INCLUDE}
 CASADI_LIB_PATH = ${CASADI_LIB}
 
-GTEST_PATH = ../googletest/googletest
+GTEST_PATH = $(GTEST_INCLUDE)
 GTEST_LIB = ./build/lib
 
 SRC = ./src
@@ -27,7 +27,8 @@ CXXFLAGS += -g -Wall -Wextra -std=c++11 -Wno-ignored-attributes -Wfatal-errors
 GTEST_LIBS = $(GTEST_LIB)/libgtest.a $(GTEST_LIB)/libgtest_main.a
 
 INCLUDES_EIGEN = -I $(EXTERN)/eigen
-INCLUDES = -I$(SRC) -I$(INCLUDE)  $(INCLUDES_EIGEN) -I$(CASADI_INCLUDE_PATH)
+INCLUDES = -I$(SRC) -I$(INCLUDE) \
+					 $(INCLUDES_EIGEN) -I$(CASADI_INCLUDE_PATH)
 
 COMMON_HEADERS = $(SRC)/exceptions.h $(SRC)/typedefs.h
 
