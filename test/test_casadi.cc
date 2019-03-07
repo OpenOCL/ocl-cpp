@@ -1,13 +1,13 @@
 #include <utils/test.h>
 
-#include "casadi.h"
+#include "tensor/casadi.h"
 
 
 TEST(testCasadiMatrix, ScalarOperators)
 {
   // scalar unary operations
   {
-    CasadiMatrixNat m = CasadiMatrixNat(4);
-    ocl::test::assertDoubleFullEqual( ocl::full(m), 4 );
+    ocl::CasadiMatrixNat m = ocl::CasadiMatrixNat(4);
+    ocl::test::assertEqual( ocl::casadi::full(m), {4} );
   }
 }

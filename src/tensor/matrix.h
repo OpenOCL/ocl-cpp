@@ -60,7 +60,7 @@ public:
   Matrix exp() const;
   Matrix log() const;
 
-  Matrix pow(const Scalar exponent) const;
+  Matrix cpow(const Matrix& exponent) const;
 
   Matrix norm() const;
   Matrix sum() const;
@@ -76,12 +76,17 @@ public:
 
   Matrix ctimes(const Matrix& other) const;
   Matrix plus(const Matrix& other) const;
-  Matrix cdiv(const Matrix& other) const;
+  Matrix cdivide(const Matrix& other) const;
   Matrix minus(const Matrix& other) const;
+
+  Matrix cmin(const Matrix& other) const;
+  Matrix cmax(const Matrix& other) const;
 
   Matrix times(const Matrix& other) const;
   Matrix cross(const Matrix& other) const;
   Matrix dot(const Matrix& other) const;
+
+  Matrix atan2(const Matrix& other) const;
 
 private:
   CasadiMatrixNat m;
@@ -114,7 +119,7 @@ static inline Matrix cosh(const Matrix& m) { return Matrix(casadi::cosh(m.data()
 static inline Matrix exp(const Matrix& m) { return Matrix(casadi::exp(m.data())); }
 static inline Matrix log(const Matrix& m) { return Matrix(casadi::log(m.data())); }
 
-static inline Matrix pow(const Matrix& m, const Scalar exponent) { return Matrix(casadi::pow(m.data(), exponent)); }
+static inline Matrix cpow(const Matrix& m, const Matrix& exponent) { return Matrix(casadi::cpow(m.data(), exponent.data())); }
 
 static inline Matrix norm(const Matrix& m) { return Matrix(casadi::norm(m.data())); }
 static inline Matrix sum(const Matrix& m) { return Matrix(casadi::sum(m.data())); }
@@ -138,12 +143,17 @@ static inline Matrix slice(const Matrix& m, const Integer i, const Integer k) {
 
 static inline Matrix ctimes(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::ctimes(m1.data(), m2.data())); }
 static inline Matrix plus(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::plus(m1.data(), m2.data())); }
-static inline Matrix cdiv(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::cdiv(m1.data(), m2.data())); }
+static inline Matrix cdivide(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::cdivide(m1.data(), m2.data())); }
 static inline Matrix minus(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::minus(m1.data(), m2.data())); }
+
+static inline Matrix cmin(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::cmin(m1.data(), m2.data())); }
+static inline Matrix cmax(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::cmax(m1.data(), m2.data())); }
 
 static inline Matrix times(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::times(m1.data(), m2.data())); }
 static inline Matrix cross(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::cross(m1.data(), m2.data())); }
 static inline Matrix dot(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::dot(m1.data(), m2.data())); }
+
+static inline Matrix atan2(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::atan2(m1.data(), m2.data())); }
 
 // Member functions (calling the static functions above)
 inline Matrix Matrix::uplus() const { return ocl::uplus(*this); }
@@ -164,8 +174,8 @@ inline Matrix Matrix::cosh() const { return ocl::cosh(*this); }
 inline Matrix Matrix::exp() const { return ocl::exp(*this); }
 inline Matrix Matrix::log() const { return ocl::log(*this); }
 
-inline Matrix Matrix::pow(const Scalar exponent) const {
-  return ocl::pow(*this, exponent);
+inline Matrix Matrix::cpow(const Matrix& exponent) const {
+  return ocl::cpow(*this, exponent);
 }
 
 inline Matrix Matrix::norm() const { return ocl::norm(*this); }
@@ -188,12 +198,17 @@ inline Matrix Matrix::slice(const Integer i, const Integer k) const {
 
 inline Matrix Matrix::ctimes(const Matrix& other) const { return ocl::ctimes(*this, other); }
 inline Matrix Matrix::plus(const Matrix& other) const { return ocl::plus(*this, other); }
-inline Matrix Matrix::cdiv(const Matrix& other) const { return ocl::cdiv(*this, other); }
+inline Matrix Matrix::cdivide(const Matrix& other) const { return ocl::cdivide(*this, other); }
 inline Matrix Matrix::minus(const Matrix& other) const { return ocl::minus(*this, other); }
+
+inline Matrix Matrix::cmin(const Matrix& other) const { return ocl::cmin(*this, other); }
+inline Matrix Matrix::cmax(const Matrix& other) const { return ocl::cmax(*this, other); }
 
 inline Matrix Matrix::times(const Matrix& other) const { return ocl::times(*this, other); }
 inline Matrix Matrix::cross(const Matrix& other) const { return ocl::cross(*this, other); }
 inline Matrix Matrix::dot(const Matrix& other) const { return ocl::dot(*this, other); }
+
+inline Matrix Matrix::atan2(const Matrix& other) const { return ocl::atan2(*this, other); }
 
 }
 #endif // OCLCPP_OCL_SYMBOLIC_AD_MATRIX_H_

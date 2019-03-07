@@ -23,7 +23,7 @@
 #include <string>
 #include <iostream>
 
-#include "tree_tensor/matrix.h"
+#include "tensor/matrix.h"
 #include "typedefs.h"
 #include "exceptions.h"
 
@@ -70,7 +70,7 @@ public:
     this->data.push_back(m);
   }
 
-  int length() const {
+  unsigned int length() const {
     return this->data.size();
   }
 
@@ -100,7 +100,7 @@ public:
   T log() const;
 
   // operators - unary element wise + scalar
-  T pow(Scalar exponent) const;
+  T cpow(const T& exponent) const;
 
   // reduction operations
   T norm() const;
@@ -127,10 +127,15 @@ public:
   T ctimes(const T& other) const;
   T cdivide(const T& other) const;
 
+  T cmin(const T& other) const;
+  T cmax(const T& other) const;
+
   // binary matrix operations
   T times(const T& other) const;
   T cross(const T& other) const;
   T dot(const T& other) const;
+
+  T atan2(const T& other) const;
 
   // operator overloading
   T operator+(const T& other) const;
@@ -157,7 +162,6 @@ namespace tensor
 
 // Function pointers to static functions
 typedef Matrix (*UnaryOpFcn)(const Matrix& m);
-typedef Matrix (*UnaryOpFcnWithScalar)(const Matrix& m, Scalar s);
 typedef Matrix (*UnaryOpFcnWithInteger2)(const Matrix& m, Integer s1, Integer s2);
 typedef Matrix (*UnaryOpFcnWithInteger4)(const Matrix& m, Integer s1, Integer s2, Integer s3, Integer s4);
 typedef Matrix (*UnaryReductionOpFcn)(const Matrix& m);
@@ -170,15 +174,6 @@ static inline Tensor unaryVecOperation(const Tensor& tensor, UnaryOpFcn fcn_ptr)
   Tensor t = Tensor();
   for(unsigned int i=0; i<tensor.length(); i++) {
     t.insert( fcn_ptr(tensor.get(i)) );
-  }
-  return t;
-}
-
-static inline Tensor unaryVecOperationWithScalar(const Tensor& tensor, UnaryOpFcnWithScalar fcn_ptr, Scalar s)
-{
-  Tensor t = Tensor();
-  for(unsigned int i=0; i<tensor.length(); i++) {
-    t.insert( fcn_ptr(tensor.get(i), s) );
   }
   return t;
 }
@@ -293,9 +288,9 @@ static inline Tensor log(const Tensor& t) {
   return tensor::unaryVecOperation(t, f);
 }
 
-static inline Tensor pow(const Tensor& t, const Scalar exponent) {
-  Matrix (*f)(const Matrix&, const Scalar) = &ocl::pow;
-  return tensor::unaryVecOperationWithScalar(t, f, exponent);
+static inline Tensor cpow(const Tensor& t, const Tensor& exponent) {
+  Matrix (*f)(const Matrix&, const Matrix&) = &ocl::cpow;
+  return tensor::binaryVecOperation(t, f, exponent);
 }
 
 static inline Tensor norm(const Tensor& t) {
@@ -350,12 +345,17 @@ static inline Tensor block(const Tensor& t, Integer i, Integer j, Integer k, Int
 static inline Tensor plus(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::plus, t2); }
 static inline Tensor minus(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::minus, t2); }
 static inline Tensor ctimes(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::ctimes, t2); }
-static inline Tensor cdivide(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::cdiv, t2); }
+static inline Tensor cdivide(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::cdivide, t2); }
+
+static inline Tensor cmin(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::cmin, t2); }
+static inline Tensor cmax(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::cmax, t2); }
 
 // binary matrix operations
 static inline Tensor times(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::times, t2); }
 static inline Tensor cross(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::cross, t2); }
 static inline Tensor dot(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::dot, t2); }
+
+static inline Tensor atan2(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::atan2, t2); }
 
 
 //
@@ -381,7 +381,7 @@ inline Tensor Tensor::exp() const { return ocl::exp(*this); }
 inline Tensor Tensor::log() const { return ocl::log(*this); }
 
 // operators - unary element wise + scalar
-inline Tensor Tensor::pow(const Scalar exponent) const { return ocl::pow(*this, exponent); }
+inline Tensor Tensor::cpow(const Tensor& exponent) const { return ocl::cpow(*this, exponent); }
 
 // reduction operations
 inline Tensor Tensor::norm() const { return ocl::norm(*this); }
@@ -414,10 +414,15 @@ inline Tensor Tensor::minus(const Tensor& other) const { return ocl::minus(*this
 inline Tensor Tensor::ctimes(const Tensor& other) const { return ocl::ctimes(*this, other); }
 inline Tensor Tensor::cdivide(const Tensor& other) const { return ocl::cdivide(*this, other); }
 
+inline Tensor Tensor::cmin(const Tensor& other) const { return ocl::cmin(*this, other); }
+inline Tensor Tensor::cmax(const Tensor& other) const { return ocl::cmax(*this, other); }
+
 // binary matrix operations
 inline Tensor Tensor::times(const Tensor& other) const { return ocl::times(*this, other); }
 inline Tensor Tensor::cross(const Tensor& other) const { return ocl::cross(*this, other); }
 inline Tensor Tensor::dot(const Tensor& other) const { return ocl::dot(*this, other); }
+
+inline Tensor Tensor::atan2(const Tensor& other) const { return ocl::atan2(*this, other); }
 
 // operator overloading
 inline Tensor Tensor::operator+(const Tensor& other) const {

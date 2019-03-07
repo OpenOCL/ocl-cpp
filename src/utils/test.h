@@ -23,9 +23,14 @@ namespace ocl
 namespace test
 {
 
-void assertDoubleFullEqual(const double* v1, const double v2) {
-  ASSERT_EQ(v1[0],v2);
+void assertEqual(const std::vector<double>& v1, const std::vector<double>& v2) {
+  ASSERT_EQ(v1,v2);
 }
+
+void assertDoubleFullEqual(const std::vector<double>& v1, const double v2) {
+  assertEqual(v1,{v2});
+}
+
 
 } // namespace test
 } //namespace ocl

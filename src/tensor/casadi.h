@@ -74,7 +74,7 @@ static inline CasadiMatrixNat cosh(const CasadiMatrixNat& m) { return CasadiMatr
 static inline CasadiMatrixNat exp(const CasadiMatrixNat& m) { return CasadiMatrixNat::exp(m); }
 static inline CasadiMatrixNat log(const CasadiMatrixNat& m) { return CasadiMatrixNat::log(m); }
 
-static inline CasadiMatrixNat pow(const CasadiMatrixNat& m, const CasadiScalar exponent) {
+static inline CasadiMatrixNat cpow(const CasadiMatrixNat& m, const CasadiMatrixNat& exponent) {
   return CasadiMatrixNat::pow(m, exponent);
 }
 
@@ -114,11 +114,19 @@ static inline CasadiMatrixNat ctimes(const CasadiMatrixNat& m1, const CasadiMatr
 static inline CasadiMatrixNat plus(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
   return m1 + m2;
 }
-static inline CasadiMatrixNat cdiv(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
+static inline CasadiMatrixNat cdivide(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
   return CasadiMatrixNat::mrdivide(m1,m2);
 }
 static inline CasadiMatrixNat minus(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
   return m1 - m2;
+}
+
+static inline CasadiMatrixNat cmin(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
+  return CasadiMatrixNat::fmin(m1, m2);
+}
+
+static inline CasadiMatrixNat cmax(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
+  return CasadiMatrixNat::fmax(m1, m2);
 }
 
 // binary operations
@@ -132,6 +140,10 @@ static inline CasadiMatrixNat cross(const CasadiMatrixNat& m1, const CasadiMatri
 
 static inline CasadiMatrixNat dot(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
   return CasadiMatrixNat::dot(m1, m2);
+}
+
+static inline CasadiMatrixNat atan2(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
+  return CasadiMatrixNat::atan2(m1, m2);
 }
 
 }

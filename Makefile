@@ -25,8 +25,6 @@ EXTERN = ./extern
 BIN = ./build/bin
 OBJ = ./build/obj
 
-
-
 CPPFLAGS += -isystem $(GTEST_PATH)/include -isystem $(CASADI_INCLUDE_PATH)
 CXXFLAGS += -g -Wall -Wextra -std=c++11 -Wno-ignored-attributes -Wfatal-errors
 
@@ -42,10 +40,11 @@ GTEST_HEADERS = $(GTEST_PATH)/include/gtest/*.h \
 GTEST_SRCS_ = $(GTEST_PATH)/src/*.cc $(GTEST_PATH)/src/*.h $(GTEST_HEADERS)
 
 TESTS = $(BIN)/test_casadi $(BIN)/test_matrix $(BIN)/test_tensor
+TESTS_O = $(OBJ)/test_casadi.o $(OBJ)/test_matrix.o $(OBJ)/test_tensor.o
 COMMON_HEADERS = $(SRC)/exceptions.h $(SRC)/typedefs.h
-TENSOR_HEADERS = $(SRC)/tree_tensor/tensor.h $(SRC)/tree_tensor/matrix.h $(SRC)/tree_tensor/casadi.h
+TENSOR_HEADERS = $(SRC)/tensor/tensor.h $(SRC)/tensor/matrix.h $(SRC)/tensor/casadi.h
 
-all: $(TESTS)
+all: $(TESTS_O)
 gtest: $(GTEST_LIBS)
 clean:
 	rm -f $(TESTS) $(OBJ)/*.o
@@ -66,17 +65,7 @@ $(GTEST_LIB)/libgtest.a : $(OBJ)/gtest-all.o
 $(GTEST_LIB)/libgtest_main.a : $(OBJ)/gtest-all.o $(OBJ)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
-# binaries
-$(BIN)/test_casadi : $(OBJ)/test_casadi.o
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) -lcasadi  -lgtest_main -lpthread -o $@ $^
-
-$(BIN)/test_matrix : $(OBJ)/test_matrix.o
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) -lcasadi  -lgtest_main -lpthread -o $@ $^
-
-$(BIN)/test_tensor : $(OBJ)/test_tensor.o
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) -lcasadi  -lgtest_main -lpthread -o $@ $^
-
-# # tensor classes
+# tensor classes
 $(OBJ)/test_casadi.o : $(TEST)/test_casadi.cc $(TENSOR_HEADERS) $(COMMON_HEADERS) $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
@@ -85,3 +74,13 @@ $(OBJ)/test_matrix.o : $(TEST)/test_matrix.cc $(TENSOR_HEADERS) $(COMMON_HEADERS
 
 $(OBJ)/test_tensor.o : $(TEST)/test_tensor.cc $(TENSOR_HEADERS) $(COMMON_HEADERS) $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+# binaries
+# $(BIN)/test_casadi : $(OBJ)/test_casadi.o
+# 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) -lcasadi  -lgtest_main -lpthread -o $@ $^
+#
+# $(BIN)/test_matrix : $(OBJ)/test_matrix.o
+# 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) -lcasadi  -lgtest_main -lpthread -o $@ $^
+#
+# $(BIN)/test_tensor : $(OBJ)/test_tensor.o
+# 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) -lcasadi  -lgtest_main -lpthread -o $@ $^
