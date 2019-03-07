@@ -57,7 +57,7 @@ public:
   {
     std::cout << "{" << std::endl;
     for (unsigned int i=0; i < data.size(); i++) {
-      std::cout << this->get(i).raw() << std::endl << std::endl;
+      std::cout << this->get(i).data() << std::endl << std::endl;
     }
     std::cout << "}" << std::endl;
   }
@@ -144,7 +144,7 @@ private:
 }; // class Tensor<M>
 
 
-double* full(const Tensor& t) {
+std::vector<double> full(const Tensor& t) {
   return ocl::full(t.get(0));
 }
 

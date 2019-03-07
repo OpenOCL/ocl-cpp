@@ -16,6 +16,9 @@
 #ifndef OCL_CASADI_H_
 #define OCL_CASADI_H_
 
+#include "casadi/casadi.hpp"
+#include "typedefs.h"
+
 namespace ocl
 {
 typedef casadi::SX CasadiMatrixNat; // native casadi type
@@ -24,6 +27,34 @@ typedef int CasadiInteger;
 
 namespace casadi
 {
+
+//
+// data access functions
+
+
+static inline Shape shape(const CasadiMatrixNat& m)
+{
+  return Shape({m.rows(), m.columns()});
+}
+
+static inline std::vector<double> full(const CasadiMatrixNat& m)
+{
+
+  std::string name = "f";
+  ::casadi::Function f = ::casadi::Function(name, {}, {m});
+  std::vector< ::casadi::DM > dm_out;
+  f.call({},dm_out);
+
+  ::casadi::DM d = dm_out[0];
+
+  double *data = d.ptr();
+  int nel = shape(m).numel();
+  std::vector<double> values(data, data + nel);
+  return values;
+}
+
+
+
 // native casadi type operations
 static inline CasadiMatrixNat uplus(const CasadiMatrixNat& m) { return m; }
 static inline CasadiMatrixNat uminus(const CasadiMatrixNat& m) { return -m; }

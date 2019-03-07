@@ -1,6 +1,6 @@
 # ocl-cpp
 
-## C-code compilation
+## C++-code compilation
 
 You can create a bash script `compile.sh` which will be ignored by git for your personal configuration, with the content along the lines of:
 ```bash
@@ -11,7 +11,7 @@ make
 ```
 where `INCLUDE` are the directories with the header files (`.h`) and LIB are the directories containing shared/static library files (`.a`, `.so`, `.dylib`).
 
-e.g.
+For example:
 ```bash
 export CASADI_INCLUDE=../../Software/casadi-osx-matlabR2014b-v3.3.0/include
 export CASADI_LIB=../../Software/casadi-osx-matlabR2014b-v3.3.0/

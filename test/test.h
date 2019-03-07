@@ -13,36 +13,20 @@
  *    General Public License for more details.
  *
  */
-#ifndef OCLCPP_OCL_TYPEDEFS_H_
-#define OCLCPP_OCL_TYPEDEFS_H_
+#ifndef OCL_TEST_H_
+#define OCL_TEST_H_
+
+#include <gtest/gtest.h>
 
 namespace ocl
 {
-typedef float Scalar;
-typedef int Integer;
-typedef std::vector<int> IndizesArray;
-typedef std::string String;
-
-class Shape
+namespace test
 {
-public:
-  Shape(std::initializer_list<int> s) :s(s) { }
 
-  int get(int i) {
-    return s[i];
-  }
-
-  int numel() {
-    int r = 0;
-    for (unsigned int i=0;i<s.size();i++) {
-      r *= s[i];
-    }
-    return r;
-  }
-
-private:
-  const std::vector<int> s;
-};
-
+void assertDoubleFullEqual(const double* v1, const double v2) {
+  ASSERT_EQ(v1[0],v2);
 }
-#endif // OCLCPP_OCL_TYPEDEFS_H_
+
+} // namespace test
+} //namespace ocl
+#endif // OCL_TEST_H_

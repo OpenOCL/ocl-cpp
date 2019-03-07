@@ -25,8 +25,8 @@ EXTERN = ./extern
 BIN = ./build/bin
 OBJ = ./build/obj
 
-# Set Google Test's header directory as a system directory, such that
-# the compiler doesn't generate warnings in Google Test headers.
+
+
 CPPFLAGS += -isystem $(GTEST_PATH)/include -isystem $(CASADI_INCLUDE_PATH)
 CXXFLAGS += -g -Wall -Wextra -std=c++11 -Wno-ignored-attributes -Wfatal-errors
 
@@ -36,18 +36,16 @@ INCLUDES_EIGEN = -I $(EXTERN)/eigen
 INCLUDES = -I$(SRC) -I$(INCLUDE) \
 					 $(INCLUDES_EIGEN) -I$(CASADI_INCLUDE_PATH)
 
-COMMON_HEADERS = $(SRC)/exceptions.h $(SRC)/typedefs.h
-
 GTEST_STATIC = $(GTEST_LIB)/libgtest.a
-
-LIB_O =
-TESTS = $(OBJ)/test_tensor.o
-
 GTEST_HEADERS = $(GTEST_PATH)/include/gtest/*.h \
                 $(GTEST_PATH)/include/gtest/internal/*.h
+GTEST_SRCS_ = $(GTEST_PATH)/src/*.cc $(GTEST_PATH)/src/*.h $(GTEST_HEADERS)
 
-.PHONY: all
-all: $(GTEST_LIBS) $(LIB_O) $(TESTS) $(BIN)/test_tensor
+TESTS = $(BIN)/test_casadi $(BIN)/test_matrix $(BIN)/test_tensor
+COMMON_HEADERS = $(SRC)/exceptions.h $(SRC)/typedefs.h
+TENSOR_HEADERS = $(SRC)/tree_tensor/tensor.h $(SRC)/tree_tensor/matrix.h $(SRC)/tree_tensor/casadi.h
+
+all: $(GTEST_LIBS) $(TESTS)
 gtest: $(GTEST_LIBS)
 clean:
 	rm -f $(TESTS) $(OBJ)/*.o
@@ -56,9 +54,7 @@ clean-bin :
 clean-all : clean-bin
 	rm -f $(GTEST_LIBS) $(TESTS) $(OBJ)/*.o $(LIB)/*.a
 
-
-# Builds gtest.a and gtest_main.a.
-GTEST_SRCS_ = $(GTEST_PATH)/src/*.cc $(GTEST_PATH)/src/*.h $(GTEST_HEADERS)
+# Rules for gtest.a and gtest_main.a.
 $(OBJ)/gtest-all.o : $(GTEST_SRCS_)
 	$(CXX) $(CPPFLAGS) -I$(GTEST_PATH) $(CXXFLAGS) -c \
             $(GTEST_PATH)/src/gtest-all.cc -o $@
@@ -70,9 +66,22 @@ $(GTEST_LIB)/libgtest.a : $(OBJ)/gtest-all.o
 $(GTEST_LIB)/libgtest_main.a : $(OBJ)/gtest-all.o $(OBJ)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
-# builds Eigen Tensor
-$(OBJ)/test_tensor.o : $(TEST)/test_tensor.cc $(SRC)/tree_tensor/tensor.h $(SRC)/tree_tensor/matrix.h $(SRC)/tree_tensor/casadi.h $(COMMON_HEADERS) $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+# binaries
+$(BIN)/test_casadi : $(OBJ)/test_casadi.o
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) -lcasadi  -lgtest_main -lpthread -o $@ $^
+
+$(BIN)/test_matrix : $(OBJ)/test_matrix.o
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) -lcasadi  -lgtest_main -lpthread -o $@ $^
 
 $(BIN)/test_tensor : $(OBJ)/test_tensor.o
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) -lcasadi  -lgtest_main -lpthread $^ -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) -lcasadi  -lgtest_main -lpthread -o $@ $^
+
+# # tensor classes
+$(OBJ)/test_casadi.o : $(TEST)/test_casadi.cc $(TENSOR_HEADERS) $(COMMON_HEADERS) $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJ)/test_matrix.o : $(TEST)/test_matrix.cc $(TENSOR_HEADERS) $(COMMON_HEADERS) $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJ)/test_tensor.o : $(TEST)/test_tensor.cc $(TENSOR_HEADERS) $(COMMON_HEADERS) $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@

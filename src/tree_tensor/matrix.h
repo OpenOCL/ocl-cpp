@@ -16,9 +16,8 @@
 #ifndef OCLCPP_OCL_SYMBOLIC_AD_MATRIX_H_
 #define OCLCPP_OCL_SYMBOLIC_AD_MATRIX_H_
 
-#include "casadi/casadi.hpp"
-#include "casadi.h"
 
+#include "casadi.h"
 #include "typedefs.h"
 
 namespace ocl
@@ -89,14 +88,11 @@ private:
 };
 
 static inline Shape shape(const Matrix& m) {
-  return Shape({m.data().rows(), m.data().columns()});
+  return casadi::shape(m.data());
 }
 
 static inline std::vector<double> full(const Matrix& m) {
-  double *data = m.data().ptr();
-  int nel = m.shape().numel();
-  vector<double> values(data, data + nel);
-  return value;
+  return casadi::full(m.data());
 }
 
 // Static functions
@@ -150,54 +146,54 @@ static inline Matrix cross(const Matrix& m1, const Matrix& m2) { return Matrix(c
 static inline Matrix dot(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::dot(m1.data(), m2.data())); }
 
 // Member functions (calling the static functions above)
-inline Matrix Matrix::uplus() { return ocl::uplus(*this); }
-inline Matrix Matrix::uminus() { return ocl::uminus(*this); }
-inline Matrix Matrix::square() { return ocl::square(*this); }
-inline Matrix Matrix::inverse() { return ocl::inverse(*this); }
-inline Matrix Matrix::abs() { return ocl::abs(*this); }
-inline Matrix Matrix::sqrt() { return ocl::sqrt(*this); }
-inline Matrix Matrix::sin() { return ocl::sin(*this); }
-inline Matrix Matrix::cos() { return ocl::cos(*this); }
-inline Matrix Matrix::tan() { return ocl::tan(*this); }
-inline Matrix Matrix::atan() { return ocl::atan(*this); }
-inline Matrix Matrix::asin() { return ocl::asin(*this); }
-inline Matrix Matrix::acos() { return ocl::acos(*this); }
-inline Matrix Matrix::tanh() { return ocl::tanh(*this); }
-inline Matrix Matrix::sinh() { return ocl::sinh(*this); }
-inline Matrix Matrix::cosh() { return ocl::cosh(*this); }
-inline Matrix Matrix::exp() { return ocl::exp(*this); }
-inline Matrix Matrix::log() { return ocl::log(*this); }
+inline Matrix Matrix::uplus() const { return ocl::uplus(*this); }
+inline Matrix Matrix::uminus() const { return ocl::uminus(*this); }
+inline Matrix Matrix::square() const { return ocl::square(*this); }
+inline Matrix Matrix::inverse() const { return ocl::inverse(*this); }
+inline Matrix Matrix::abs() const { return ocl::abs(*this); }
+inline Matrix Matrix::sqrt() const { return ocl::sqrt(*this); }
+inline Matrix Matrix::sin() const { return ocl::sin(*this); }
+inline Matrix Matrix::cos() const { return ocl::cos(*this); }
+inline Matrix Matrix::tan() const { return ocl::tan(*this); }
+inline Matrix Matrix::atan() const { return ocl::atan(*this); }
+inline Matrix Matrix::asin() const { return ocl::asin(*this); }
+inline Matrix Matrix::acos() const { return ocl::acos(*this); }
+inline Matrix Matrix::tanh() const { return ocl::tanh(*this); }
+inline Matrix Matrix::sinh() const { return ocl::sinh(*this); }
+inline Matrix Matrix::cosh() const { return ocl::cosh(*this); }
+inline Matrix Matrix::exp() const { return ocl::exp(*this); }
+inline Matrix Matrix::log() const { return ocl::log(*this); }
 
-inline Matrix Matrix::pow(const Scalar exponent) {
+inline Matrix Matrix::pow(const Scalar exponent) const {
   return ocl::pow(*this, exponent);
 }
 
-inline Matrix Matrix::norm() { return ocl::norm(*this); }
-inline Matrix Matrix::sum() { return ocl::sum(*this); }
-inline Matrix Matrix::min() { return ocl::min(*this); }
-inline Matrix Matrix::max() { return ocl::max(*this); }
-inline Matrix Matrix::mean() { return ocl::mean(*this); }
-inline Matrix Matrix::trace() { return ocl::trace(*this); }
+inline Matrix Matrix::norm() const { return ocl::norm(*this); }
+inline Matrix Matrix::sum() const { return ocl::sum(*this); }
+inline Matrix Matrix::min() const { return ocl::min(*this); }
+inline Matrix Matrix::max() const { return ocl::max(*this); }
+inline Matrix Matrix::mean() const { return ocl::mean(*this); }
+inline Matrix Matrix::trace() const { return ocl::trace(*this); }
 
-inline Matrix Matrix::reshape(const Integer rows, const Integer cols) {
+inline Matrix Matrix::reshape(const Integer rows, const Integer cols) const {
   return ocl::reshape(*this, rows, cols);
 }
-inline Matrix Matrix::transpose() { return ocl::transpose(*this); }
-inline Matrix Matrix::block(const Integer i, const Integer j, const Integer k, const Integer l) {
+inline Matrix Matrix::transpose() const { return ocl::transpose(*this); }
+inline Matrix Matrix::block(const Integer i, const Integer j, const Integer k, const Integer l) const {
   return ocl::block(*this, i, j, k, l);
 }
-inline Matrix Matrix::slice(const Integer i, const Integer k) {
+inline Matrix Matrix::slice(const Integer i, const Integer k) const {
   return ocl::slice(*this, i, k);
 }
 
-inline Matrix Matrix::ctimes(const Matrix& other) { return ocl::ctimes(*this, other); }
-inline Matrix Matrix::plus(const Matrix& other) { return ocl::plus(*this, other); }
-inline Matrix Matrix::cdiv(const Matrix& other) { return ocl::cdiv(*this, other); }
-inline Matrix Matrix::minus(const Matrix& other) { return ocl::minus(*this, other); }
+inline Matrix Matrix::ctimes(const Matrix& other) const { return ocl::ctimes(*this, other); }
+inline Matrix Matrix::plus(const Matrix& other) const { return ocl::plus(*this, other); }
+inline Matrix Matrix::cdiv(const Matrix& other) const { return ocl::cdiv(*this, other); }
+inline Matrix Matrix::minus(const Matrix& other) const { return ocl::minus(*this, other); }
 
-inline Matrix Matrix::times(const Matrix& other) { return ocl::times(*this, other); }
-inline Matrix Matrix::cross(const Matrix& other) { return ocl::cross(*this, other); }
-inline Matrix Matrix::dot(const Matrix& other) { return ocl::dot(*this, other); }
+inline Matrix Matrix::times(const Matrix& other) const { return ocl::times(*this, other); }
+inline Matrix Matrix::cross(const Matrix& other) const { return ocl::cross(*this, other); }
+inline Matrix Matrix::dot(const Matrix& other) const { return ocl::dot(*this, other); }
 
 }
 #endif // OCLCPP_OCL_SYMBOLIC_AD_MATRIX_H_
