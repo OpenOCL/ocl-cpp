@@ -23,6 +23,8 @@ typedef int Integer;
 typedef std::vector<int> IndizesArray;
 typedef std::string String;
 
+typedef std::map<const std::string&, const RootNode> Branches;
+
 class Shape
 {
 public:

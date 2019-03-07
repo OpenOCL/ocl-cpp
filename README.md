@@ -1,6 +1,6 @@
 # ocl-cpp
 
-## C++-code compilation
+## C++ code compilation
 
 You can create a bash script `compile.sh` which will be ignored by git for your personal configuration, with the content along the lines of:
 ```bash

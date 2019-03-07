@@ -24,29 +24,6 @@
 namespace ocl
 {
 
-typedef std::map<const std::string&, const RootNode> Branches;
-typedef std::vector<int> Shape;
-typedef std::vector<std::vector<int>> IndizesArray;
-
-static RootNode flattenTree(const RootNode& tree)
-{
-  TreeBuilder tout = TreeBuilder();
-  flattenTreeIterate(tree, &tout);
-  return tout;
-}
-
-static void flattenTreeIterate(const RootNode& tree, RootNode* tout)
-{
-  for (const auto& b : tree.branches) {
-    RootNode child = tree.get(b.first);
-    if (child.hasBranches()) {
-      flattenTreeIterate(child, tout);
-    } else {
-      tout->add(b, child);
-    }
-  } // end for
-}
-
 class Structure
 {
   virtual const int length() = 0;
@@ -62,7 +39,8 @@ class RootNode : public Structure
 {
  public:
 
-  RootNode(const Branches branches, const Shape shape, const IndizesArray indizes);
+   RootNode(const Branches& branches, const Shape& shape, const IndizesArray& indizes)
+       : branches(branches), shape(shape), indizes(indizes) { }
 
   const boolean hasBranches() const;
 
@@ -74,10 +52,6 @@ class RootNode : public Structure
 
   const RootNode get(const String& id, const IndizesArray& positions);
 
-  // merges two position arrays
-  static IndizesArray mergeArrays(const IndizesArray& p1,
-    const IndizesArray& p2);
-
  private:
    // map to the children
    const Branches branches;
@@ -86,6 +60,40 @@ class RootNode : public Structure
    // vector of indizes
    const IndizesArray indizes;
 };
+
+boolean hasBranches() const
+{
+  return branches.empty();
+}
+
+int length() const
+{
+  return indizes.size();
+}
+
+Size size() const
+{
+  Size s = shape;
+  if (shape.size() == 0 || this->length() > 1)
+  {
+    s.append(this->length());
+  }
+  return s;
+}
+
+int nel() const
+{
+  Size s = this->size;
+  return std::accumulate(s.begin(), s.end(), 0);
+}
+
+
+RootNode get(const std::string& id) const
+{
+  auto b = branches[id];
+  IndizesArray idz = Structure.mergeArrays(indizes, b.indizes);
+  return RootNode(b.branches, b.shape, idz);
+}
 
 } // namespace ocl
 #endif  // OCLCPP_OCL_ROOTNODE_H_

@@ -89,6 +89,24 @@ class TreeTensor
 
 }; // class StructuredTensor
 
+
+static StructuredTensor StructuredTensor::create(const Structure &structure,
+    const Tensor &tensor)
+{
+  s = structure->size();
+  PositionArray positions(s);
+  positions = value;
+  oclValue = StructuredTensor(structure, value);
+}
+
+// constructor
+StructuredTensor(const Structure &structure, const PositionArray &positions, const T &value)
+{
+  structure = structure;
+  positions = positions;
+  value = value;
+}
+
 } // namespace ocl
 
 
