@@ -23,8 +23,6 @@
 #include <string>
 #include <iostream>
 
-#include <Eigen/Geometry>
-
 #include "tree_tensor/matrix.h"
 #include "typedefs.h"
 #include "exceptions.h"
@@ -38,20 +36,19 @@ namespace ocl
 class Tensor
 {
 public:
-  // Use shortcut T for Tensor<M>
+
+  // Use shortcut T for Tensor and M for Matrix
   typedef Matrix M;
   typedef Tensor T;
 
   // static constructors
-  static T FromMatrix(const M& mat) {
-    T t = T();
-    t.data = {mat};
-    return t;
-  }
+  static Tensor Zeros(int rows, int cols);
+  static Tensor Ones(int rows, int cols);
 
-  // Constructor
-  Tensor(Eigen::Index rows, Eigen::Index cols) {}
+  // Constructors
   Tensor() { }
+  Tensor(double v) { this->insert(Matrix(v)); }
+  Tensor(const Matrix& m) { this->insert(m); }
 
   // Returns the underlying value
   std::vector<M> value();
@@ -60,9 +57,21 @@ public:
   {
     std::cout << "{" << std::endl;
     for (unsigned int i=0; i < data.size(); i++) {
-      std::cout << data[i].m << std::endl << std::endl;
+      std::cout << this->get(i).raw() << std::endl << std::endl;
     }
     std::cout << "}" << std::endl;
+  }
+
+  Matrix get(int i) const {
+    return this->data[i];
+  }
+
+  void insert(const Matrix& m) {
+    this->data.push_back(m);
+  }
+
+  int length() const {
+    return this->data.size();
   }
 
   // Slices value
@@ -129,11 +138,15 @@ public:
   T operator*(const T& other) const;
   T operator/(const T& other) const;
 
-
+private:
   std::vector<M> data;
 
 }; // class Tensor<M>
 
+
+double* full(const Tensor& t) {
+  return ocl::full(t.get(0));
+}
 
 namespace tensor
 {
@@ -155,8 +168,8 @@ typedef Matrix (*BinaryOpFcn)(const Matrix& m1, const Matrix& m2);
 static inline Tensor unaryVecOperation(const Tensor& tensor, UnaryOpFcn fcn_ptr)
 {
   Tensor t = Tensor();
-  for(unsigned int i=0; i<tensor.data.size(); i++) {
-    t.data.push_back( fcn_ptr(tensor.data[i]) );
+  for(unsigned int i=0; i<tensor.length(); i++) {
+    t.insert( fcn_ptr(tensor.get(i)) );
   }
   return t;
 }
@@ -164,8 +177,8 @@ static inline Tensor unaryVecOperation(const Tensor& tensor, UnaryOpFcn fcn_ptr)
 static inline Tensor unaryVecOperationWithScalar(const Tensor& tensor, UnaryOpFcnWithScalar fcn_ptr, Scalar s)
 {
   Tensor t = Tensor();
-  for(unsigned int i=0; i<tensor.data.size(); i++) {
-    t.data.push_back( fcn_ptr(tensor.data[i], s) );
+  for(unsigned int i=0; i<tensor.length(); i++) {
+    t.insert( fcn_ptr(tensor.get(i), s) );
   }
   return t;
 }
@@ -173,8 +186,8 @@ static inline Tensor unaryVecOperationWithScalar(const Tensor& tensor, UnaryOpFc
 static inline Tensor unaryVecOperationWithInteger2(const Tensor& tensor, UnaryOpFcnWithInteger2 fcn_ptr, Integer s1, Integer s2)
 {
   Tensor t = Tensor();
-  for(unsigned int i=0; i<tensor.data.size(); i++) {
-    t.data.push_back( fcn_ptr(tensor.data[i], s1, s2) );
+  for(unsigned int i=0; i<tensor.length(); i++) {
+    t.insert( fcn_ptr(tensor.get(i), s1, s2) );
   }
   return t;
 }
@@ -182,8 +195,8 @@ static inline Tensor unaryVecOperationWithInteger2(const Tensor& tensor, UnaryOp
 static inline Tensor unaryVecOperationWithInteger4(const Tensor& tensor, UnaryOpFcnWithInteger4 fcn_ptr, Integer s1, Integer s2, Integer s3, Integer s4)
 {
   Tensor t = Tensor();
-  for(unsigned int i=0; i<tensor.data.size(); i++) {
-    t.data.push_back( fcn_ptr(tensor.data[i], s1, s2, s3, s4) );
+  for(unsigned int i=0; i<tensor.length(); i++) {
+    t.insert( fcn_ptr(tensor.get(i), s1, s2, s3, s4) );
   }
   return t;
 }
@@ -191,8 +204,8 @@ static inline Tensor unaryVecOperationWithInteger4(const Tensor& tensor, UnaryOp
 static inline Tensor unaryReductionOperation(const Tensor& tensor, UnaryReductionOpFcn fcn_ptr)
 {
   Tensor t = Tensor();
-  for(unsigned int i=0; i<tensor.data.size(); i++) {
-    t.data.push_back( fcn_ptr(tensor.data[i]) );
+  for(unsigned int i=0; i<tensor.length(); i++) {
+    t.insert( fcn_ptr(tensor.get(i)) );
   }
   return t;
 }
@@ -203,8 +216,8 @@ static inline Tensor binaryVecOperation(const Tensor& tensor, BinaryOpFcn fcn_pt
   //assertEqual(other.data.size(), 1);
 
   Tensor t = Tensor();
-  for(unsigned int i=0; i<tensor.data.size(); i++) {
-    t.data.push_back( fcn_ptr(tensor.data[i], other.data[0]) );
+  for(unsigned int i=0; i<tensor.length(); i++) {
+    t.insert( fcn_ptr(tensor.get(i), other.get(0)) );
   }
   return t;
 }
@@ -334,8 +347,8 @@ static inline Tensor block(const Tensor& t, Integer i, Integer j, Integer k, Int
 }
 
 // binary coefficient wise
-static inline Tensor plus(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::cplus, t2); }
-static inline Tensor minus(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::cminus, t2); }
+static inline Tensor plus(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::plus, t2); }
+static inline Tensor minus(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::minus, t2); }
 static inline Tensor ctimes(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::ctimes, t2); }
 static inline Tensor cdivide(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::cdiv, t2); }
 

@@ -21,7 +21,7 @@
 namespace ocl
 {
 
-class StructuredTensor
+class TreeTensor
 {
 
  private:
@@ -31,32 +31,29 @@ class StructuredTensor
  public:
 
   // Static factory methods
-  static StructuredTensor create(const Structure &structure, const Tensor &value);
-  static StructuredTensor create(const Structure &structure, const float[] &value);
-  static StructuredTensor createFromValue(const Structure &structure,
-      const PositionArray &positions, const ValueStorage &value);
-  static StructuredTensor Matrix(const float[] &value);
+  static TreeTensor create(const Structure& structure, const ValueStorage& value);
+  static TreeTensor create(const Structure& structure, const Tensor& value);
+  static TreeTensor Matrix(const Tensor& value);
 
   // Constructor
   StructuredTensor(const Structure &structure, const ValueStorage &vs);
   // Returns the number of elements of the value
   int numel();
   // Returns the underlying value
-  T value();
+  Tensor value();
   // Return a string representation
   std::string str();
   // Display
   void disp();
-  // Sets a value, supports broadcasting, optional slices
-  void set(T value, std::string slice1=":",
-      std::string slice2=":", std::string slice3=":");
+  // Sets a value, supports broadcasting
+  void set(Tensor value);
   // Returns the size of value
   Size size();
   // Returns a sub-value by id
-  T get(std::string id);
+  Tensor get(std::string id);
   // Slices value
-  T slice(std::string slice1=":",
-      std::string slice2=":", std::string slice3=":");
+  Tensor slice(const Slice& slice1=Slice::all, const Slice& slice2=Slice::all,
+               const Slice& slice3=Slice::all);
 
   // linspace operator
   T = linspace(const Value<T>& other);

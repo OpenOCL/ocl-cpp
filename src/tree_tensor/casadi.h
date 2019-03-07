@@ -80,13 +80,13 @@ static inline CasadiMatrixNat slice(const CasadiMatrixNat& m, CasadiInteger i, C
 static inline CasadiMatrixNat ctimes(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
   return CasadiMatrixNat::times(m1, m2);
 }
-static inline CasadiMatrixNat cplus(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
+static inline CasadiMatrixNat plus(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
   return m1 + m2;
 }
 static inline CasadiMatrixNat cdiv(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
   return CasadiMatrixNat::mrdivide(m1,m2);
 }
-static inline CasadiMatrixNat cminus(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
+static inline CasadiMatrixNat minus(const CasadiMatrixNat& m1, const CasadiMatrixNat& m2) {
   return m1 - m2;
 }
 
