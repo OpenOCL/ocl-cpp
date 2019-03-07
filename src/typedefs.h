@@ -22,6 +22,7 @@ typedef float Scalar;
 typedef int Integer;
 typedef std::vector<int> IndizesArray;
 typedef std::string String;
+typedef unsigned int uint;
 
 typedef std::map<const std::string&, const RootNode> Branches;
 

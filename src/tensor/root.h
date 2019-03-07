@@ -35,20 +35,32 @@ class TensorStructure : public RootNode {
   TensorStructure(shape) : branches(Branches()), shape(shape), indizes(IndizesArray()) { }
 };
 
-class RootNode : public Structure
+class Root : public Structure
 {
  public:
 
-   RootNode(const Branches& branches, const Shape& shape, const IndizesArray& indizes)
-       : branches(branches), shape(shape), indizes(indizes) { }
+  Root(const Branches& branches, const Shape& shape, const IndizesArray& indizes)
+      : branches(branches), shape(shape), indizes(indizes) { }
 
-  const boolean hasBranches() const;
+  boolean hasBranches() const {
+    return branches.empty();
+  }
 
-  const int length() const;
+  // Returns the number of root nodes
+  uint length() const {
+    return indizes.size();
+  }
 
-  const Shape size() const;
+  Size size() const
+  {
+    Size s = shape;
+    if (shape.size() == 0 || this->length() > 1) {
+      s.append(this->length());
+    }
+    return s;
+  }
 
-  const int nel() const
+  uint nel() const
 
   const RootNode get(const String& id, const IndizesArray& positions);
 
@@ -61,25 +73,11 @@ class RootNode : public Structure
    const IndizesArray indizes;
 };
 
-boolean hasBranches() const
-{
-  return branches.empty();
-}
 
-int length() const
-{
-  return indizes.size();
-}
 
-Size size() const
-{
-  Size s = shape;
-  if (shape.size() == 0 || this->length() > 1)
-  {
-    s.append(this->length());
-  }
-  return s;
-}
+
+
+
 
 int nel() const
 {
