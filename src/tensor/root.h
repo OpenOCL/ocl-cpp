@@ -44,7 +44,7 @@ class Root : public Structure
 
   Root(const Branches& branches, const Shape& shape, const IndizesArray& indizes)
       : branches(branches), shape(shape), indizes(indizes) { }
-
+ 
   boolean hasBranches() const {
     return branches.empty();
   }
