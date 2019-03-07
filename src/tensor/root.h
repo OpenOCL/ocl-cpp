@@ -19,16 +19,16 @@
 #include <tuple>
 #include <map>
 
-#include "typedefs.h"
+#include "utils/typedefs.h"
 
 namespace ocl
 {
 
 class Structure
 {
-  virtual const int length() = 0;
-  virtual const int size() = 0;
-  virtual const int nel() = 0;
+  virtual uint length() = 0;
+  virtual Size size() = 0;
+  virtual uint nel() = 0;
 };
 
 class TensorStructure : public RootNode {
@@ -39,6 +39,9 @@ class Root : public Structure
 {
  public:
 
+  typedef std::map<const std::string&, const RootNode> Branches;
+  typedef std::vector<int> IndizesArray;
+
   Root(const Branches& branches, const Shape& shape, const IndizesArray& indizes)
       : branches(branches), shape(shape), indizes(indizes) { }
 
@@ -46,21 +49,28 @@ class Root : public Structure
     return branches.empty();
   }
 
+  // Return the shape of the nodes
+  Size shape() const { return this->nodeShape; }
   // Returns the number of root nodes
-  uint length() const {
-    return indizes.size();
-  }
+  uint length() const { return indizes.size(); }
 
-  Size size() const
+  // Return the complete shape including number of roots (length):
+  // size := [shape length]
+  Shape size() const
   {
-    Size s = shape;
+    Shape s = this->shape();
     if (shape.size() == 0 || this->length() > 1) {
-      s.append(this->length());
+      s = merge( s, Shape(this->length()) );
     }
     return s;
   }
 
+  // Number of elements: prod(size)
   uint nel() const
+  {
+    Shape s = this->size();
+    return std::accumulate(s.begin(), s.end(), 0);
+  }
 
   const RootNode get(const String& id, const IndizesArray& positions);
 
@@ -68,23 +78,10 @@ class Root : public Structure
    // map to the children
    const Branches branches;
    // length of the structure
-   const Shape shape;
+   const Shape nodeShape;
    // vector of indizes
    const IndizesArray indizes;
 };
-
-
-
-
-
-
-
-int nel() const
-{
-  Size s = this->size;
-  return std::accumulate(s.begin(), s.end(), 0);
-}
-
 
 RootNode get(const std::string& id) const
 {

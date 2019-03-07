@@ -17,7 +17,9 @@
 #define OCL_CASADI_H_
 
 #include "casadi/casadi.hpp"
-#include "typedefs.h"
+
+#include "utils/typedefs.h"
+#include "tensor/shape.h"
 
 namespace ocl
 {

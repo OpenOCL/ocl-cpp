@@ -16,7 +16,7 @@
 #ifndef OCLCPP_OCL_STRUCTUREDTENSOR_H_
 #define OCLCPP_OCL_STRUCTUREDTENSOR_H_
 
-#include "typedefs.h"
+#include "utils/typedefs.h"
 
 namespace ocl
 {
@@ -36,7 +36,7 @@ class TreeTensor
   static TreeTensor Matrix(const Tensor& value);
 
   // Constructor
-  StructuredTensor(const Structure &structure, const ValueStorage &vs);
+  TreeTensor(const Structure &structure, const ValueStorage &vs);
   // Returns the number of elements of the value
   int numel();
   // Returns the underlying value

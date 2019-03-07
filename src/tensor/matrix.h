@@ -18,7 +18,7 @@
 
 
 #include "casadi.h"
-#include "typedefs.h"
+#include "utils/typedefs.h"
 
 namespace ocl
 {

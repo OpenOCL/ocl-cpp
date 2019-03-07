@@ -20,32 +20,7 @@ namespace ocl
 {
 typedef float Scalar;
 typedef int Integer;
-typedef std::vector<int> IndizesArray;
 typedef std::string String;
 typedef unsigned int uint;
-
-typedef std::map<const std::string&, const RootNode> Branches;
-
-class Shape
-{
-public:
-  Shape(std::initializer_list<int> s) :s(s) { }
-
-  int get(int i) {
-    return s[i];
-  }
-
-  int numel() {
-    int r = 0;
-    for (unsigned int i=0;i<s.size();i++) {
-      r *= s[i];
-    }
-    return r;
-  }
-
-private:
-  const std::vector<int> s;
-};
-
 }
 #endif // OCLCPP_OCL_TYPEDEFS_H_

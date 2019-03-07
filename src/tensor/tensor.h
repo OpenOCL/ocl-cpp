@@ -24,7 +24,7 @@
 #include <iostream>
 
 #include "tensor/matrix.h"
-#include "typedefs.h"
+#include "utils/typedefs.h"
 #include "exceptions.h"
 
 
