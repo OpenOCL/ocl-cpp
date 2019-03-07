@@ -33,7 +33,7 @@ CXXFLAGS += -g -Wall -Wextra -std=c++11 -Wno-ignored-attributes -Wfatal-errors
 GTEST_LIBS = $(GTEST_LIB)/libgtest.a $(GTEST_LIB)/libgtest_main.a
 
 INCLUDES_EIGEN = -I $(EXTERN)/eigen
-INCLUDES = -I$(SRC) -I$(INCLUDE) \
+INCLUDES = -I$(SRC) -I$(TEST) -I$(INCLUDE) \
 					 $(INCLUDES_EIGEN) -I$(CASADI_INCLUDE_PATH)
 
 GTEST_STATIC = $(GTEST_LIB)/libgtest.a
@@ -45,7 +45,7 @@ TESTS = $(BIN)/test_casadi $(BIN)/test_matrix $(BIN)/test_tensor
 COMMON_HEADERS = $(SRC)/exceptions.h $(SRC)/typedefs.h
 TENSOR_HEADERS = $(SRC)/tree_tensor/tensor.h $(SRC)/tree_tensor/matrix.h $(SRC)/tree_tensor/casadi.h
 
-all: $(GTEST_LIBS) $(TESTS)
+all: $(TESTS)
 gtest: $(GTEST_LIBS)
 clean:
 	rm -f $(TESTS) $(OBJ)/*.o

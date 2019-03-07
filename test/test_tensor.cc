@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include <utils/test.h>
 #include "tree_tensor/tensor.h"
 
 TEST(testGeneralTensor, Constructor) {
