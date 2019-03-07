@@ -30,31 +30,9 @@ class TreeTensor
 
  public:
 
-  // Static factory methods
-  static TreeTensor create(const Structure& structure, const ValueStorage& value);
-  static TreeTensor create(const Structure& structure, const Tensor& value);
-  static TreeTensor Matrix(const Tensor& value);
-
   // Constructor
-  TreeTensor(const Structure &structure, const ValueStorage &vs);
-
-  // static StructuredTensor StructuredTensor::create(const Structure &structure,
-  //     const Tensor &tensor)
-  // {
-  //   s = structure->size();
-  //   PositionArray positions(s);
-  //   positions = value;
-  //   oclValue = StructuredTensor(structure, value);
-  // }
-  //
-  // // constructor
-  // StructuredTensor(const Structure &structure, const PositionArray &positions, const T &value)
-  // {
-  //   structure = structure;
-  //   positions = positions;
-  //   value = value;
-  // }
-
+  TreeTensor(const Structure &structure, const ValueStorage &value_storage)
+      : structure(structure), value_storage(value_storage) { }
   // Accessors
   const ValueStorage& value_storage() const { return this->value_storage; }
   const Structure& structure() const { return this->structure; }
