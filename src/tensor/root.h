@@ -31,6 +31,8 @@ class Structure
   virtual Shape size() = 0;
   virtual uint nel() = 0;
   virtual Structure get(const std::string& id);
+  virtual Structure get(const int idx);
+  virtual Structure slice(const Slices& slices);
 };
 
 class TensorStructure : public Root {

@@ -18,7 +18,7 @@
 
 namespace ocl {
 
-class TreeBuilder : public RootNode
+class TreeBuilder
 {
  public:
   TreeBuilder();
@@ -29,8 +29,11 @@ class TreeBuilder : public RootNode
 
   void addRepeated(const std::vector<String>& ids, const std::vector<RootNode>& nodes, const int N);
 
+  Root getTree();
+
  private:
   int len;
+  Root tree;
 };
 
 } // namespace ocl

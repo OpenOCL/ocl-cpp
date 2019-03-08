@@ -29,39 +29,35 @@ class ValueStorage
   int nel() { storage.size(); }
 
   // set trajectory of value
-  void set(const RootNode& structure, const std::vector<T>& value)
+  void set(const std::vector<int>& indizes, const std::vector<T>& value)
   {
-    assertEqual(structure.length(), value.size());
+    assertEqual(indizes.size(), value.size());
 
-    for(int i=0; i < structure.length(); i++)
+    for(unsigned int i=0; i < indizes.size(); i++)
     {
-      std::vector<int> idz = structure.indizes[i];
-      T v = value[i];
-      storage.set(idz) = v;
+      storage.set(indizes[i]) = value[i];
     }
   }
 
   // set value
-  void set(const RootNode& structure, const Tensor& value)
+  void set(const std::vector<int>& indizes, const Tensor& value)
   {
-    for(int i=0; i < structure.length(); i++)
+    for(unsigned int i=0; i < indizes.size(); i++)
     {
-      std::vector<int> idz = structure.indizes[i];
-      storage.set(idz) = value;
+      storage.set(indizes[i]) = value;
     }
   }
 
-  Tensor value(const RootNode$ structure)
+  Tensor value(const std::vector<int>& indizes, const Shape& shape)
   {
-    Shape s = structure.shape();
-
     std::vector<T> vout = {};
-    for(int i=0; i < structure.length(); i++)
+    for(unsigned int i=0; i < indizes.size(); i++)
     {
       T v = storage[structure.indizes[i]];
-      v = v.reshape(s);
+      v = v.reshape(shape);
       vout[i] = v;
     }
+    return Tensor(vout);
   }
 
  private:

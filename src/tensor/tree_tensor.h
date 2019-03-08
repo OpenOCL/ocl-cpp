@@ -71,11 +71,10 @@ class TreeTensor
   }
 
   // Slices value
-  Tensor slice(const Slices& slices = Slices::all(this->value()) )
+  TreeTensor slice(const Slices& slices = Slices::all(this->structure()) )
   {
-    Tensor t = value();
-    t.slice(slices);
-    return t;
+    Root r = this->structure().slice(slices);
+    return TreeTensor(r, this->value_storage());
   }
 
   // operators - unary element wise
