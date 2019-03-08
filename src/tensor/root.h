@@ -76,10 +76,41 @@ class Root : public Structure
     return std::accumulate(s.begin(), s.end(), 0);
   }
 
-  virtual Root get(const String& id) override;
-  virtual Root get(const int idx) override;
+  virtual Root get(const std::string& id) const override
+  {
+    auto b = branches[id];
+    IndizesArray idz = Structure.mergeArrays(indizes, b.indizes);
+    return Root(b.branches, b.nodeShape, idz);
+  }
 
- private:
+  virtual Root at(const int idx) override
+  {
+    std::vector<int> idz = {indizes[idx]};
+    return Root(branches, nodeShape, idz);
+  }
+
+  virtual Root block(const int i, const int j, const int k, const int l)
+  {
+    IndizesArray a();
+    for (uint i=0; i<indizes.size(); i++)
+    {
+      // Pass indizes memory to eigen to reshape and slice indizes
+      std::vector<int> idz = indizes[i];
+      int* idz_ptr = &idz[0];
+      eigen::Map<const eigen::Array<int,Dynamic,Dynamic> > m_reshaped(idz_ptr, nodeShape.get(0), nodeShape.get(1));
+      eigen::Array<int,Dynamic,Dynamic> m_sliced = m_reshaped.block(i, j, k, l);
+
+      // copy data to vector
+      std::vector<int> dest(m_sliced.size);
+      dest.assign(m_sliced.data(), m_sliced.data() + m_sliced.size());
+      a.push_back(dest);
+    }
+    return a;
+  }
+
+
+
+protected:
    // map to the children
    const Branches branches;
    // length of the structure
@@ -88,12 +119,7 @@ class Root : public Structure
    const IndizesArray indizes;
 };
 
-Root get(const std::string& id) const override
-{
-  auto b = branches[id];
-  IndizesArray idz = Structure.mergeArrays(indizes, b.indizes);
-  return RootNode(b.branches, b.shape, idz);
-}
+
 
 } // namespace ocl
 #endif  // OCLCPP_OCL_ROOTNODE_H_
