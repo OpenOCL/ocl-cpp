@@ -26,12 +26,14 @@ namespace ocl
 
 class Structure
 {
+  virtual Shape shape() = 0;
   virtual uint length() = 0;
-  virtual Size size() = 0;
+  virtual Shape size() = 0;
   virtual uint nel() = 0;
+  virtual Structure get(const std::string& id);
 };
 
-class TensorStructure : public RootNode {
+class TensorStructure : public Root {
   TensorStructure(shape) : branches(Branches()), shape(shape), indizes(IndizesArray()) { }
 };
 
@@ -50,13 +52,13 @@ class Root : public Structure
   }
 
   // Return the shape of the nodes
-  Size shape() const { return this->nodeShape; }
+  virtual Shape shape() const override { return this->nodeShape; }
   // Returns the number of root nodes
-  uint length() const { return indizes.size(); }
+  uint length() const override { return indizes.size(); }
 
   // Return the complete shape including number of roots (length):
   // size := [shape length]
-  Shape size() const
+  Shape size() const override
   {
     Shape s = this->shape();
     if (shape.size() == 0 || this->length() > 1) {
@@ -66,13 +68,14 @@ class Root : public Structure
   }
 
   // Number of elements: prod(size)
-  uint nel() const
+  uint nel() const override
   {
     Shape s = this->size();
     return std::accumulate(s.begin(), s.end(), 0);
   }
 
-  const RootNode get(const String& id, const IndizesArray& positions);
+  virtual Root get(const String& id) override;
+  virtual Root get(const int idx) override;
 
  private:
    // map to the children
@@ -83,7 +86,7 @@ class Root : public Structure
    const IndizesArray indizes;
 };
 
-RootNode get(const std::string& id) const
+Root get(const std::string& id) const override
 {
   auto b = branches[id];
   IndizesArray idz = Structure.mergeArrays(indizes, b.indizes);
