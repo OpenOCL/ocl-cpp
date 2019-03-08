@@ -1,19 +1,19 @@
 #include <utils/test.h>
 #include "tensor/tensor.h"
 
-TEST(testGeneralTensor, Constructor) {
+// TEST(testGeneralTensor, Constructor) {
+//
+//   ocl::Tensor a = ocl::Tensor::Zeros(4,3);
+//   ocl::Tensor b = ocl::Tensor::Ones(4,3);
+//
+//   ocl::cos(b).disp();
+//   b.cos().disp();
+//   b.disp();
+//
+//   ASSERT_EQ(6, 6);
+// }
 
-  ocl::Tensor a = ocl::Tensor::Zeros(4,3);
-  ocl::Tensor b = ocl::Tensor::Ones(4,3);
-
-  ocl::cos(b).disp();
-  b.cos().disp();
-  b.disp();
-
-  ASSERT_EQ(6, 6);
-}
-
-TEST(testCasadiTensor, ScalarOperators) {
+TEST(testGeneralTensor, ScalarOperators) {
   // scalar unary operations
   {
     auto a = ocl::Tensor(4);
@@ -33,7 +33,7 @@ TEST(testCasadiTensor, ScalarOperators) {
   {
     auto a = ocl::Tensor(4);
     auto r = ocl::log(a);
-    ocl::test::assertDoubleFullEqual( ocl::full(r), 0.60205999132 );
+    ocl::test::assertDoubleFullEqual( ocl::full(r), 1.38629436112 );
   }
   {
     auto a = ocl::Tensor(4);

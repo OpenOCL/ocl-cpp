@@ -29,7 +29,7 @@ public:
   std::vector<int> vec() const { return this->s; }
 
   int numel() const {
-    int r = 0;
+    int r = 1;
     for (unsigned int i=0;i<s.size();i++) {
       r *= s[i];
     }

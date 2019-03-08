@@ -23,7 +23,7 @@ TEST(testCasadiMatrix, ScalarOperators)
   {
     auto a = ocl::Matrix(4);
     auto r = ocl::log(a);
-    ocl::test::assertDoubleFullEqual( ocl::full(r), 0.60205999132 );
+    ocl::test::assertDoubleFullEqual( ocl::full(r), 1.38629436112 );
   }
   {
     auto a = ocl::Matrix(4);

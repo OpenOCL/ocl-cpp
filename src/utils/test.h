@@ -23,13 +23,27 @@ namespace ocl
 namespace test
 {
 
-void assertEqual(const std::vector<double>& v1, const std::vector<double>& v2) {
-  ASSERT_EQ(v1,v2);
+void assertDoubleFullEqual(const std::vector<double>& v1, const std::vector<double>& v2,
+                           const double eps=1e-4) {
+
+  EXPECT_EQ(v1.size(), v2.size()) << "Vectors v1 and v2 are of unequal length";
+  for (unsigned int i = 0; i < v1.size(); ++i) {
+    EXPECT_NEAR(v1[i], v2[i], eps) << "Vectors v1 and v2 differ at index " << i;
+  }
 }
 
-void assertDoubleFullEqual(const std::vector<double>& v1, const double v2) {
-  assertEqual(v1,{v2});
+void assertDoubleFullEqual(const std::vector<double>& v1, const double v2,
+                           const double eps=1e-4) {
+
+
+  std::vector<double> v2vec = {v2};
+  assertDoubleFullEqual(v1, v2vec, eps);
 }
+
+void assertEqual(const std::vector<double>& v1, const std::vector<double>& v2) {
+  assertDoubleFullEqual(v1,v2);
+}
+
 
 
 } // namespace test
