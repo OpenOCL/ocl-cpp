@@ -26,7 +26,9 @@ BIN = ./build/bin
 OBJ = ./build/obj
 
 CPPFLAGS += -isystem $(GTEST_PATH)/include -isystem $(CASADI_INCLUDE_PATH)
-CXXFLAGS += -g -Wall -Wextra -std=c++11 -Wno-ignored-attributes -Wfatal-errors
+CXXFLAGS += -g -Wall -Wextra -std=c++11 -Wfatal-errors
+
+LDFLAGS +=
 
 GTEST_LIBS = $(GTEST_LIB)/libgtest.a $(GTEST_LIB)/libgtest_main.a
 
@@ -79,10 +81,10 @@ $(OBJ)/test_tensor.o : $(TEST)/test_tensor.cc $(TENSOR_HEADERS) $(COMMON_HEADERS
 
 # binaries
 $(BIN)/test_casadi : $(OBJ)/test_casadi.o
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) -lcasadi  -lgtest_main -lpthread -o $@ $^
+	$(CXX) $(LDFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) $^ -lcasadi -lgtest_main -lpthread -o $@
 
 $(BIN)/test_matrix : $(OBJ)/test_matrix.o
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) -lcasadi  -lgtest_main -lpthread -o $@ $^
+	$(CXX) $(LDFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) $^ -lcasadi -lgtest_main -lpthread -o $@
 
 $(BIN)/test_tensor : $(OBJ)/test_tensor.o
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) -lcasadi  -lgtest_main -lpthread -o $@ $^
+	$(CXX) $(LDFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) $^ -lcasadi -lgtest_main -lpthread -o $@

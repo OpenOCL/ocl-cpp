@@ -23,8 +23,8 @@
 
 namespace ocl
 {
-typedef casadi::SX CasadiMatrixNat; // native casadi type
-typedef casadi::SX CasadiScalar;
+typedef ::casadi::SX CasadiMatrixNat; // native casadi type
+typedef ::casadi::SX CasadiScalar;
 typedef int CasadiInteger;
 
 namespace casadi
@@ -43,7 +43,13 @@ static inline std::vector<double> full(const CasadiMatrixNat& m)
 {
 
   std::string name = "f";
-  ::casadi::Function f = ::casadi::Function(name, {}, {m});
+  std::vector<CasadiMatrixNat> f_inputs;
+  std::vector<CasadiMatrixNat> f_outputs;
+  f_outputs.push_back(m);
+
+  ::casadi::Dict opts = ::casadi::Dict();
+
+  ::casadi::Function f = ::casadi::Function(name, f_inputs, f_outputs, opts);
   std::vector< ::casadi::DM > dm_out;
   f.call({},dm_out);
 
