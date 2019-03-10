@@ -1,17 +1,13 @@
 #include <utils/test.h>
 #include "tensor/tensor.h"
 
-// TEST(testGeneralTensor, Constructor) {
-//
-//   ocl::Tensor a = ocl::Tensor::Zeros(4,3);
-//   ocl::Tensor b = ocl::Tensor::Ones(4,3);
-//
-//   ocl::cos(b).disp();
-//   b.cos().disp();
-//   b.disp();
-//
-//   ASSERT_EQ(6, 6);
-// }
+TEST(testGeneralTensor, Slice) {
+
+  auto a = ocl::Tensor(4);
+  auto r = ocl::uplus(a);
+
+  ASSERT_EQ(6, 6);
+}
 
 TEST(testGeneralTensor, ScalarOperators) {
   // scalar unary operations

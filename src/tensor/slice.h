@@ -18,9 +18,26 @@
 
 namespace ocl {
 
-class Slice
+class Slicable
 {
-  Slice()
+public:
+  virtual int size(int dim) const = 0;
+};
+
+static inline std::vector<int> linspace(int start, int end, int stride = 1) {
+  std::vector<int> v;
+  for(int idx = start; idx <= end; idx += stride) {
+    v.push_back(idx);
+  }
+  return v;
+}
+
+static inline std::vector<int> all(const Slicable& obj, const int dim) {
+ return linspace(0, obj.size(dim)-1);
+}
+
+static inline std::vector<int> end(const Slicable& obj, const int dim) {
+ return {obj.size(dim)-1};
 }
 
 } // namespace ocl

@@ -33,7 +33,7 @@ namespace ocl
 {
 
 // Tensor class is dependent of Matrix type M.
-class Tensor
+class Tensor : public Slicable
 {
 public:
 
@@ -72,6 +72,10 @@ public:
 
   unsigned int length() const {
     return this->data.size();
+  }
+
+  virtual int size(int dim) const override {
+    return this->data[0].size(dim);
   }
 
   // Slices value
@@ -116,10 +120,7 @@ public:
   T reshape(Integer cols, Integer rows) const;
 
   // get slice (i:j)
-  T slice(Integer i, Integer j) const;
-
-  // get block slice of cols (i:j) and rows (k:l)
-  T block(Integer i, Integer j, Integer k, Integer l) const;
+  T slice(const std::vector<int>& slice) const;
 
   // binary coefficient wise
   T plus(const T& other) const;
@@ -163,6 +164,7 @@ namespace tensor
 // Function pointers to static functions
 typedef Matrix (*UnaryOpFcn)(const Matrix& m);
 typedef Matrix (*UnaryOpFcnWithInteger2)(const Matrix& m, Integer s1, Integer s2);
+typedef Matrix (*UnaryOpFcnWithIntegerVec)(const Matrix& m, const std::vector<int>& vec);
 typedef Matrix (*UnaryOpFcnWithInteger4)(const Matrix& m, Integer s1, Integer s2, Integer s3, Integer s4);
 typedef Matrix (*UnaryReductionOpFcn)(const Matrix& m);
 
@@ -183,6 +185,15 @@ static inline Tensor unaryVecOperationWithInteger2(const Tensor& tensor, UnaryOp
   Tensor t = Tensor();
   for(unsigned int i=0; i<tensor.length(); i++) {
     t.insert( fcn_ptr(tensor.get(i), s1, s2) );
+  }
+  return t;
+}
+
+static inline Tensor unaryVecOperationWithIntegerVec(const Tensor& tensor, UnaryOpFcnWithIntegerVec fcn_ptr, const std::vector<int>& vec)
+{
+  Tensor t = Tensor();
+  for(unsigned int i=0; i<tensor.length(); i++) {
+    t.insert( fcn_ptr(tensor.get(i), vec) );
   }
   return t;
 }
@@ -332,14 +343,10 @@ static inline Tensor reshape(const Tensor& t, Integer cols, Integer rows) {
 }
 
 // get slice (i:j)
-static inline Tensor slice(const Tensor& t, Integer i, Integer j) {
-  return tensor::unaryVecOperationWithInteger2(t, &ocl::slice, i, j);
+static inline Tensor slice(const Tensor& t, const std::vector<int>& slice) {
+  return tensor::unaryVecOperationWithIntegerVec(t, &ocl::slice, slice);
 }
 
-// get block slice of cols (i:j) and rows (k:l)
-static inline Tensor block(const Tensor& t, Integer i, Integer j, Integer k, Integer l) {
-  return tensor::unaryVecOperationWithInteger4(t, &ocl::block, i, j, k, l);
-}
 
 // binary coefficient wise
 static inline Tensor plus(const Tensor& t1, const Tensor& t2) { return tensor::binaryVecOperation(t1, &ocl::plus, t2); }
@@ -399,13 +406,8 @@ inline Tensor Tensor::reshape(Integer cols, Integer rows) const {
 }
 
 // get slice (i:j)
-inline Tensor Tensor::slice(Integer i, Integer j) const {
-  return ocl::slice(*this, i, j);
-}
-
-// get block slice of cols (i:j) and rows (k:l)
-inline Tensor Tensor::block(Integer i, Integer j, Integer k, Integer l) const {
-  return ocl::block(*this, i, j, k, l);
+inline Tensor Tensor::slice(const std::vector<int>& slice) const {
+  return ocl::slice(*this, slice);
 }
 
 // binary coefficient wise

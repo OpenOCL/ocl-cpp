@@ -19,18 +19,31 @@
 
 #include "casadi.h"
 #include "utils/typedefs.h"
+#include "slice.h"
 
 namespace ocl
 {
 
 
-class Matrix
+class Matrix : public Slicable
 {
 public:
 
-  static Matrix Sym(int rows, int cols) {
+  static Matrix Sym(const int rows, const int cols) {
     CasadiMatrixNat m = CasadiMatrixNat::sym("m", rows, cols);
     return Matrix(m);
+  }
+
+  static Matrix Eye(const int n) {
+    return CasadiMatrixNat::eye(n);
+  }
+
+  static Matrix Zero(const int rows, const int cols) {
+    return CasadiMatrixNat::zeros(rows, cols);
+  }
+
+  static Matrix One(const int rows, const int cols) {
+    return CasadiMatrixNat::ones(rows, cols);
   }
 
   Matrix(const ::casadi::DM& v) : m(v) { }
@@ -39,6 +52,10 @@ public:
 
   CasadiMatrixNat data() const{
     return m;
+  }
+
+  virtual int size(int dim) const override {
+    return this->m.size(dim);
   }
 
   // Member functions are defined inline below class (after static functions).
@@ -71,8 +88,7 @@ public:
 
   Matrix reshape(const Integer rows, const Integer cols) const;
   Matrix transpose() const;
-  Matrix block(const Integer i, const Integer j, const Integer k, const Integer l) const;
-  Matrix slice(const Integer i, const Integer k) const;
+  Matrix slice(const std::vector<int>& slice) const;
 
   Matrix ctimes(const Matrix& other) const;
   Matrix plus(const Matrix& other) const;
@@ -134,11 +150,9 @@ static inline Matrix reshape(const Matrix& m, const Integer rows, const Integer 
 static inline Matrix transpose(const Matrix& m) {
   return Matrix(casadi::transpose(m.data()));
 }
-static inline Matrix block(const Matrix& m, const Integer i, const Integer j, const Integer k, const Integer l) {
-  return Matrix(casadi::block(m.data(), i, j, k, l));
-}
-static inline Matrix slice(const Matrix& m, const Integer i, const Integer k) {
-  return Matrix(casadi::slice(m.data(), i, k));
+
+static inline Matrix slice(const Matrix& m, const std::vector<int>& slice) {
+  return Matrix(casadi::slice(m.data(), slice));
 }
 
 static inline Matrix ctimes(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::ctimes(m1.data(), m2.data())); }
@@ -189,11 +203,9 @@ inline Matrix Matrix::reshape(const Integer rows, const Integer cols) const {
   return ocl::reshape(*this, rows, cols);
 }
 inline Matrix Matrix::transpose() const { return ocl::transpose(*this); }
-inline Matrix Matrix::block(const Integer i, const Integer j, const Integer k, const Integer l) const {
-  return ocl::block(*this, i, j, k, l);
-}
-inline Matrix Matrix::slice(const Integer i, const Integer k) const {
-  return ocl::slice(*this, i, k);
+
+inline Matrix Matrix::slice(const std::vector<int>& slice) const {
+  return ocl::slice(*this, slice);
 }
 
 inline Matrix Matrix::ctimes(const Matrix& other) const { return ocl::ctimes(*this, other); }
