@@ -103,8 +103,8 @@ static inline CasadiMatrixNat reshape(const CasadiMatrixNat& m, CasadiInteger ro
 static inline CasadiMatrixNat transpose(const CasadiMatrixNat& m) { return m.T(); }
 
 // get block slice of cols (i:j) and rows (k:l)
-static inline CasadiMatrixNat slice(const CasadiMatrixNat& m, const std::vector<int>& slice) {
-  CasadiMatrixNat ret = m(slice);
+static inline CasadiMatrixNat slice(const CasadiMatrixNat& m, const std::vector<int>& slice1, const std::vector<int>& slice2) {
+  CasadiMatrixNat ret = m(slice1, slice2);
   return ret;
 }
 

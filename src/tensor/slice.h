@@ -18,11 +18,13 @@
 
 namespace ocl {
 
+// A slicable class must provide a size method
 class Slicable
 {
 public:
   virtual int size(int dim) const = 0;
 };
+
 
 static inline std::vector<int> linspace(int start, int end, int stride = 1) {
   std::vector<int> v;

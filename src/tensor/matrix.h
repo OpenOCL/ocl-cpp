@@ -88,7 +88,7 @@ public:
 
   Matrix reshape(const Integer rows, const Integer cols) const;
   Matrix transpose() const;
-  Matrix slice(const std::vector<int>& slice) const;
+  Matrix slice(const std::vector<int>& slice1, const std::vector<int>& slice2) const;
 
   Matrix ctimes(const Matrix& other) const;
   Matrix plus(const Matrix& other) const;
@@ -151,8 +151,8 @@ static inline Matrix transpose(const Matrix& m) {
   return Matrix(casadi::transpose(m.data()));
 }
 
-static inline Matrix slice(const Matrix& m, const std::vector<int>& slice) {
-  return Matrix(casadi::slice(m.data(), slice));
+static inline Matrix slice(const Matrix& m, const std::vector<int>& slice1, const std::vector<int>& slice2) {
+  return Matrix(casadi::slice(m.data(), slice1, slice2));
 }
 
 static inline Matrix ctimes(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::ctimes(m1.data(), m2.data())); }
@@ -204,8 +204,8 @@ inline Matrix Matrix::reshape(const Integer rows, const Integer cols) const {
 }
 inline Matrix Matrix::transpose() const { return ocl::transpose(*this); }
 
-inline Matrix Matrix::slice(const std::vector<int>& slice) const {
-  return ocl::slice(*this, slice);
+inline Matrix Matrix::slice(const std::vector<int>& slice1, const std::vector<int>& slice2) const {
+  return ocl::slice(*this, slice1, slice2);
 }
 
 inline Matrix Matrix::ctimes(const Matrix& other) const { return ocl::ctimes(*this, other); }

@@ -3,10 +3,10 @@
 
 TEST(testGeneralTensor, Slice) {
 
-  auto a = ocl::Tensor(4);
-  auto r = ocl::uplus(a);
+  auto a = ocl::Tensor::One(5,5)*10;
+  auto r = ocl::slice(a, {3}, ocl::end(a, 2) );
 
-  ASSERT_EQ(6, 6);
+  ocl::test::assertDoubleFullEqual( ocl::full(r), 10 );
 }
 
 TEST(testGeneralTensor, ScalarOperators) {
