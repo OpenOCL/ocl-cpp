@@ -53,7 +53,7 @@ class ValueStorage
     std::vector<T> vout = {};
     for(unsigned int i=0; i < indizes.size(); i++)
     {
-      T v = storage[structure.indizes[i]];
+      T v = storage.slice(structure.indizes[i]);
       v = v.reshape(shape);
       vout[i] = v;
     }
@@ -63,9 +63,6 @@ class ValueStorage
  private:
   Tensor storage;
 };
-
-template<>
-std::vector<casadi.MX> ValueStorage<vasadi.MX>
 
 } // namespace ocl
 #endif  // OCLCPP_OCL_VALUESTORAGE_H_
