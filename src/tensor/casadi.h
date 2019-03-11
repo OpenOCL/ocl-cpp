@@ -18,9 +18,6 @@
 
 #include "casadi/casadi.hpp"
 
-#include "utils/typedefs.h"
-#include "tensor/shape.h"
-
 namespace ocl
 {
 typedef ::casadi::SX CasadiMatrixNat; // native casadi type
@@ -34,9 +31,14 @@ namespace casadi
 // data access functions
 
 
-static inline Shape shape(const CasadiMatrixNat& m)
+static inline std::vector<int> shape(const CasadiMatrixNat& m)
 {
-  return Shape({m.rows(), m.columns()});
+  return {m.rows(), m.columns()};
+}
+
+static inline int size(const CasadiMatrixNat& m, const int dim)
+{
+  return m.size(dim);
 }
 
 static inline std::vector<double> full(const CasadiMatrixNat& m)
@@ -56,7 +58,7 @@ static inline std::vector<double> full(const CasadiMatrixNat& m)
   ::casadi::DM d = dm_out[0];
 
   double *data = d.ptr();
-  int nel = shape(m).numel();
+  int nel = size(m,0)*size(m,1);
   std::vector<double> values(data, data + nel);
   return values;
 }

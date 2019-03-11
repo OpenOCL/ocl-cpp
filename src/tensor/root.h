@@ -44,7 +44,7 @@ class Root : public Structure
  public:
 
   typedef std::map<const std::string&, const RootNode> Branches;
-  typedef std::vector<int> IndizesArray;
+  typedef std::vector<std::vector<int> > IndizesArray;
 
   Root(const Branches& branches, const Shape& shape, const IndizesArray& indizes)
       : branches(branches), shape(shape), indizes(indizes) { }

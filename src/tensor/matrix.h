@@ -20,6 +20,7 @@
 #include "casadi.h"
 #include "utils/typedefs.h"
 #include "slice.h"
+#include "shape.h"
 
 namespace ocl
 {
@@ -109,7 +110,7 @@ private:
 };
 
 static inline Shape shape(const Matrix& m) {
-  return casadi::shape(m.data());
+  return Shape(casadi::shape(m.data()));
 }
 
 static inline std::vector<double> full(const Matrix& m) {
