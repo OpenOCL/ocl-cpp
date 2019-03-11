@@ -13,8 +13,8 @@
  *    General Public License for more details.
  *
  */
-#ifndef OCLCPP_OCL_ROOTNODE_H_
-#define OCLCPP_OCL_ROOTNODE_H_
+#ifndef OCLCPP_OCL_TREE_H_
+#define OCLCPP_OCL_TREE_H_
 
 #include <tuple>
 #include <map>
@@ -30,11 +30,11 @@ namespace ocl
 //   TensorStructure(shape) : branches(Branches()), shape(shape), indizes(IndizesArray()) { }
 // };
 
-class Root
+class Tree
 {
  public:
 
-  Root(const std::map<std::string, Root>& branches,
+  Tree(const std::map<std::string, Tree>& branches,
        const std::vector<int>& nodeShape,
        const std::vector<std::vector<int> >& indizes)
       : branches(branches), nodeShape(nodeShape), indizes(indizes) { }
@@ -98,11 +98,9 @@ class Root
     return a;
   }
 
-
-
 protected:
    // map to the children
-   std::map<std::string, Root> branches;
+   std::map<std::string, Tree> branches;
    // length of the structure
    std::vector<int> nodeShape;
    // vector of indizes
@@ -112,4 +110,4 @@ protected:
 
 
 } // namespace ocl
-#endif  // OCLCPP_OCL_ROOTNODE_H_
+#endif  // OCLCPP_OCL_TREE_H_

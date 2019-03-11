@@ -1,5 +1,5 @@
 #include <utils/testing.h>
-#include "tensor/root.h"
+#include "tensor/tree.h"
 
 
 TEST(testRoot, Constructor) {

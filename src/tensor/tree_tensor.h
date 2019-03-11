@@ -26,12 +26,12 @@ class TreeTensor : public Slicable
 
  private:
   ValueStorage& value_storage;
-  const Structure structure;
+  const Tree structure;
 
  public:
 
   // Constructor
-  TreeTensor(const Structure &structure, const ValueStorage &value_storage)
+  TreeTensor(const Tree &structure, const ValueStorage &value_storage)
       : structure(structure), value_storage(value_storage) { }
   // Accessors
   const ValueStorage& value_storage() const { return this->value_storage; }
@@ -60,21 +60,21 @@ class TreeTensor : public Slicable
   // Returns a sub-tree by id
   TreeTensor get(const std::string& id) const
   {
-    Root r = this->structure().get(id);
+    Tree r = this->structure().get(id);
     return TreeTensor(r, this->value_storage());
   }
 
   // Returns a sub-tree by index
   TreeTensor get(const std::vector<int> indizes) const
   {
-    Root r = this->structure().get(indizes);
+    Tree r = this->structure().get(indizes);
     return TreeTensor(r, this->value_storage());
   }
 
   // Slices value
   TreeTensor slice(const std::vector<int>& slice1 = slice::all(this, 0), const std::vector<int>& slice2 = slice::all(this, 1)) )
   {
-    Root r = this->structure().slice(slices);
+    Tree r = this->structure().slice(slices);
     return TreeTensor(r, this->value_storage());
   }
 
