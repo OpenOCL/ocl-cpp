@@ -54,11 +54,17 @@ public:
     return m;
   }
 
+  CasadiMatrixNat& dataRef(){
+    return m;
+  }
+
   virtual int size(const int dim) const override {
     return this->m.size(dim);
   }
 
   // Member functions are defined inline below class (after static functions).
+  void assign(int row, int col, double val);
+
   Matrix uplus() const;
   Matrix uminus() const;
   Matrix square() const;
@@ -117,6 +123,11 @@ static inline std::vector<double> full(const Matrix& m) {
 }
 
 // Static functions
+static inline void assign(Matrix& m, int row, int col, double val)
+{
+  casadi::assign(m.dataRef(), row, col, val);
+}
+
 static inline Matrix uplus(const Matrix& m) { return Matrix(casadi::uplus(m.data())); }
 static inline Matrix uminus(const Matrix& m) { return Matrix(casadi::uminus(m.data())); }
 static inline Matrix square(const Matrix& m) { return Matrix(casadi::square(m.data())); }
@@ -170,6 +181,8 @@ static inline Matrix dot(const Matrix& m1, const Matrix& m2) { return Matrix(cas
 static inline Matrix atan2(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::atan2(m1.data(), m2.data())); }
 
 // Member functions (calling the static functions above)
+inline void Matrix::assign(int row, int col, double val) { return ocl::assign(*this, row, col, val); }
+
 inline Matrix Matrix::uplus() const { return ocl::uplus(*this); }
 inline Matrix Matrix::uminus() const { return ocl::uminus(*this); }
 inline Matrix Matrix::square() const { return ocl::square(*this); }

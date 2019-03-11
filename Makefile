@@ -26,7 +26,7 @@ BIN = ./build/bin
 OBJ = ./build/obj
 
 CPPFLAGS += -isystem $(GTEST_PATH)/include -isystem $(CASADI_INCLUDE_PATH)
-CXXFLAGS += -g -Wall -Wextra -std=c++11 -Wfatal-errors
+CXXFLAGS += -g -Wall -Wextra -std=c++11 -fmax-errors=3
 
 LDFLAGS +=
 

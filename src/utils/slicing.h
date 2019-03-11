@@ -29,7 +29,12 @@ public:
 
 static inline std::vector<int> slice(const std::vector<int>& vector, const std::vector<int>& slices)
 {
-
+  std::vector<int> r;
+  for (unsigned int i=0; i < slices.size(); i++)
+  {
+    r.push_back(vector[slices[i]]);
+  }
+  return r;
 }
 
 static inline std::vector<int> all(const Slicable& obj, const int dim) {

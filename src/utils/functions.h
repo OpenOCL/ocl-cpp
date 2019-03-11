@@ -20,6 +20,19 @@
 
 namespace ocl {
 
+
+  static inline std::vector<int> toVector(const int* data, int nel)
+  {
+    std::vector<int> values(data, data + nel);
+    return values;
+  }
+
+static inline std::vector<double> toVector(const double* data, int nel)
+{
+  std::vector<double> values(data, data + nel);
+  return values;
+}
+
 static inline std::vector<int> merge(const std::vector<int>& a, const std::vector<int>& b)
 {
   std::vector<int> s;
@@ -36,9 +49,10 @@ static inline int prod(const std::vector<int>& v) {
   return r;
 }
 
+// End is not included
 static inline std::vector<int> linspace(int start, int end, int stride = 1) {
   std::vector<int> v;
-  for(int idx = start; idx <= end; idx += stride) {
+  for(int idx = start; idx < end; idx += stride) {
     v.push_back(idx);
   }
   return v;

@@ -16,6 +16,8 @@
 #ifndef OCL_TENSOR_FUNCTIONS_H_
 #define OCL_TENSOR_FUNCTIONS_H_
 
+#include "utils/slicing.h"
+
 namespace ocl
 {
 
@@ -32,36 +34,37 @@ static std::vector<std::vector<int> > mergeIndizes(
   int s1 = p1.size();
   int s2 = p2.size();
 
-  std::vector<std::vector<int> > pout(p2[0].size(),s1*s2);
+  std::vector<std::vector<int> > pout(s1*s2);
   for(int k=0; k<s1; k++)
   {
     std::vector<int> ap1 = p1[k];
     for(int l=0; l<s2; l++)
     {
       std::vector<int> ap2 = p2[l];
-      pout[l+(k-1)*K2] = ap1[ap2];
+      pout[l+k*s1] = slice(ap1, ap2);
     }
   }
-} // mergeArrays
+  return pout;
+} // mergeIndizes
 
-static RootNode flattenTree(const RootNode& tree)
-{
-  TreeBuilder tout = TreeBuilder();
-  flattenTreeIterate(tree, &tout);
-  return tout;
-}
-
-static void flattenTreeIterate(const RootNode& tree, RootNode* tout)
-{
-  for (const auto& b : tree.branches) {
-    RootNode child = tree.get(b.first);
-    if (child.hasBranches()) {
-      flattenTreeIterate(child, tout);
-    } else {
-      tout->add(b, child);
-    }
-  } // end for
-}
+// static Tree flattenTree(const Tree& tree)
+// {
+//   TreeBuilder tout = TreeBuilder();
+//   flattenTreeIterate(tree, &tout);
+//   return tout;
+// }
+//
+// static void flattenTreeIterate(const Tree& tree, Tree* tout)
+// {
+//   for (const auto& b : tree.branches) {
+//     Tree child = tree.get(b.first);
+//     if (child.hasBranches()) {
+//       flattenTreeIterate(child, tout);
+//     } else {
+//       tout->add(b, child);
+//     }
+//   } // end for
+// }
 
 } // namespace tensor
 } // namespace ocl

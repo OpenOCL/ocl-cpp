@@ -22,11 +22,12 @@
 #include "utils/typedefs.h"
 #include "utils/functions.h"
 #include "tensor/functions.h"
+#include "tensor/casadi.h"
 
 namespace ocl
 {
 
-// class TensorStructure : public Root {
+// class TensorStructure : public Tree {
 //   TensorStructure(shape) : branches(Branches()), shape(shape), indizes(IndizesArray()) { }
 // };
 
@@ -66,36 +67,35 @@ class Tree
     return std::accumulate(s.begin(), s.end(), 0);
   }
 
-  Root get(std::string id) const
+  Tree get(std::string id) const
   {
-    Root b = this->branches.at(id);
-    IndizesArray idz = tensor::mergeArrays(indizes, b.indizes);
-    return Root(b.branches, b.nodeShape, idz);
+    Tree b = this->branches.at(id);
+    std::vector<std::vector<int> > idz = tensor::mergeIndizes(indizes, b.indizes);
+    return Tree(b.branches, b.nodeShape, idz);
   }
 
-  Root at(const int idx) const
+  Tree at(const int idx) const
   {
-    std::vector<int> idz = {indizes[idx]};
-    return Root(branches, nodeShape, idz);
+    std::vector<std::vector<int> > idz = {indizes[idx]};
+    return Tree(branches, nodeShape, idz);
   }
 
-  Root slice(const std::vector<int>& slice1, const std::vector<int>& slice2) const
+  Tree slice(const std::vector<int>& slice1, const std::vector<int>& slice2) const
   {
-    std::vector<std::vector<int> > a();
+    std::vector<std::vector<int> > a;
     for (uint i=0; i<indizes.size(); i++)
     {
 
-      ::casadi::DM m_reshaped = ::casadi::DM(nodeShape.get(0), nodeShape.get(1));
-      m_reshaped.set(indizes[i]);
-      ::casadi::DM m_sliced = m_reshaped(slice1, slice2);
+      ::casadi::IM m_reshaped = ::casadi::IM(nodeShape[0], nodeShape[1]);
+      m_reshaped.set( indizes[i], false, linspace(0, indizes[i].size()) );
+      ::casadi::IM m_sliced = m_reshaped(slice1, slice2);
 
       // copy data to vector
-      double *data = m_sliced.ptr();
-      int nel = shape(m_sliced).numel();
-      std::vector<double> values(data, data + nel);
-      a.push_back(values);
+      int *data = m_sliced.ptr();
+      int nel = m_sliced.size1()*m_sliced.size2();
+      a.push_back(toVector(data, nel));
     }
-    return a;
+    return Tree(branches, nodeShape, a);
   }
 
 protected:

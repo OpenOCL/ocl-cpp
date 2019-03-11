@@ -27,9 +27,11 @@ typedef int CasadiInteger;
 namespace casadi
 {
 
-//
-// data access functions
-
+static inline void assign(CasadiMatrixNat& m, const int row, const int col, const double value)
+{
+  // false means zero based indexing (true is one based like in Matlab)
+  m.set(value, false, row, col);
+}
 
 static inline std::vector<int> shape(const CasadiMatrixNat& m)
 {
@@ -62,8 +64,6 @@ static inline std::vector<double> full(const CasadiMatrixNat& m)
   std::vector<double> values(data, data + nel);
   return values;
 }
-
-
 
 // native casadi type operations
 static inline CasadiMatrixNat uplus(const CasadiMatrixNat& m) { return m; }
