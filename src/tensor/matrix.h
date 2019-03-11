@@ -19,8 +19,8 @@
 
 #include "casadi.h"
 #include "utils/typedefs.h"
-#include "slice.h"
-#include "shape.h"
+#include "utils/slice.h"
+#include "utils/shape.h"
 
 namespace ocl
 {

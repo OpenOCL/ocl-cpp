@@ -20,6 +20,7 @@
 #include <map>
 
 #include "utils/typedefs.h"
+#include "utils/shape.h"
 
 namespace ocl
 {
