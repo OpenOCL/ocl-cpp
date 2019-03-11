@@ -48,7 +48,7 @@ TENSOR_HEADERS = $(SRC)/tensor/casadi.h $(SRC)/tensor/functions.h \
  					       $(SRC)/tensor/matrix.h $(SRC)/tensor/root.h \
 								 $(SRC)/tensor/shape.h $(SRC)/tensor/tensor.h
 
-all: $(BIN)/casadi_playbox $(TESTS)
+all: $(BIN)/dev_playbox $(TESTS)
 gtest: $(GTEST_LIBS)
 clean:
 	rm -f $(TESTS) $(OBJ)/*.o
@@ -69,10 +69,10 @@ $(GTEST_LIB)/libgtest.a : $(OBJ)/gtest-all.o
 $(GTEST_LIB)/libgtest_main.a : $(OBJ)/gtest-all.o $(OBJ)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
-$(OBJ)/casadi_playbox.o : $(TEST)/casadi_playbox.cc $(SRC)/tensor/matrix.h
+$(OBJ)/dev_playbox.o : $(TEST)/dev_playbox.cc $(SRC)/tensor/matrix.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-$(BIN)/casadi_playbox : $(OBJ)/casadi_playbox.o
+$(BIN)/dev_playbox : $(OBJ)/dev_playbox.o
 	$(CXX) $(LDFLAGS) -L$(CASADI_LIB_PATH) $^ -lcasadi -o $@
 
 # tensor classes
