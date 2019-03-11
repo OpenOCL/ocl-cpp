@@ -19,8 +19,7 @@
 
 #include "casadi.h"
 #include "utils/typedefs.h"
-#include "utils/slice.h"
-#include "utils/shape.h"
+#include "utils/slicing.h"
 
 namespace ocl
 {
@@ -109,8 +108,8 @@ private:
   CasadiMatrixNat m;
 };
 
-static inline Shape shape(const Matrix& m) {
-  return Shape(casadi::shape(m.data()));
+static inline std::vector<int> shape(const Matrix& m) {
+  return casadi::shape(m.data());
 }
 
 static inline std::vector<double> full(const Matrix& m) {

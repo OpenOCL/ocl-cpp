@@ -1,4 +1,4 @@
-#include <utils/test.h>
+#include <utils/testing.h>
 #include "tensor/tensor.h"
 
 TEST(testGeneralTensor, Slice) {

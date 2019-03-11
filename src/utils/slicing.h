@@ -16,6 +16,8 @@
 #ifndef OCL_TENSOR_SLICE_H_
 #define OCL_TENSOR_SLICE_H_
 
+#include "utils/functions.h"
+
 namespace ocl {
 
 // A slicable class must provide a size method
@@ -25,13 +27,9 @@ public:
   virtual int size(const int dim) const = 0;
 };
 
+static inline std::vector<int> slice(const std::vector<int>& vector, const std::vector<int>& slices)
+{
 
-static inline std::vector<int> linspace(int start, int end, int stride = 1) {
-  std::vector<int> v;
-  for(int idx = start; idx <= end; idx += stride) {
-    v.push_back(idx);
-  }
-  return v;
 }
 
 static inline std::vector<int> all(const Slicable& obj, const int dim) {

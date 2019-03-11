@@ -18,26 +18,27 @@
 
 namespace ocl
 {
+
 namespace tensor
 {
 
-static IndizesArray mergeArrays(const IndizesArray &p1,
-    const IndizesArray &p2);
+static std::vector<std::vector<int> > mergeIndizes(
+    const std::vector<std::vector<int> >& p1,
+    const std::vector<std::vector<int> >& p2)
 {
   // Combine arrays of positions
   // p2 are relative to p1
   // Returns: absolute p2
-  const auto& s1 = p1.size();
-  const auto& s2 = p2.size();
+  int s1 = p1.size();
+  int s2 = p2.size();
 
-  IndizesArray pout(s2[0].size(),s1*s2);
+  std::vector<std::vector<int> > pout(p2[0].size(),s1*s2);
   for(int k=0; k<s1; k++)
   {
-    auto ap1 = p1[k];
-
+    std::vector<int> ap1 = p1[k];
     for(int l=0; l<s2; l++)
     {
-      auto ap2 = p2[l];
+      std::vector<int> ap2 = p2[l];
       pout[l+(k-1)*K2] = ap1[ap2];
     }
   }

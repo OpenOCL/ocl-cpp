@@ -20,79 +20,68 @@
 #include <map>
 
 #include "utils/typedefs.h"
-#include "utils/shape.h"
+#include "utils/functions.h"
+#include "tensor/functions.h"
 
 namespace ocl
 {
 
-class Structure
-{
-  virtual Shape shape() = 0;
-  virtual uint length() = 0;
-  virtual Shape size() = 0;
-  virtual uint nel() = 0;
-  virtual Structure get(const std::string& id);
-  virtual Structure get(const int idx);
-  virtual Structure slice(const Slices& slices);
-};
+// class TensorStructure : public Root {
+//   TensorStructure(shape) : branches(Branches()), shape(shape), indizes(IndizesArray()) { }
+// };
 
-class TensorStructure : public Root {
-  TensorStructure(shape) : branches(Branches()), shape(shape), indizes(IndizesArray()) { }
-};
-
-class Root : public Structure
+class Root
 {
  public:
 
-  typedef std::map<const std::string&, const RootNode> Branches;
-  typedef std::vector<std::vector<int> > IndizesArray;
+  Root(const std::map<std::string, Root>& branches,
+       const std::vector<int>& nodeShape,
+       const std::vector<std::vector<int> >& indizes)
+      : branches(branches), nodeShape(nodeShape), indizes(indizes) { }
 
-  Root(const Branches& branches, const Shape& shape, const IndizesArray& indizes)
-      : branches(branches), shape(shape), indizes(indizes) { }
-
-  boolean hasBranches() const {
+  bool hasBranches() const {
     return branches.empty();
   }
 
   // Return the shape of the nodes
-  virtual Shape shape() const override { return this->nodeShape; }
+  virtual std::vector<int> shape() const { return this->nodeShape; }
   // Returns the number of root nodes
-  uint length() const override { return indizes.size(); }
+  uint length() const { return indizes.size(); }
 
   // Return the complete shape including number of roots (length):
   // size := [shape length]
-  Shape size() const override
+  std::vector<int> size() const
   {
-    Shape s = this->shape();
-    if (shape.size() == 0 || this->length() > 1) {
-      s = merge( s, Shape(this->length()) );
+    std::vector<int> s = this->shape();
+    if (nodeShape.size() == 0 || this->length() > 1) {
+      s = merge( s, {(int)this->length()} );
     }
     return s;
   }
 
   // Number of elements: prod(size)
-  uint nel() const override
+  uint nel() const
   {
-    Shape s = this->size();
+    std::vector<int> s = this->size();
     return std::accumulate(s.begin(), s.end(), 0);
   }
 
-  virtual Root get(const std::string& id) const override
+  Root get(std::string id) const
   {
-    auto b = branches[id];
-    IndizesArray idz = Structure.mergeArrays(indizes, b.indizes);
+    Root b = this->branches.at(id);
+    IndizesArray idz = tensor::mergeArrays(indizes, b.indizes);
     return Root(b.branches, b.nodeShape, idz);
   }
 
-  virtual Root at(const int idx) override
+  Root at(const int idx) const
   {
     std::vector<int> idz = {indizes[idx]};
     return Root(branches, nodeShape, idz);
   }
 
-  virtual Root slice(const std::vector<int>& slice1, const std::vector<int>& slice2)
+  Root slice(const std::vector<int>& slice1, const std::vector<int>& slice2) const
   {
-    IndizesArray a();
+    std::vector<std::vector<int> > a();
     for (uint i=0; i<indizes.size(); i++)
     {
 
@@ -113,11 +102,11 @@ class Root : public Structure
 
 protected:
    // map to the children
-   const Branches branches;
+   std::map<std::string, Root> branches;
    // length of the structure
-   const Shape nodeShape;
+   std::vector<int> nodeShape;
    // vector of indizes
-   const IndizesArray indizes;
+   std::vector<std::vector<int> > indizes;
 };
 
 

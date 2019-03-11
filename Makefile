@@ -43,7 +43,7 @@ GTEST_SRCS_ = $(GTEST_PATH)/src/*.cc $(GTEST_PATH)/src/*.h $(GTEST_HEADERS)
 
 TESTS = $(BIN)/test_casadi $(BIN)/test_matrix $(BIN)/test_tensor $(BIN)/test_root
 TESTS_O = $(OBJ)/test_casadi.o $(OBJ)/test_matrix.o $(OBJ)/test_tensor.o
-COMMON_HEADERS = $(SRC)/utils/exceptions.h $(SRC)/utils/typedefs.h $(SRC)/utils/test.h $(SRC)/utils/slice.h $(SRC)/utils/shape.h
+COMMON_HEADERS = $(SRC)/utils/exceptions.h $(SRC)/utils/typedefs.h $(SRC)/utils/testing.h $(SRC)/utils/slicing.h
 TENSOR_HEADERS = $(SRC)/tensor/casadi.h $(SRC)/tensor/functions.h \
  					       $(SRC)/tensor/matrix.h $(SRC)/tensor/root.h \
 								 $(SRC)/tensor/tensor.h
