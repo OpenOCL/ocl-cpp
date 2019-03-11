@@ -54,7 +54,7 @@ public:
     return m;
   }
 
-  virtual int size(int dim) const override {
+  virtual int size(const int dim) const override {
     return this->m.size(dim);
   }
 

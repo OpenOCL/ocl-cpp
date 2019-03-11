@@ -89,21 +89,21 @@ class Root : public Structure
     return Root(branches, nodeShape, idz);
   }
 
-  virtual Root block(const int i, const int j, const int k, const int l)
+  virtual Root slice(const std::vector<int>& slice1, const std::vector<int>& slice2)
   {
     IndizesArray a();
     for (uint i=0; i<indizes.size(); i++)
     {
-      // Pass indizes memory to eigen to reshape and slice indizes
-      std::vector<int> idz = indizes[i];
-      int* idz_ptr = &idz[0];
-      eigen::Map<const eigen::Array<int,Dynamic,Dynamic> > m_reshaped(idz_ptr, nodeShape.get(0), nodeShape.get(1));
-      eigen::Array<int,Dynamic,Dynamic> m_sliced = m_reshaped.block(i, j, k, l);
+
+      ::casadi::DM m_reshaped = ::casadi::DM(nodeShape.get(0), nodeShape.get(1));
+      m_reshaped.set(indizes[i]);
+      ::casadi::DM m_sliced = m_reshaped(slice1, slice2);
 
       // copy data to vector
-      std::vector<int> dest(m_sliced.size);
-      dest.assign(m_sliced.data(), m_sliced.data() + m_sliced.size());
-      a.push_back(dest);
+      double *data = m_sliced.ptr();
+      int nel = shape(m_sliced).numel();
+      std::vector<double> values(data, data + nel);
+      a.push_back(values);
     }
     return a;
   }

@@ -21,7 +21,7 @@
 namespace ocl
 {
 
-class TreeTensor
+class TreeTensor : public Slicable
 {
 
  private:
@@ -55,6 +55,7 @@ class TreeTensor
 
   // Returns the size of value
   Size size() const { return this->structure().size(); }
+  virtual Size size(const int dim) const { return this->structure(dim).size(); }
 
   // Returns a sub-tree by id
   TreeTensor get(const std::string& id) const
@@ -71,7 +72,7 @@ class TreeTensor
   }
 
   // Slices value
-  TreeTensor slice(const Slices& slices = Slices::all(this->structure()) )
+  TreeTensor slice(const std::vector<int>& slice1 = slice::all(this, 0), const std::vector<int>& slice2 = slice::all(this, 1)) )
   {
     Root r = this->structure().slice(slices);
     return TreeTensor(r, this->value_storage());

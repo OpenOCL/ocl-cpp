@@ -22,7 +22,7 @@ namespace ocl {
 class Slicable
 {
 public:
-  virtual int size(int dim) const = 0;
+  virtual int size(const int dim) const = 0;
 };
 
 

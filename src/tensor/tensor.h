@@ -62,7 +62,7 @@ public:
     std::cout << "}" << std::endl;
   }
 
-  Matrix get(int i) const {
+  Matrix get(const int i) const {
     return this->data[i];
   }
 
@@ -74,7 +74,7 @@ public:
     return this->data.size();
   }
 
-  virtual int size(int dim) const override {
+  virtual int size(const int dim) const override {
     return this->data[0].size(dim);
   }
 

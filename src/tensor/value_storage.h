@@ -29,7 +29,7 @@ class ValueStorage
   int nel() { storage.size(); }
 
   // set trajectory of value
-  void set(const std::vector<int>& indizes, const std::vector<T>& value)
+  void set(const std::vector<int>& indizes, const std::vector<Tensor>& value)
   {
     assertEqual(indizes.size(), value.size());
 
