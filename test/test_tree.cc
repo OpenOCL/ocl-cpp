@@ -10,9 +10,9 @@ TEST(testTree, aTwoVariables)
 
   ocl::Tree x = tb.tree();
 
-  ocl::testAssertEqual(x.get("x1").indizes(),{{1,2}})
-  ocl::testAssertEqual(x.get("x2").indizes(),{{3,4,5,6,7,8}})
-  ocl::testAssertEqual(x.shape(),{8,1})
+  ocl::test::assertEqual(x.get("x1").indizes(),{{1,2}})
+  ocl::test::assertEqual(x.get("x2").indizes(),{{3,4,5,6,7,8}})
+  ocl::test::assertEqual(x.shape(),{8,1})
 }
 
 TEST(testTree, bShape)
@@ -22,7 +22,7 @@ TEST(testTree, bShape)
 
   ocl::Tree x = tb.tree();
 
-  testAssertEqual(x.shape(), {8,1})
+  ocl::test::assertEqual(x.shape(), {8,1})
 }
 
 TEST(testTree, cRepeatedVar) {
@@ -33,8 +33,8 @@ TEST(testTree, cRepeatedVar) {
 
   Tree x = tb.tree();
 
-  testAssertEqual(x.get("x1").indizes(),{{1,2,3},{10,11,12}})
-  testAssertEqual(x.get("x2").indizes(),{{4,5,6,7,8,9}})
+  ocl::test::assertEqual(x.get("x1").indizes(),{{1,2,3},{10,11,12}})
+  ocl::test::assertEqual(x.get("x2").indizes(),{{4,5,6,7,8,9}})
 }
 
 TEST(testTree, dSubTree)
@@ -56,8 +56,8 @@ TEST(testTree, dSubTree)
 
   ocl::Tree x = tb_x.tree();
 
-  ocl::testAssertEqual(x.get("u").get("x1").indizes(), {{4,5,6},{16,17,18},{28,29,30},{40,41,42}} );
+  ocl::test::assertEqual(x.get("u").get("x1").indizes(), {{4,5,6},{16,17,18},{28,29,30},{40,41,42}} );
 
   ocl::Tree r = x.get("u").at(1).get("x1");
-  ocl::testAssertEqual(r.indizes(), {{4,5,6},{16,17,18}} );
+  ocl::test::assertEqual(r.indizes(), {{4,5,6},{16,17,18}} );
 }
