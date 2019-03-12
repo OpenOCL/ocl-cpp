@@ -47,29 +47,21 @@ class TreeTensor : public Slicable
 
   // Sets a value, supports broadcasting
   // tensor::assign itself does broadcasting on the matrix level (dim 1 and 2)
-  void set(const Tensor& value) const {
+  void set(const Tensor& value) {
     for(unsigned int i=0; i < indizes.size(); i++)
     {
       assert(structure.indizes().size()==value.size() || value.size() == 1, "Can not broadcast value.");
       if (structure.indizes().size()==value.size) {
-        tensor::assign(value_storage, indizes[i], value.get(i).data(), value.get(i).size(0), value.get(i).size(1));
+        tensor::assign(indizes[i], value.get(i).data(), value.get(i).size(0), value.get(i).size(1), &value_storage);
       } else {
         // value.size() == 1, broadcast on the third dimension (repeat first matrix)
-        tensor::assign(value_storage, indizes[i], value.get(0), value.get(0).size(0), value.get(0).size(1);
+        tensor::assign(indizes[i], value.get(0), value.get(0).size(0), value.get(0).size(1), &value_storage);
       }
     }
   }
 
-  // Get value of tensor
-  Tensor value() const {
-    std::vector<T> vout = {};
-    for(unsigned int i=0; i < indizes.size(); i++)
-    {
-      T v = storage.slice(structure.indizes[i]);
-      v = v.reshape(shape);
-      vout[i] = v;
-    }
-    return Tensor(vout);
+  std::vector<double> data() const {
+    return value_storage;
   }
 
   // Returns the size of value
@@ -84,7 +76,7 @@ class TreeTensor : public Slicable
   }
 
   // Returns a sub-tree by index
-  TreeTensor at(const std::vector<int> indizes) const
+  TreeTensor at(const std::vector<int>& indizes) const
   {
     Tree r = this->structure().get(indizes);
     return TreeTensor(r, this->value_storage());
@@ -95,6 +87,30 @@ class TreeTensor : public Slicable
   {
     Tree r = this->structure().slice(slice1, slice2);
     return TreeTensor(r, this->value_storage());
+  }
+
+  // Get tensor value of tree tensor
+  Tensor value() const {
+    std::vector<Matrix> matrizes = {};
+    for(unsigned int i=0; i < indizes.size(); i++)
+    {
+      std::vector<double> d = tensor::subindex(value_storage, structure.indizes(i));
+      ocl::Matrix m(structure.shape(), d);
+      matrizes.push_back(m);
+    }
+    return Tensor(matrizes);
+  }
+
+  // Get value data of tree tensor.
+  // Returns vector/trajectory of matrizes in column major storage.
+  std::vector<std::vector<double> > data() const {
+    std::vector<std::vector<double> > data = {};
+    for(unsigned int i=0; i < indizes.size(); i++)
+    {
+      std::vector<double> d = tensor::subindex(value_storage, structure.indizes(i));
+      data.push_back(d);
+    }
+    return data;
   }
 
   // operators - unary element wise

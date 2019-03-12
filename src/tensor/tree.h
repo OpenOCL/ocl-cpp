@@ -17,20 +17,19 @@
 #define OCLCPP_OCL_TREE_H_
 
 #include <tuple>
-#include <map>
+#include <map>  // branches
 
 #include "utils/typedefs.h"
-#include "utils/functions.h"
-#include "tensor/functions.h"
-#include "tensor/casadi.h"
+#include "utils/functions.h"   // prod
+#include "tensor/functions.h"  // tensor::range
+#include "tensor/casadi.h"     // slice
 
+// This file defines classes Tree and Leaf
 namespace ocl
 {
-
-// class TensorStructure : public Tree {
-//   TensorStructure(shape) : branches(Branches()), shape(shape), indizes(IndizesArray()) { }
-// };
-
+// Tree structure with children accessable by id
+// The tree can have multiple roots (number given by length, number of vectors
+// in indizes), each root has the same shape given by nodeShape
 class Tree
 {
  public:
@@ -40,50 +39,45 @@ class Tree
        const std::vector<std::vector<int> >& indizes)
       : branches(branches), nodeShape(nodeShape), indizes(indizes) { }
 
+  // Check if there are subtrees
   bool hasBranches() const {
     return branches.empty();
   }
 
-  std::vector<std::vector<int> > indizes() {
-    return indizes;
+  // get indizes of trajectory element i
+  std::vector<int> indizes(int i) {
+    return indizes[i];
   }
 
   // Return the shape of the nodes
   virtual std::vector<int> shape() const { return this->nodeShape; }
+
   // Returns the number of root nodes
   uint length() const { return indizes.size(); }
 
-  // Return the complete shape including number of roots (length):
-  // size := [shape length]
-  std::vector<int> size() const
+  // Returns total number of elements
+  int size() const
   {
     std::vector<int> s = this->shape();
-    if (nodeShape.size() == 0 || this->length() > 1) {
-      s = merge( s, {(int)this->length()} );
-    }
-    return s;
+    return prod(s) * this->length;
   }
 
-  // Number of elements: prod(size)
-  uint nel() const
-  {
-    std::vector<int> s = this->size();
-    return std::accumulate(s.begin(), s.end(), 0);
-  }
-
-  Tree get(std::string id) const
+  // Get subtree by string id
+  Tree get(const std::string& id) const
   {
     Tree b = this->branches.at(id);
     std::vector<std::vector<int> > idz = tensor::mergeIndizes(indizes, b.indizes);
     return Tree(b.branches, b.nodeShape, idz);
   }
 
+  // Cut tree, get single element of trajectory
   Tree at(const int idx) const
   {
     std::vector<std::vector<int> > idz = {indizes[idx]};
     return Tree(branches, nodeShape, idz);
   }
 
+  // Slice matrizes in trajectory
   Tree slice(const std::vector<int>& slice1, const std::vector<int>& slice2) const
   {
     std::vector<std::vector<int> > a;
@@ -114,7 +108,12 @@ private:
    std::vector<std::vector<int> > indizes;
 };
 
-
+// A tree with no children/branches
+class Leaf : public Tree {
+  Leaf(const std::vector<int>& shape)
+    : branches(Branches()), shape(shape),
+      indizes( {tensor::range(0, prod(shape))} ) { }
+};
 
 } // namespace ocl
 #endif  // OCLCPP_OCL_TREE_H_

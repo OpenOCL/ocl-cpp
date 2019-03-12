@@ -42,9 +42,15 @@ static inline std::vector<int> range(int start, int end, int stride = 1) {
   return v;
 }
 
-static inline void assign(std::vector<doule>& value_storage, std::vector<int> indizes, std::vector<double> values, int dim0, int dim1)
+static inline void assign(std::vector<int> indizes, std::vector<double> values, int dim0, int dim1, std::vector<double> *value_storage)
 {
 
+}
+
+static inline std::vector<double> subsindex(const std::vector<double>& values, const std::vector<int>& indizes)
+{
+  
+  return v_out;
 }
 
 static inline std::vector<std::vector<int> > mergeIndizes(
