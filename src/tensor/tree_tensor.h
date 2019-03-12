@@ -17,8 +17,10 @@
 #define OCLCPP_OCL_TREETENSOR_H_
 
 #include "utils/typedefs.h"
-#inlcude "tensor/functions.h" // tensor::assign
+#include "utils/slicing.h"     // Slicable
+#inlcude "tensor/functions.h"  // tensor::assign
 
+// This file implements class TreeTensor and static methods on TreeTensor
 namespace ocl
 {
 
@@ -47,7 +49,8 @@ class TreeTensor : public Slicable
 
   // Sets a value, supports broadcasting
   // tensor::assign itself does broadcasting on the matrix level (dim 1 and 2)
-  void set(const Tensor& value) {
+  void set(const Tensor& value)
+  {
     for(unsigned int i=0; i < indizes.size(); i++)
     {
       assert(structure.indizes().size()==value.size() || value.size() == 1, "Can not broadcast value.");
@@ -90,7 +93,8 @@ class TreeTensor : public Slicable
   }
 
   // Get tensor value of tree tensor
-  Tensor value() const {
+  Tensor value() const
+  {
     std::vector<Matrix> matrizes = {};
     for(unsigned int i=0; i < indizes.size(); i++)
     {
@@ -103,7 +107,8 @@ class TreeTensor : public Slicable
 
   // Get value data of tree tensor.
   // Returns vector/trajectory of matrizes in column major storage.
-  std::vector<std::vector<double> > data() const {
+  std::vector<std::vector<double> > data() const
+  {
     std::vector<std::vector<double> > data = {};
     for(unsigned int i=0; i < indizes.size(); i++)
     {

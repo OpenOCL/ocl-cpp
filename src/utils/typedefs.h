@@ -16,6 +16,10 @@
 #ifndef OCLCPP_OCL_TYPEDEFS_H_
 #define OCLCPP_OCL_TYPEDEFS_H_
 
+#include <cmath>
+#include <functional>
+#include <vector>
+
 namespace ocl
 {
 typedef float Scalar;

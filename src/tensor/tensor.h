@@ -13,19 +13,14 @@
  *    General Public License for more details.
  *
  */
-#ifndef OCLCPP_OCL_EIGENTENSOR_H_
-#define OCLCPP_OCL_EIGENTENSOR_H_
+#ifndef OCLCPP_OCL_TENSOR_H_
+#define OCLCPP_OCL_TENSOR_H_
 
-#include <cmath>
-#include <functional>
-#include <algorithm>
-#include <vector>
-#include <string>
-#include <iostream>
+#include <iostream>            // disp
 
-#include "tensor/matrix.h"
-#include "utils/typedefs.h"
-#include "utils/exceptions.h"
+#include "utils/typedefs.h"    // Integer
+#include "tensor/matrix.h"     // Matrix
+#include "utils/slicing.h"     // Slicable
 
 namespace ocl
 {
@@ -436,4 +431,4 @@ inline Tensor Tensor::operator/(const Tensor& other) const {
 }
 
 } // namespace ocl
-#endif  // OCLCPP_OCL_EIGENTENSOR_H_
+#endif  // OCLCPP_OCL_TENSOR_H_
