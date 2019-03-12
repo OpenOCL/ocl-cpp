@@ -10,8 +10,8 @@ TEST(testTree, aTwoVariables)
 
   ocl::Tree x = tb.tree();
 
-  ocl::testAssertEqual(x.get("x1").indizes(),{1,2})
-  ocl::testAssertEqual(x.get("x2").indizes(),{3,4,5,6,7,8})
+  ocl::testAssertEqual(x.get("x1").indizes(),{{1,2}})
+  ocl::testAssertEqual(x.get("x2").indizes(),{{3,4,5,6,7,8}})
   ocl::testAssertEqual(x.shape(),{8,1})
 }
 
