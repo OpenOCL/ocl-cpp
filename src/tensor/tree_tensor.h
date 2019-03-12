@@ -13,10 +13,11 @@
  *    General Public License for more details.
  *
  */
-#ifndef OCLCPP_OCL_STRUCTUREDTENSOR_H_
-#define OCLCPP_OCL_STRUCTUREDTENSOR_H_
+#ifndef OCLCPP_OCL_TREETENSOR_H_
+#define OCLCPP_OCL_TREETENSOR_H_
 
 #include "utils/typedefs.h"
+#inlcude "tensor/functions.h" // tensor::assign
 
 namespace ocl
 {
@@ -25,7 +26,7 @@ class TreeTensor : public Slicable
 {
 
  private:
-  ValueStorage& value_storage;
+  std::vector<double>& value_storage;
   const Tree structure;
 
  public:
@@ -33,6 +34,7 @@ class TreeTensor : public Slicable
   // Constructor
   TreeTensor(const Tree &structure, const ValueStorage &value_storage)
       : structure(structure), value_storage(value_storage) { }
+
   // Accessors
   const ValueStorage& value_storage() const { return this->value_storage; }
   const Structure& structure() const { return this->structure; }
@@ -44,18 +46,35 @@ class TreeTensor : public Slicable
   void disp();
 
   // Sets a value, supports broadcasting
+  // tensor::assign itself does broadcasting on the matrix level (dim 1 and 2)
   void set(const Tensor& value) const {
-    this->value_storage().set(this->structure(), value);
+    for(unsigned int i=0; i < indizes.size(); i++)
+    {
+      assert(structure.indizes().size()==value.size() || value.size() == 1, "Can not broadcast value.");
+      if (structure.indizes().size()==value.size) {
+        tensor::assign(value_storage, indizes[i], value.get(i).data(), value.get(i).size(0), value.get(i).size(1));
+      } else {
+        // value.size() == 1, broadcast on the third dimension (repeat first matrix)
+        tensor::assign(value_storage, indizes[i], value.get(0), value.get(0).size(0), value.get(0).size(1);
+      }
+    }
   }
 
   // Get value of tensor
   Tensor value() const {
-   this->value_storage().value(this->structure());
+    std::vector<T> vout = {};
+    for(unsigned int i=0; i < indizes.size(); i++)
+    {
+      T v = storage.slice(structure.indizes[i]);
+      v = v.reshape(shape);
+      vout[i] = v;
+    }
+    return Tensor(vout);
   }
 
   // Returns the size of value
-  Size size() const { return this->structure().size(); }
-  virtual Size size(const int dim) const { return this->structure(dim).size(); }
+  std::vector<int> size() const { return this->structure().size(); }
+  std::vector<int> size(const int dim) const { return this->structure().size(dim); }
 
   // Returns a sub-tree by id
   TreeTensor get(const std::string& id) const
@@ -65,81 +84,75 @@ class TreeTensor : public Slicable
   }
 
   // Returns a sub-tree by index
-  TreeTensor get(const std::vector<int> indizes) const
+  TreeTensor at(const std::vector<int> indizes) const
   {
     Tree r = this->structure().get(indizes);
     return TreeTensor(r, this->value_storage());
   }
 
-  // Slices value
-  TreeTensor slice(const std::vector<int>& slice1 = slice::all(this, 0), const std::vector<int>& slice2 = slice::all(this, 1)) )
+  TreeTensor slice(const std::vector<int>& slice1 = slice::all(this, 0),
+                   const std::vector<int>& slice2 = slice::all(this, 1)) const
   {
-    Tree r = this->structure().slice(slices);
+    Tree r = this->structure().slice(slice1, slice2);
     return TreeTensor(r, this->value_storage());
   }
 
   // operators - unary element wise
-  T uplus() const;
-  T uminus() const;
-  T square() const;
-  T inverse() const;
-  T abs() const;
-  T sqrt() const;
-  T sin() const;
-  T cos() const;
-  T tan() const;
-  T atan() const;
-  T asin() const;
-  T acos() const;
-  T tanh() const;
-  T cosh() const;
-  T sinh() const;
-  T exp() const;
-  T log() const;
+  Tensor uplus() const;
+  Tensor uminus() const;
+  Tensor square() const;
+  Tensor inverse() const;
+  Tensor abs() const;
+  Tensor sqrt() const;
+  Tensor sin() const;
+  Tensor cos() const;
+  Tensor tan() const;
+  Tensor atan() const;
+  Tensor asin() const;
+  Tensor acos() const;
+  Tensor tanh() const;
+  Tensor cosh() const;
+  Tensor sinh() const;
+  Tensor exp() const;
+  Tensor log() const;
 
   // operators - unary element wise + scalar
-  T cpow(const T& exponent) const;
+  Tensor cpow(const Tensor& exponent) const;
 
   // reduction operations
-  T norm() const;
-  T sum() const;
-  T min() const;
-  T max() const;
-  T trace() const;
-  T mean() const;
+  Tensor norm() const;
+  Tensor sum() const;
+  Tensor min() const;
+  Tensor max() const;
+  Tensor trace() const;
+  Tensor mean() const;
 
   // geometrical operations
-  T transpose() const;
+  Tensor transpose() const;
 
-  T reshape(Integer cols, Integer rows) const;
-
-  // get slice (i:j)
-  T slice(Integer i, Integer j) const;
-
-  // get block slice of cols (i:j) and rows (k:l)
-  T block(Integer i, Integer j, Integer k, Integer l) const;
+  Tensor reshape(int cols, int rows) const;
 
   // binary coefficient wise
-  T plus(const T& other) const;
-  T minus(const T& other) const;
-  T ctimes(const T& other) const;
-  T cdivide(const T& other) const;
+  Tensor plus(const TreeTensor& other) const;
+  Tensor minus(const TreeTensor& other) const;
+  Tensor ctimes(const TreeTensor& other) const;
+  Tensor cdivide(const TreeTensor& other) const;
 
-  T cmin(const T& other) const;
-  T cmax(const T& other) const;
+  Tensor cmin(const TreeTensor& other) const;
+  Tensor cmax(const TreeTensor& other) const;
 
   // binary matrix operations
-  T times(const T& other) const;
-  T cross(const T& other) const;
-  T dot(const T& other) const;
+  Tensor times(const TreeTensor& other) const;
+  Tensor cross(const TreeTensor& other) const;
+  Tensor dot(const TreeTensor& other) const;
 
-  T atan2(const T& other) const;
+  Tensor atan2(const TreeTensor& other) const;
 
   // operator overloading
-  T operator+(const T& other) const;
-  T operator-(const T& other) const;
-  T operator*(const T& other) const;
-  T operator/(const T& other) const;
+  Tensor operator+(const TreeTensor& other) const;
+  Tensor operator-(const TreeTensor& other) const;
+  Tensor operator*(const TreeTensor& other) const;
+  Tensor operator/(const TreeTensor& other) const;
 
 }; // class StructuredTensor
 
@@ -293,8 +306,5 @@ inline Tensor TreeTensor::operator/(const TreeTensor& other) const {
   return this->cdivide(other);
 }
 
-
 } // namespace ocl
-
-
-#endif  // OCLCPP_OCL_STRUCTUREDTENSOR_H_
+#endif  // OCLCPP_OCL_TREETENSOR_H_

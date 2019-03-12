@@ -24,7 +24,30 @@ namespace ocl
 namespace tensor
 {
 
-static std::vector<std::vector<int> > mergeIndizes(
+// End is included (closed interval)
+static inline std::vector<int> linspace(int start, int end, int stride = 1) {
+  std::vector<int> v;
+  for(int idx = start; idx <= end; idx += stride) {
+    v.push_back(idx);
+  }
+  return v;
+}
+
+// End is not included (open interval)
+static inline std::vector<int> range(int start, int end, int stride = 1) {
+  std::vector<int> v;
+  for(int idx = start; idx < end; idx += stride) {
+    v.push_back(idx);
+  }
+  return v;
+}
+
+static inline void assign(std::vector<doule>& value_storage, std::vector<int> indizes, std::vector<double> values, int dim0, int dim1)
+{
+
+}
+
+static inline std::vector<std::vector<int> > mergeIndizes(
     const std::vector<std::vector<int> >& p1,
     const std::vector<std::vector<int> >& p2)
 {

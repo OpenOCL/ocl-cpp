@@ -1,7 +1,6 @@
 #include <utils/testing.h>
 #include "tensor/tree.h"
 
-
 TEST(testTreeTensor, aThreeVariables)
 {
   ocl::TreeBuilder tb;
@@ -69,7 +68,7 @@ TEST(testTreeTensor, bOcpTensor)
   vs = ValueStorage(ocp_tree.size(), 0);
 
   v = OclTensor.create(ocp_tree, vs);
-  v.get("R").set(ocl::eye(3));
+  v.get("R").set(ocl::Matrix::Eye(3));
   v.get("p").set({100, 0, -50});
   v.get("v").set({20, 0, 0});
   v.get("w").set({0, 1, 0.1});

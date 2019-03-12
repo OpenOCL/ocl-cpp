@@ -27,8 +27,6 @@
 #include "utils/typedefs.h"
 #include "utils/exceptions.h"
 
-
-
 namespace ocl
 {
 
@@ -77,9 +75,6 @@ public:
   virtual int size(const int dim) const override {
     return this->data[0].size(dim);
   }
-
-  // Slices value
-  std::vector<M> slice();
 
   //
   // Declare tensor operations

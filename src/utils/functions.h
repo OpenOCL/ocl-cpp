@@ -20,19 +20,21 @@
 
 namespace ocl {
 
+// Array to vector.
+static inline std::vector<int> toVector(const int* data, int nel)
+{
+  std::vector<int> values(data, data + nel);
+  return values;
+}
 
-  static inline std::vector<int> toVector(const int* data, int nel)
-  {
-    std::vector<int> values(data, data + nel);
-    return values;
-  }
-
+// Array to vector.
 static inline std::vector<double> toVector(const double* data, int nel)
 {
   std::vector<double> values(data, data + nel);
   return values;
 }
 
+// Concatenate two vectors
 static inline std::vector<int> merge(const std::vector<int>& a, const std::vector<int>& b)
 {
   std::vector<int> s;
@@ -41,6 +43,7 @@ static inline std::vector<int> merge(const std::vector<int>& a, const std::vecto
   return s;
 }
 
+// Product of all elements in vector
 static inline int prod(const std::vector<int>& v) {
   int r = 1;
   for (unsigned int i=0; i<v.size(); i++) {
@@ -48,16 +51,6 @@ static inline int prod(const std::vector<int>& v) {
   }
   return r;
 }
-
-// End is not included
-static inline std::vector<int> linspace(int start, int end, int stride = 1) {
-  std::vector<int> v;
-  for(int idx = start; idx < end; idx += stride) {
-    v.push_back(idx);
-  }
-  return v;
-}
-
 
 } // namespace ocl
 #endif // OCL_UTILS_FUNCTIONS_H_

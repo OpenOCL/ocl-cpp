@@ -114,6 +114,13 @@ private:
   CasadiMatrixNat m;
 };
 
+static inline std::vector<double> toColumnMajor(const Matrix& m)
+{
+  std::vector<double> v(m.size());
+
+  return v;
+}
+
 static inline std::vector<int> shape(const Matrix& m) {
   return casadi::shape(m.data());
 }

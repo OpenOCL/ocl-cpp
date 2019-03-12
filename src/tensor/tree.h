@@ -44,6 +44,10 @@ class Tree
     return branches.empty();
   }
 
+  std::vector<std::vector<int> > indizes() {
+    return indizes;
+  }
+
   // Return the shape of the nodes
   virtual std::vector<int> shape() const { return this->nodeShape; }
   // Returns the number of root nodes
@@ -94,11 +98,14 @@ class Tree
       int *data = m_sliced.ptr();
       int nel = m_sliced.size1()*m_sliced.size2();
       a.push_back(toVector(data, nel));
+
+      std::vector<int> sliceShape;
     }
-    return Tree(branches, nodeShape, a);
+    std::map<std::string, Tree> branches;
+    return Tree(branches, sliceShape, a);
   }
 
-protected:
+private:
    // map to the children
    std::map<std::string, Tree> branches;
    // length of the structure
