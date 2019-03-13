@@ -35,7 +35,7 @@ public:
     return ColumnMajorVector(m.slice(indizes, 0));
   }
 
-  void assign(const std::vector<int>& indizes, const std::vector<double>& values, int size0, int size1)
+  void assign(const std::vector<int>& indizes, const ColumnMajorVector& values, int size0, int size1)
   {
     m.assign(indizes, 0, values);
   }

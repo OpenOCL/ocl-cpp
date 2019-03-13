@@ -34,10 +34,10 @@ static inline void assign(CasadiMatrix& m, const int row, const int col, const d
 }
 
 static inline void assign(CasadiMatrix& m, const std::vector<int>& rows,
-                          const int col, const std::vector<double>& values)
+                          const int col, const CasadiMatrix& values)
 {
   // false means zero based indexing (true is one based like in Matlab)
-  m.set(value, false, row, col);
+  m.set(values, false, row, col);
 }
 
 static inline std::vector<int> shape(const CasadiMatrix& m)

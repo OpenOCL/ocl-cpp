@@ -67,7 +67,7 @@ public:
 
   // Member functions are defined inline below class (after static functions).
   void assign(int row, int col, double val);
-  void assign(std::vector<int> rows, int col, std::vector<double> values);
+  void assign(const std::vector<int>& rows, int col, const ColumnMajorVector& values);
 
   Matrix uplus() const;
   Matrix uminus() const;
@@ -131,7 +131,8 @@ static inline void assign(Matrix& m, int row, int col, double val) {
   casadi::assign(m.rawRef(), row, col, val);
 }
 
-static inline void assign(Matrix& m, std::vector<int> rows, int col, std::vector<double> values) {
+static inline void assign(Matrix& m, const std::vector<int>& rows, int col,
+                          const ColumnMajorVector& values) {
   casadi::assign(m.rawRef(), rows, col, values);
 }
 
