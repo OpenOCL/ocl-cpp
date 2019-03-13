@@ -23,8 +23,11 @@ namespace ocl {
 class ColumnMajorVector
 {
 public:
-  ColumnMajorVector(const Matrix& m) : m(m) { }
+
+  // Reshape matrizes to vectors
+  ColumnMajorVector(const Matrix& m) : m(m.reshape(m.size(0)*m.size(1), 1)) { }
   ColumnMajorVector(int size) : m(Matrix::Zero(size,1)) { }
+
   Matrix data() const { return m; }
 
   ColumnMajorVector subsindex(const std::vector<int>& indizes) const

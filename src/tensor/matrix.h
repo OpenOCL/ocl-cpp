@@ -33,31 +33,33 @@ class Matrix : public Slicable
 public:
 
   static Matrix Sym(const int rows, const int cols) {
-    CasadiMatrixNat m = CasadiMatrixNat::sym("m", rows, cols);
+    CasadiMatrix m = CasadiMatrix::sym("m", rows, cols);
     return Matrix(m);
   }
 
   static Matrix Eye(const int n) {
-    return Matrix(CasadiMatrixNat::eye(n));
+    return Matrix(CasadiMatrix::eye(n));
   }
 
   static Matrix Zero(const int rows, const int cols) {
-    return Matrix(CasadiMatrixNat::zeros(rows, cols));
+    return Matrix(CasadiMatrix::zeros(rows, cols));
   }
 
   static Matrix One(const int rows, const int cols) {
-    return Matrix(CasadiMatrixNat::ones(rows, cols));
+    return Matrix(CasadiMatrix::ones(rows, cols));
   }
 
   Matrix(const ::casadi::DM& v) : m(v) { }
   Matrix(const double v) : m(v) { }
-  Matrix(const CasadiMatrixNat& m) : m(m) { }
+  Matrix(const CasadiMatrix& m) : m(m) { }
   Matrix(const ColumnMajorVector& v) : m(v.data()) { }
 
 
   // Get underlying data type
-  CasadiMatrixNat raw() const { return m; }
-  CasadiMatrixNat& rawRef() { return m; }
+  CasadiMatrix raw() const { return m; }
+  CasadiMatrix& rawRef() { return m; }
+
+  CasadiMatrix data() const { return m.reshape(size(0)*size(1), 1); }
 
   virtual int size(const int dim) const override {
     return this->m.size(dim);
@@ -113,7 +115,7 @@ public:
   Matrix atan2(const Matrix& other) const;
 
 private:
-  CasadiMatrixNat m;
+  CasadiMatrix m;
 };
 
 static inline std::vector<int> shape(const Matrix& m) {

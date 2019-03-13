@@ -17,8 +17,7 @@
 #define OCLCPP_OCL_TREETENSOR_H_
 
 #include "utils/typedefs.h"
-#include "utils/slicing.h"     // Slicable
-#include "tensor/functions.h"  // tensor::assign
+#include "utils/slicing.h"        // Slicable
 #include "tensor/column_major.h"  // ColumnMajorVector, assign, subsindex
 
 // This file implements class TreeTensor and static methods on TreeTensor
@@ -49,17 +48,17 @@ class TreeTensor : public Slicable
   void disp();
 
   // Sets a value, supports broadcasting
-  // tensor::assign itself does broadcasting on the matrix level (dim 1 and 2)
+  // ColumnMajorVector::assign itself does broadcasting on the matrix level (dim 1 and 2)
   void set(const Tensor& value)
   {
     for(unsigned int i=0; i < indizes.size(); i++)
     {
       assert(structure.indizes().size()==value.size() || value.size() == 1, "Can not broadcast value.");
       if (structure.indizes().size()==value.size) {
-        tensor::assign(indizes[i], value.get(i).data(), value.get(i).size(0), value.get(i).size(1), &value_storage);
+        value_storage.assign(indizes[i], value.get(i).data(), value.get(i).size(0), value.get(i).size(1));
       } else {
         // value.size() == 1, broadcast on the third dimension (repeat first matrix)
-        tensor::assign(indizes[i], value.get(0), value.get(0).size(0), value.get(0).size(1), &value_storage);
+        value_storage.assign(indizes[i], value.get(0).data(), value.get(0).size(0), value.get(0).size(1));
       }
     }
   }
