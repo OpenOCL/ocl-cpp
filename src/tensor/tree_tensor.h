@@ -28,17 +28,17 @@ class TreeTensor : public Slicable
 {
 
  private:
-  std::vector<double>& value_storage;
+  ColumnMajorVector& value_storage;
   const Tree structure;
 
  public:
 
   // Constructor
-  TreeTensor(const Tree &structure, const ValueStorage &value_storage)
+  TreeTensor(const Tree &structure, const ColumnMajorVector &value_storage)
       : structure(structure), value_storage(value_storage) { }
 
   // Accessors
-  const ValueStorage& value_storage() const { return this->value_storage; }
+  const ColumnMajorVector& value_storage() const { return this->value_storage; }
   const Structure& structure() const { return this->structure; }
 
   // Return a string representation
@@ -63,7 +63,8 @@ class TreeTensor : public Slicable
     }
   }
 
-  std::vector<double> data() const {
+  // Return reference to the value storage
+  ColumnMajorVector& data() const {
     return value_storage;
   }
 

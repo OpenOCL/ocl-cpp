@@ -21,9 +21,10 @@
 #include "utils/typedefs.h"
 #include "utils/slicing.h"
 
+
+// This file defines classes Matrix and Vector
 namespace ocl
 {
-
 
 class Matrix : public Slicable
 {
@@ -35,28 +36,24 @@ public:
   }
 
   static Matrix Eye(const int n) {
-    return CasadiMatrixNat::eye(n);
+    return Matrix(CasadiMatrixNat::eye(n));
   }
 
   static Matrix Zero(const int rows, const int cols) {
-    return CasadiMatrixNat::zeros(rows, cols);
+    return Matrix(CasadiMatrixNat::zeros(rows, cols));
   }
 
   static Matrix One(const int rows, const int cols) {
-    return CasadiMatrixNat::ones(rows, cols);
+    return Matrix(CasadiMatrixNat::ones(rows, cols));
   }
 
   Matrix(const ::casadi::DM& v) : m(v) { }
   Matrix(const double v) : m(v) { }
   Matrix(const CasadiMatrixNat& m) : m(m) { }
 
-  CasadiMatrixNat data() const{
-    return m;
-  }
-
-  CasadiMatrixNat& dataRef(){
-    return m;
-  }
+  // Get underlying data type
+  CasadiMatrixNat raw() const { return m; }
+  CasadiMatrixNat& rawRef() { return m; }
 
   virtual int size(const int dim) const override {
     return this->m.size(dim);
@@ -122,70 +119,70 @@ static inline std::vector<double> toColumnMajor(const Matrix& m)
 }
 
 static inline std::vector<int> shape(const Matrix& m) {
-  return casadi::shape(m.data());
+  return casadi::shape(m.raw());
 }
 
 static inline std::vector<double> full(const Matrix& m) {
-  return casadi::full(m.data());
+  return casadi::full(m.raw());
 }
 
 // Static functions
 static inline void assign(Matrix& m, int row, int col, double val)
 {
-  casadi::assign(m.dataRef(), row, col, val);
+  casadi::assign(m.rawRef(), row, col, val);
 }
 
-static inline Matrix uplus(const Matrix& m) { return Matrix(casadi::uplus(m.data())); }
-static inline Matrix uminus(const Matrix& m) { return Matrix(casadi::uminus(m.data())); }
-static inline Matrix square(const Matrix& m) { return Matrix(casadi::square(m.data())); }
-static inline Matrix inverse(const Matrix& m) { return Matrix(casadi::inverse(m.data())); }
-static inline Matrix abs(const Matrix& m) { return Matrix(casadi::abs(m.data())); }
-static inline Matrix sqrt(const Matrix& m) { return Matrix(casadi::sqrt(m.data())); }
-static inline Matrix sin(const Matrix& m) { return Matrix(casadi::sin(m.data())); }
-static inline Matrix cos(const Matrix& m) { return Matrix(casadi::cos(m.data())); }
-static inline Matrix tan(const Matrix& m) { return Matrix(casadi::tan(m.data())); }
-static inline Matrix atan(const Matrix& m) { return Matrix(casadi::atan(m.data())); }
-static inline Matrix asin(const Matrix& m) { return Matrix(casadi::asin(m.data())); }
-static inline Matrix acos(const Matrix& m) { return Matrix(casadi::acos(m.data())); }
-static inline Matrix tanh(const Matrix& m) { return Matrix(casadi::tanh(m.data())); }
-static inline Matrix sinh(const Matrix& m) { return Matrix(casadi::sinh(m.data())); }
-static inline Matrix cosh(const Matrix& m) { return Matrix(casadi::cosh(m.data())); }
-static inline Matrix exp(const Matrix& m) { return Matrix(casadi::exp(m.data())); }
-static inline Matrix log(const Matrix& m) { return Matrix(casadi::log(m.data())); }
+static inline Matrix uplus(const Matrix& m) { return Matrix(casadi::uplus(m.raw())); }
+static inline Matrix uminus(const Matrix& m) { return Matrix(casadi::uminus(m.raw())); }
+static inline Matrix square(const Matrix& m) { return Matrix(casadi::square(m.raw())); }
+static inline Matrix inverse(const Matrix& m) { return Matrix(casadi::inverse(m.raw())); }
+static inline Matrix abs(const Matrix& m) { return Matrix(casadi::abs(m.raw())); }
+static inline Matrix sqrt(const Matrix& m) { return Matrix(casadi::sqrt(m.raw())); }
+static inline Matrix sin(const Matrix& m) { return Matrix(casadi::sin(m.raw())); }
+static inline Matrix cos(const Matrix& m) { return Matrix(casadi::cos(m.raw())); }
+static inline Matrix tan(const Matrix& m) { return Matrix(casadi::tan(m.raw())); }
+static inline Matrix atan(const Matrix& m) { return Matrix(casadi::atan(m.raw())); }
+static inline Matrix asin(const Matrix& m) { return Matrix(casadi::asin(m.raw())); }
+static inline Matrix acos(const Matrix& m) { return Matrix(casadi::acos(m.raw())); }
+static inline Matrix tanh(const Matrix& m) { return Matrix(casadi::tanh(m.raw())); }
+static inline Matrix sinh(const Matrix& m) { return Matrix(casadi::sinh(m.raw())); }
+static inline Matrix cosh(const Matrix& m) { return Matrix(casadi::cosh(m.raw())); }
+static inline Matrix exp(const Matrix& m) { return Matrix(casadi::exp(m.raw())); }
+static inline Matrix log(const Matrix& m) { return Matrix(casadi::log(m.raw())); }
 
-static inline Matrix cpow(const Matrix& m, const Matrix& exponent) { return Matrix(casadi::cpow(m.data(), exponent.data())); }
+static inline Matrix cpow(const Matrix& m, const Matrix& exponent) { return Matrix(casadi::cpow(m.raw(), exponent.raw())); }
 
-static inline Matrix norm(const Matrix& m) { return Matrix(casadi::norm(m.data())); }
-static inline Matrix sum(const Matrix& m) { return Matrix(casadi::sum(m.data())); }
-static inline Matrix min(const Matrix& m) { return Matrix(casadi::min(m.data())); }
-static inline Matrix max(const Matrix& m) { return Matrix(casadi::max(m.data())); }
-static inline Matrix mean(const Matrix& m) { return Matrix(casadi::mean(m.data())); }
-static inline Matrix trace(const Matrix& m) { return Matrix(casadi::trace(m.data())); }
+static inline Matrix norm(const Matrix& m) { return Matrix(casadi::norm(m.raw())); }
+static inline Matrix sum(const Matrix& m) { return Matrix(casadi::sum(m.raw())); }
+static inline Matrix min(const Matrix& m) { return Matrix(casadi::min(m.raw())); }
+static inline Matrix max(const Matrix& m) { return Matrix(casadi::max(m.raw())); }
+static inline Matrix mean(const Matrix& m) { return Matrix(casadi::mean(m.raw())); }
+static inline Matrix trace(const Matrix& m) { return Matrix(casadi::trace(m.raw())); }
 
 static inline Matrix reshape(const Matrix& m, const Integer rows, const Integer cols) {
-  return Matrix(casadi::reshape(m.data(), rows, cols));
+  return Matrix(casadi::reshape(m.raw(), rows, cols));
 }
 static inline Matrix transpose(const Matrix& m) {
-  return Matrix(casadi::transpose(m.data()));
+  return Matrix(casadi::transpose(m.raw()));
 }
 
 static inline Matrix slice(const Matrix& m, const std::vector<int>& slice1, const std::vector<int>& slice2) {
-  return Matrix(casadi::slice(m.data(), slice1, slice2));
+  return Matrix(casadi::slice(m.raw(), slice1, slice2));
 }
 
-static inline Matrix ctimes(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::ctimes(m1.data(), m2.data())); }
-static inline Matrix plus(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::plus(m1.data(), m2.data())); }
-static inline Matrix cdivide(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::cdivide(m1.data(), m2.data())); }
-static inline Matrix minus(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::minus(m1.data(), m2.data())); }
+static inline Matrix ctimes(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::ctimes(m1.raw(), m2.raw())); }
+static inline Matrix plus(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::plus(m1.raw(), m2.raw())); }
+static inline Matrix cdivide(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::cdivide(m1.raw(), m2.raw())); }
+static inline Matrix minus(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::minus(m1.raw(), m2.raw())); }
 
-static inline Matrix cmin(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::cmin(m1.data(), m2.data())); }
-static inline Matrix cmax(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::cmax(m1.data(), m2.data())); }
+static inline Matrix cmin(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::cmin(m1.raw(), m2.raw())); }
+static inline Matrix cmax(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::cmax(m1.raw(), m2.raw())); }
 
-static inline Matrix times(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::times(m1.data(), m2.data())); }
-static inline Matrix cross(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::cross(m1.data(), m2.data())); }
-static inline Matrix dot(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::dot(m1.data(), m2.data())); }
+static inline Matrix times(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::times(m1.raw(), m2.raw())); }
+static inline Matrix cross(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::cross(m1.raw(), m2.raw())); }
+static inline Matrix dot(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::dot(m1.raw(), m2.raw())); }
 
-static inline Matrix atan2(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::atan2(m1.data(), m2.data())); }
+static inline Matrix atan2(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::atan2(m1.raw(), m2.raw())); }
 
 // Member functions (calling the static functions above)
 inline void Matrix::assign(int row, int col, double val) { return ocl::assign(*this, row, col, val); }

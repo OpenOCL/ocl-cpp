@@ -25,18 +25,19 @@
 namespace ocl
 {
 
-// Tensor class is dependent of Matrix type M.
+// Tensor class
 class Tensor : public Slicable
 {
 public:
 
-  // Use shortcut T for Tensor and M for Matrix
-  typedef Matrix M;
-  typedef Tensor T;
-
   // static constructors
-  static Tensor Zero(const int rows, const int cols) { return Tensor(M::Zero(rows, cols)); }
-  static Tensor One(const int rows, const int cols) { return Tensor(M::One(rows, cols)); };
+  static Tensor Zero(const int rows, const int cols) {
+    return Tensor(Matrix::Zero(rows, cols));
+  }
+
+  static Tensor One(const int rows, const int cols) {
+    return Tensor(Matrix::One(rows, cols));
+  };
 
   // Constructors
   Tensor() { }
@@ -44,7 +45,10 @@ public:
   Tensor(const Matrix& m) { this->insert(m); }
 
   // Returns the underlying value
-  std::vector<M> value();
+  std::vector<ColumnMajorVector>& data()
+  {
+
+  }
 
   void disp()
   {
@@ -67,7 +71,7 @@ public:
     return this->data.size();
   }
 
-  virtual int size(const int dim) const override {
+  virtual int size(const int dim) const {
     return this->data[0].size(dim);
   }
 
@@ -75,64 +79,64 @@ public:
   // Declare tensor operations
 
   // operators - unary element wise
-  T uplus() const;
-  T uminus() const;
-  T square() const;
-  T inverse() const;
-  T abs() const;
-  T sqrt() const;
-  T sin() const;
-  T cos() const;
-  T tan() const;
-  T atan() const;
-  T asin() const;
-  T acos() const;
-  T tanh() const;
-  T cosh() const;
-  T sinh() const;
-  T exp() const;
-  T log() const;
+  Tensor uplus() const;
+  Tensor uminus() const;
+  Tensor square() const;
+  Tensor inverse() const;
+  Tensor abs() const;
+  Tensor sqrt() const;
+  Tensor sin() const;
+  Tensor cos() const;
+  Tensor tan() const;
+  Tensor atan() const;
+  Tensor asin() const;
+  Tensor acos() const;
+  Tensor tanh() const;
+  Tensor cosh() const;
+  Tensor sinh() const;
+  Tensor exp() const;
+  Tensor log() const;
 
   // operators - unary element wise + scalar
-  T cpow(const T& exponent) const;
+  Tensor cpow(const Tensor& exponent) const;
 
   // reduction operations
-  T norm() const;
-  T sum() const;
-  T min() const;
-  T max() const;
-  T trace() const;
-  T mean() const;
+  Tensor norm() const;
+  Tensor sum() const;
+  Tensor min() const;
+  Tensor max() const;
+  Tensor trace() const;
+  Tensor mean() const;
 
   // geometrical operations
-  T transpose() const;
+  Tensor transpose() const;
 
-  T reshape(Integer cols, Integer rows) const;
+  Tensor reshape(Integer cols, Integer rows) const;
 
   // get slice (i:j)
-  T slice(const std::vector<int>& slice1, const std::vector<int>& slice2) const;
+  Tensor slice(const std::vector<int>& slice1, const std::vector<int>& slice2) const;
 
   // binary coefficient wise
-  T plus(const T& other) const;
-  T minus(const T& other) const;
-  T ctimes(const T& other) const;
-  T cdivide(const T& other) const;
+  Tensor plus(const Tensor& other) const;
+  Tensor minus(const Tensor& other) const;
+  Tensor ctimes(const Tensor& other) const;
+  Tensor cdivide(const Tensor& other) const;
 
-  T cmin(const T& other) const;
-  T cmax(const T& other) const;
+  Tensor cmin(const Tensor& other) const;
+  Tensor cmax(const Tensor& other) const;
 
   // binary matrix operations
-  T times(const T& other) const;
-  T cross(const T& other) const;
-  T dot(const T& other) const;
+  Tensor times(const Tensor& other) const;
+  Tensor cross(const Tensor& other) const;
+  Tensor dot(const Tensor& other) const;
 
-  T atan2(const T& other) const;
+  Tensor atan2(const Tensor& other) const;
 
   // operator overloading
-  T operator+(const T& other) const;
-  T operator-(const T& other) const;
-  T operator*(const T& other) const;
-  T operator/(const T& other) const;
+  Tensor operator+(const Tensor& other) const;
+  Tensor operator-(const Tensor& other) const;
+  Tensor operator*(const Tensor& other) const;
+  Tensor operator/(const Tensor& other) const;
 
 private:
   std::vector<M> data;
