@@ -13,16 +13,18 @@
  *    General Public License for more details.
  *
  */
-#ifndef OCLCPP_OCL_SYMBOLIC_AD_MATRIX_H_
-#define OCLCPP_OCL_SYMBOLIC_AD_MATRIX_H_
 
+#ifndef OCLCPP_OCL_MATRIX_H_
+#define OCLCPP_OCL_MATRIX_H_
 
 #include "casadi.h"
 #include "utils/typedefs.h"
 #include "utils/slicing.h"
 
+// File summary:
+//  Defines class ocl::Matrix.
+//  Static operations on ocl::Matrix.
 
-// This file defines classes Matrix and Vector
 namespace ocl
 {
 
@@ -240,4 +242,4 @@ inline Matrix Matrix::dot(const Matrix& other) const { return ocl::dot(*this, ot
 inline Matrix Matrix::atan2(const Matrix& other) const { return ocl::atan2(*this, other); }
 
 }
-#endif // OCLCPP_OCL_SYMBOLIC_AD_MATRIX_H_
+#endif // OCLCPP_OCL_MATRIX_H_

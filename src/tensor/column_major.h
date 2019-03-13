@@ -16,6 +16,7 @@
 #ifndef OCL_COLUMN_MAJOR_H_
 #define OCL_COLUMN_MAJOR_H_
 
+
 namespace ocl {
 
 static inline void assign(std::vector<int> indizes, std::vector<double> values, int dim0, int dim1, ColumnMajorVector *value_storage)
@@ -29,7 +30,7 @@ static inline std::vector<double> subsindex(const ColumnMajorVector& values, con
   return v_out;
 }
 
-// Column major vector
+// Stores matrix data in column major format
 class ColumnMajorVector
 {
 public:
