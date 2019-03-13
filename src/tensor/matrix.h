@@ -52,6 +52,8 @@ public:
   Matrix(const ::casadi::DM& v) : m(v) { }
   Matrix(const double v) : m(v) { }
   Matrix(const CasadiMatrixNat& m) : m(m) { }
+  Matrix(const ColumnMajorVector& v) : m(v.data()) { }
+
 
   // Get underlying data type
   CasadiMatrixNat raw() const { return m; }
@@ -63,6 +65,7 @@ public:
 
   // Member functions are defined inline below class (after static functions).
   void assign(int row, int col, double val);
+  void assign(std::vector<int> rows, int col, std::vector<double> values);
 
   Matrix uplus() const;
   Matrix uminus() const;
@@ -113,13 +116,6 @@ private:
   CasadiMatrixNat m;
 };
 
-static inline std::vector<double> toColumnMajor(const Matrix& m)
-{
-  std::vector<double> v(m.size());
-
-  return v;
-}
-
 static inline std::vector<int> shape(const Matrix& m) {
   return casadi::shape(m.raw());
 }
@@ -129,9 +125,12 @@ static inline std::vector<double> full(const Matrix& m) {
 }
 
 // Static functions
-static inline void assign(Matrix& m, int row, int col, double val)
-{
+static inline void assign(Matrix& m, int row, int col, double val) {
   casadi::assign(m.rawRef(), row, col, val);
+}
+
+static inline void assign(Matrix& m, std::vector<int> rows, int col, std::vector<double> values) {
+  casadi::assign(m.rawRef(), rows, col, values);
 }
 
 static inline Matrix uplus(const Matrix& m) { return Matrix(casadi::uplus(m.raw())); }
@@ -188,6 +187,7 @@ static inline Matrix atan2(const Matrix& m1, const Matrix& m2) { return Matrix(c
 
 // Member functions (calling the static functions above)
 inline void Matrix::assign(int row, int col, double val) { return ocl::assign(*this, row, col, val); }
+inline void Matrix::assign(std::vector<int> rows, int col, std::vecto<double> values) { return ocl::assign(*this, rows, col, values); }
 
 inline Matrix Matrix::uplus() const { return ocl::uplus(*this); }
 inline Matrix Matrix::uminus() const { return ocl::uminus(*this); }

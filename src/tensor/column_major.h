@@ -19,22 +19,23 @@
 
 namespace ocl {
 
-static inline void assign(std::vector<int> indizes, std::vector<double> values, int dim0, int dim1, ColumnMajorVector *value_storage)
-{
-
-}
-
-static inline std::vector<double> subsindex(const ColumnMajorVector& values, const std::vector<int>& indizes)
-{
-
-  return v_out;
-}
-
 // Stores matrix data in column major format
 class ColumnMajorVector
 {
 public:
+  ColumnMajorVector(const Matrix& m) : m(m) { }
   ColumnMajorVector(int size) : m(Matrix::Zero(size,1)) { }
+  Matrix data() const { return m; }
+
+  ColumnMajorVector subsindex(const std::vector<int>& indizes) const
+  {
+    return ColumnMajorVector(m.slice(indizes, 0));
+  }
+
+  void assign(const std::vector<int>& indizes, const std::vector<double>& values, int size0, int size1)
+  {
+    m.assign(indizes, 0, values);
+  }
 
 private:
   Matrix m;

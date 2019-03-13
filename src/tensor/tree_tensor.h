@@ -18,7 +18,8 @@
 
 #include "utils/typedefs.h"
 #include "utils/slicing.h"     // Slicable
-#inlcude "tensor/functions.h"  // tensor::assign
+#include "tensor/functions.h"  // tensor::assign
+#include "tensor/column_major.h"  // ColumnMajorVector, assign, subsindex
 
 // This file implements class TreeTensor and static methods on TreeTensor
 namespace ocl
@@ -63,6 +64,32 @@ class TreeTensor : public Slicable
     }
   }
 
+  // Get tensor value of tree tensor
+  Tensor value() const
+  {
+    std::vector<Matrix> matrizes = {};
+    for(unsigned int i=0; i < indizes.size(); i++)
+    {
+      ColumnMajorVector d = tensor::subindex(value_storage, structure.indizes(i));
+      ocl::Matrix m(structure.shape(), d);
+      matrizes.push_back(m);
+    }
+    return Tensor(matrizes);
+  }
+
+  // Get value data of tree tensor.
+  // Returns vector/trajectory of matrizes in column major storage.
+  std::vector<ColumnMajorVector> data() const
+  {
+    std::vector<std::vector<double> > data = {};
+    for(unsigned int i=0; i < indizes.size(); i++)
+    {
+      ColumnMajorVector d = tensor::subindex(value_storage, structure.indizes(i));
+      data.push_back(d);
+    }
+    return data;
+  }
+
   // Return reference to the value storage
   ColumnMajorVector& data() const {
     return value_storage;
@@ -91,32 +118,6 @@ class TreeTensor : public Slicable
   {
     Tree r = this->structure().slice(slice1, slice2);
     return TreeTensor(r, this->value_storage());
-  }
-
-  // Get tensor value of tree tensor
-  Tensor value() const
-  {
-    std::vector<Matrix> matrizes = {};
-    for(unsigned int i=0; i < indizes.size(); i++)
-    {
-      std::vector<double> d = tensor::subindex(value_storage, structure.indizes(i));
-      ocl::Matrix m(structure.shape(), d);
-      matrizes.push_back(m);
-    }
-    return Tensor(matrizes);
-  }
-
-  // Get value data of tree tensor.
-  // Returns vector/trajectory of matrizes in column major storage.
-  std::vector<std::vector<double> > data() const
-  {
-    std::vector<std::vector<double> > data = {};
-    for(unsigned int i=0; i < indizes.size(); i++)
-    {
-      std::vector<double> d = tensor::subindex(value_storage, structure.indizes(i));
-      data.push_back(d);
-    }
-    return data;
   }
 
   // operators - unary element wise
