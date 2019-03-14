@@ -17,6 +17,7 @@
 #define OCL_COLUMN_MAJOR_H_
 
 
+
 namespace ocl {
 
 // Stores matrix data in column major format
@@ -25,7 +26,7 @@ class ColumnMajorVector
 public:
 
   // Reshape matrizes to vectors
-  ColumnMajorVector(const Matrix& m) : m(m.reshape(m.size(0)*m.size(1), 1)) { }
+  ColumnMajorVector(const CasadiMatrix& m) : m(m.reshape(m.size(0)*m.size(1), 1)) { }
   ColumnMajorVector(int size) : m(Matrix::Zero(size,1)) { }
 
   Matrix data() const { return m; }
@@ -37,11 +38,11 @@ public:
 
   void assign(const std::vector<int>& indizes, const ColumnMajorVector& values, int size0, int size1)
   {
-    m.assign(indizes, 0, values);
+    m.assign(indizes, 0, values.data());
   }
 
 private:
-  Matrix m;
+  CasadiMatrix m;
 };
 
 } // namespace ocl

@@ -45,7 +45,7 @@ class Tree
   }
 
   // get indizes of trajectory element i
-  std::vector<int> indizes(int i) {
+  std::vector<int> getIndizes(int i) {
     return indizes[i];
   }
 
@@ -59,7 +59,7 @@ class Tree
   int size() const
   {
     std::vector<int> s = this->shape();
-    return prod(s) * this->length;
+    return prod(s) * this->length();
   }
 
   // Get subtree by string id
@@ -92,9 +92,8 @@ class Tree
       int *data = m_sliced.ptr();
       int nel = m_sliced.size1()*m_sliced.size2();
       a.push_back(toVector(data, nel));
-
-      std::vector<int> sliceShape;
     }
+    std::vector<int> sliceShape {(int)slice1.size(), (int)slice2.size()};
     std::map<std::string, Tree> branches;
     return Tree(branches, sliceShape, a);
   }
@@ -111,8 +110,7 @@ private:
 // A tree with no children/branches
 class Leaf : public Tree {
   Leaf(const std::vector<int>& shape)
-    : branches(Branches()), shape(shape),
-      indizes( {tensor::range(0, prod(shape))} ) { }
+    : Tree(std::map<std::string, Tree>(), shape, {range(0, prod(shape))}) { }
 };
 
 } // namespace ocl

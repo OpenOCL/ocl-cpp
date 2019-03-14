@@ -1,5 +1,6 @@
 #include <utils/testing.h>
 #include "tensor/tree.h"
+#include "tensor/tree_builder.h"
 
 
 TEST(testTree, aTwoVariables)

@@ -45,10 +45,7 @@ public:
   Tensor(const Matrix& m) { this->insert(m); }
 
   // Returns the underlying value
-  std::vector<ColumnMajorVector>& data()
-  {
 
-  }
 
   void disp()
   {
@@ -139,7 +136,7 @@ public:
   Tensor operator/(const Tensor& other) const;
 
 private:
-  std::vector<M> data;
+  std::vector<Matrix> data;
 
 }; // class Tensor<M>
 

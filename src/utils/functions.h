@@ -20,6 +20,24 @@
 
 namespace ocl {
 
+// End is included (closed interval)
+static inline std::vector<int> linspace(int start, int end, int stride = 1) {
+  std::vector<int> v;
+  for(int idx = start; idx <= end; idx += stride) {
+    v.push_back(idx);
+  }
+  return v;
+}
+
+// End is not included (open interval)
+static inline std::vector<int> range(int start, int end, int stride = 1) {
+  std::vector<int> v;
+  for(int idx = start; idx < end; idx += stride) {
+    v.push_back(idx);
+  }
+  return v;
+}
+
 // Array to vector.
 static inline std::vector<int> toVector(const int* data, int nel)
 {

@@ -52,14 +52,12 @@ public:
   Matrix(const ::casadi::DM& v) : m(v) { }
   Matrix(const double v) : m(v) { }
   Matrix(const CasadiMatrix& m) : m(m) { }
-  Matrix(const ColumnMajorVector& v) : m(v.data()) { }
-
 
   // Get underlying data type
   CasadiMatrix raw() const { return m; }
   CasadiMatrix& rawRef() { return m; }
 
-  CasadiMatrix data() const { return m.reshape(size(0)*size(1), 1); }
+  CasadiMatrix data() const { return casadi::reshape(m, size(0)*size(1), 1); }
 
   virtual int size(const int dim) const override {
     return this->m.size(dim);
@@ -67,7 +65,7 @@ public:
 
   // Member functions are defined inline below class (after static functions).
   void assign(int row, int col, double val);
-  void assign(const std::vector<int>& rows, int col, const ColumnMajorVector& values);
+  void assign(const std::vector<int>& rows, int col, const CasadiMatrix& values);
 
   Matrix uplus() const;
   Matrix uminus() const;
@@ -132,7 +130,7 @@ static inline void assign(Matrix& m, int row, int col, double val) {
 }
 
 static inline void assign(Matrix& m, const std::vector<int>& rows, int col,
-                          const ColumnMajorVector& values) {
+                          const CasadiMatrix& values) {
   casadi::assign(m.rawRef(), rows, col, values);
 }
 
@@ -190,7 +188,7 @@ static inline Matrix atan2(const Matrix& m1, const Matrix& m2) { return Matrix(c
 
 // Member functions (calling the static functions above)
 inline void Matrix::assign(int row, int col, double val) { return ocl::assign(*this, row, col, val); }
-inline void Matrix::assign(std::vector<int> rows, int col, std::vecto<double> values) { return ocl::assign(*this, rows, col, values); }
+inline void Matrix::assign(const std::vector<int>& rows, int col, const CasadiMatrix& values) { return ocl::assign(*this, rows, col, values); }
 
 inline Matrix Matrix::uplus() const { return ocl::uplus(*this); }
 inline Matrix Matrix::uminus() const { return ocl::uminus(*this); }

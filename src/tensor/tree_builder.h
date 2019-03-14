@@ -23,11 +23,11 @@ class TreeBuilder
  public:
   TreeBuilder();
 
-  void add(const String& id, const int length);
-  void add(const String& id, const Size& size);
-  void add(const String& id, const RootNode& node);
+  void add(const std::string& id, const int length);
+  void add(const std::string& id, const std::vector<int>& size);
+  void add(const std::string& id, const Tree& tree);
 
-  void addRepeated(const std::vector<String>& ids, const std::vector<RootNode>& nodes, const int N);
+  void addRepeated(const std::vector<String>& ids, const std::vector<Tree>& trees, const int N);
 
   Root getTree();
 
@@ -37,4 +37,4 @@ class TreeBuilder
 };
 
 } // namespace ocl
-#endif OCLCPP_OCL_TREEBUILDER_H_
+#endif // OCLCPP_OCL_TREEBUILDER_H_

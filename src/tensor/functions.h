@@ -24,24 +24,6 @@ namespace ocl
 namespace tensor
 {
 
-// End is included (closed interval)
-static inline std::vector<int> linspace(int start, int end, int stride = 1) {
-  std::vector<int> v;
-  for(int idx = start; idx <= end; idx += stride) {
-    v.push_back(idx);
-  }
-  return v;
-}
-
-// End is not included (open interval)
-static inline std::vector<int> range(int start, int end, int stride = 1) {
-  std::vector<int> v;
-  for(int idx = start; idx < end; idx += stride) {
-    v.push_back(idx);
-  }
-  return v;
-}
-
 static inline std::vector<std::vector<int> > mergeIndizes(
     const std::vector<std::vector<int> >& p1,
     const std::vector<std::vector<int> >& p2)
