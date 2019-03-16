@@ -26,7 +26,7 @@ BIN = ./build/bin
 OBJ = ./build/obj
 
 CPPFLAGS += -isystem $(GTEST_PATH)/include -isystem $(CASADI_INCLUDE_PATH)
-CXXFLAGS += -g -Wall -Wextra -std=c++11 -fmax-errors=3
+CXXFLAGS += -g -Wall -Wextra -std=c++11 -ferror-limit=3
 
 LDFLAGS +=
 
@@ -45,8 +45,8 @@ TESTS = $(BIN)/test_casadi $(BIN)/test_matrix $(BIN)/test_tensor $(BIN)/test_tre
 TESTS_O = $(OBJ)/test_casadi.o $(OBJ)/test_matrix.o $(OBJ)/test_tensor.o
 COMMON_HEADERS = $(SRC)/utils/exceptions.h $(SRC)/utils/typedefs.h $(SRC)/utils/testing.h $(SRC)/utils/slicing.h
 TENSOR_HEADERS = $(SRC)/tensor/casadi.h $(SRC)/tensor/functions.h \
- 					       $(SRC)/tensor/matrix.h $(SRC)/tensor/tree.h \
-								 $(SRC)/tensor/tensor.h
+ 					       $(SRC)/tensor/matrix.h  $(SRC)/tensor/tree.h \
+								 $(SRC)/tensor/tensor.h $(SRC)/tensor/tree_builder.h
 
 all: $(BIN)/dev_playbox $(TESTS)
 gtest: $(GTEST_LIBS)

@@ -16,24 +16,71 @@
 #ifndef OCLCPP_OCL_TREEBUILDER_H_
 #define OCLCPP_OCL_TREEBUILDER_H_
 
+#include "utils/assertions.h"  // assertEqual
+#include "utils/functions.h"   // prod, merge
+
 namespace ocl {
 
 class TreeBuilder
 {
  public:
-  TreeBuilder();
 
-  void add(const std::string& id, const int length);
-  void add(const std::string& id, const std::vector<int>& size);
-  void add(const std::string& id, const Tree& tree);
+  void add(const std::string& id, const int length = 1) {
+    add(id, {length, 1});
+  }
 
-  void addRepeated(const std::vector<String>& ids, const std::vector<Tree>& trees, const int N);
+  void add(const std::string& id, const std::vector<int>& shape = {1,1})
+  {
+    int N = prod(shape);
+    Tree tree = Tree( Tree::Branches(), shape, {range(_len, N)} );
+    addTree(id, tree);
+    _len += N;
+  }
 
-  Root getTree();
+  void add(const std::string& id, const Tree& tree)
+  {
+    int N = tree.size();
+    Tree t = Tree( tree._branches, tree.shape(), {range(_len, N)} );
+    addTree(id, t);
+    _len += N;
+  }
+
+  void addRepeated(const std::vector<std::string>& ids, const std::vector<Tree>& trees, const int N)
+  {
+    assertEqual(ids.size(), trees.size(), "Number of ids must correspond to the number of trees to add.");
+
+    for (int i=0; i<N; i++) {
+      for (unsigned int j=0; j<ids.size(); j++) {
+        add(ids[j], trees[j]);
+      }
+    }
+  }
+
+  void addTree(const std::string& id, const Tree& tree)
+  {
+    auto it =  _tree._branches.find(id);
+    if (it == _tree._branches.end())
+    {
+      std::pair<std::string, Tree> el(id, tree);
+      _tree._branches.insert(el);
+    }
+    else
+    {
+      Tree branch = _tree._branches.at(id);
+
+      // append all indizes of
+      branch._indizes = merge<std::vector<int>>(branch._indizes, tree._indizes);
+    }
+    _tree._shape = {_len, 1};
+    _tree._indizes = {range(0, _len)};
+  }
+
+  // Returns a reference to the tree object which the tree builder owns
+  Tree tree() { return _tree; };
 
  private:
-  int len;
-  Root tree;
+  int _len;
+  Tree _tree;
 };
 
 } // namespace ocl

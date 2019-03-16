@@ -53,9 +53,10 @@ static inline std::vector<double> toVector(const double* data, int nel)
 }
 
 // Concatenate two vectors
-static inline std::vector<int> merge(const std::vector<int>& a, const std::vector<int>& b)
+template<class T>
+static inline std::vector<T> merge(const std::vector<T>& a, const std::vector<T>& b)
 {
-  std::vector<int> s;
+  std::vector<T> s;
   s.insert( s.end(), a.begin(), a.end() );
   s.insert( s.end(), b.begin(), b.end() );
   return s;

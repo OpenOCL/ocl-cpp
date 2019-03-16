@@ -32,28 +32,46 @@ namespace ocl
 // in indizes), each root has the same shape given by nodeShape
 class Tree
 {
- public:
+
+// TreeBuilder is a friend class so that it can construct trees
+friend class TreeBuilder;
+
+public:
+
+  // constructor for empty branches
+  static std::map<std::string, Tree> Branches() {
+    return std::map<std::string, Tree>();
+  }
+
+  Tree() { }
 
   Tree(const std::map<std::string, Tree>& branches,
-       const std::vector<int>& nodeShape,
+       const std::vector<int>& shape,
        const std::vector<std::vector<int> >& indizes)
-      : branches(branches), nodeShape(nodeShape), indizes(indizes) { }
+      : _branches(branches), _shape(shape), _indizes(indizes) { }
 
   // Check if there are subtrees
   bool hasBranches() const {
-    return branches.empty();
+    return this->_branches.empty();
   }
 
   // get indizes of trajectory element i
   std::vector<int> getIndizes(int i) {
-    return indizes[i];
+    return this->_indizes[i];
   }
 
   // Return the shape of the nodes
-  virtual std::vector<int> shape() const { return this->nodeShape; }
+  std::vector<int> shape() const {
+    return this->_shape;
+  }
+
+  // Return indizes vector
+  std::vector<std::vector<int> > indizes() {
+    return this->_indizes;
+  }
 
   // Returns the number of root nodes
-  uint length() const { return indizes.size(); }
+  uint length() const { return this->_indizes.size(); }
 
   // Returns total number of elements
   int size() const
@@ -65,27 +83,27 @@ class Tree
   // Get subtree by string id
   Tree get(const std::string& id) const
   {
-    Tree b = this->branches.at(id);
-    std::vector<std::vector<int> > idz = tensor::mergeIndizes(indizes, b.indizes);
-    return Tree(b.branches, b.nodeShape, idz);
+    Tree b = this->_branches.at(id);
+    std::vector<std::vector<int> > idz = tensor::mergeIndizes(this->_indizes, b._indizes);
+    return Tree(b._branches, b._shape, idz);
   }
 
   // Cut tree, get single element of trajectory
   Tree at(const int idx) const
   {
-    std::vector<std::vector<int> > idz = {indizes[idx]};
-    return Tree(branches, nodeShape, idz);
+    std::vector<std::vector<int> > idz = {this->_indizes[idx]};
+    return Tree(this->_branches, this->_shape, idz);
   }
 
   // Slice matrizes in trajectory
   Tree slice(const std::vector<int>& slice1, const std::vector<int>& slice2) const
   {
     std::vector<std::vector<int> > a;
-    for (uint i=0; i<indizes.size(); i++)
+    for (uint i=0; i<this->_indizes.size(); i++)
     {
 
-      ::casadi::IM m_reshaped = ::casadi::IM(nodeShape[0], nodeShape[1]);
-      m_reshaped.set( indizes[i], false, linspace(0, indizes[i].size()) );
+      ::casadi::IM m_reshaped = ::casadi::IM(this->_shape[0], this->_shape[1]);
+      m_reshaped.set( this->_indizes[i], false, linspace(0, this->_indizes[i].size()) );
       ::casadi::IM m_sliced = m_reshaped(slice1, slice2);
 
       // copy data to vector
@@ -100,11 +118,11 @@ class Tree
 
 private:
    // map to the children
-   std::map<std::string, Tree> branches;
+   std::map<std::string, Tree> _branches;
    // length of the structure
-   std::vector<int> nodeShape;
+   std::vector<int> _shape;
    // vector of indizes
-   std::vector<std::vector<int> > indizes;
+   std::vector<std::vector<int> > _indizes;
 };
 
 // A tree with no children/branches

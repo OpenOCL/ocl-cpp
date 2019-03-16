@@ -44,6 +44,20 @@ void assertEqual(const std::vector<double>& v1, const std::vector<double>& v2) {
   assertDoubleFullEqual(v1,v2);
 }
 
+void assertEqual(const std::vector<int>& v1, const std::vector<int>& v2) {
+  EXPECT_EQ(v1.size(), v2.size()) << "Vectors v1 and v2 are of unequal length";
+  for (unsigned int i = 0; i < v1.size(); ++i) {
+    EXPECT_EQ(v1[i], v2[i]) << "Vectors v1 and v2 differ at index " << i;
+  }
+}
+
+void assertEqual(const std::vector<std::vector<int>>& v1, const std::vector<std::vector<int>>& v2) {
+  EXPECT_EQ(v1.size(), v2.size()) << "Vectors v1 and v2 are of unequal length";
+  for (unsigned int i = 0; i < v1.size(); ++i) {
+    assertEqual(v1[i], v2[i]);
+  }
+}
+
 
 
 } // namespace test
