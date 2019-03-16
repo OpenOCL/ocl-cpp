@@ -43,7 +43,7 @@ public:
     return std::map<std::string, Tree>();
   }
 
-  Tree() { }
+  Tree() : _branches(std::map<std::string, Tree>()), _shape({}), _indizes({}) { }
 
   Tree(const std::map<std::string, Tree>& branches,
        const std::vector<int>& shape,

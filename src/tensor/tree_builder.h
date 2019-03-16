@@ -16,14 +16,17 @@
 #ifndef OCLCPP_OCL_TREEBUILDER_H_
 #define OCLCPP_OCL_TREEBUILDER_H_
 
-#include "utils/assertions.h"  // assertEqual
-#include "utils/functions.h"   // prod, merge
+#include "utils/assertions.h"   // assertEqual
+#include "utils/functions.h"    // prod, merge
+#include "tensor/tree.h"        // Tree
 
 namespace ocl {
 
 class TreeBuilder
 {
- public:
+public:
+
+  TreeBuilder() : _len(0), _tree(Tree()) { }
 
   void add(const std::string& id, const int length = 1) {
     add(id, {length, 1});
@@ -33,7 +36,7 @@ class TreeBuilder
   {
     int N = prod(shape);
     Tree tree = Tree( Tree::Branches(), shape, {range(_len, N)} );
-    addTree(id, tree);
+    this->addTree(id, tree);
     _len += N;
   }
 
@@ -68,11 +71,11 @@ class TreeBuilder
     {
       Tree branch = _tree._branches.at(id);
 
-      // append all indizes of
+      //append all indizes of
       branch._indizes = merge<std::vector<int>>(branch._indizes, tree._indizes);
     }
     _tree._shape = {_len, 1};
-    _tree._indizes = {range(0, _len)};
+    _tree._indizes = {range(0, _len+1)};
   }
 
   // Returns a reference to the tree object which the tree builder owns

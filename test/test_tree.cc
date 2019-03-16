@@ -1,5 +1,4 @@
 #include <utils/testing.h>
-#include "tensor/tree.h"
 #include "tensor/tree_builder.h"
 
 
@@ -9,10 +8,10 @@ TEST(testTree, aTwoVariables)
   tb.add("x1", {1,2});
   tb.add("x2", {3,2});
 
-  // ocl::Tree x = tb.tree();
-  //
-  // ocl::test::assertEqual(x.get("x1").indizes(),{{1,2}});
-  // ocl::test::assertEqual(x.get("x2").indizes(),{{3,4,5,6,7,8}});
+  ocl::Tree x = tb.tree();
+
+  ocl::test::assertEqual(x.get("x1").indizes(),{{0,1}});
+  ocl::test::assertEqual(x.get("x2").indizes(),{{2,3,4,5,6,7}});
   // ocl::test::assertEqual(x.shape(),{8,1});
 }
 

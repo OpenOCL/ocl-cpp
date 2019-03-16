@@ -76,16 +76,16 @@ $(BIN)/dev_playbox : $(OBJ)/dev_playbox.o
 	$(CXX) $(LDFLAGS) -L$(CASADI_LIB_PATH) $^ -lcasadi -o $@
 
 # tensor classes
-$(OBJ)/test_casadi.o : $(TEST)/test_casadi.cc $(TENSOR_HEADERS) $(COMMON_HEADERS) $(GTEST_HEADERS)
+$(OBJ)/test_casadi.o : $(TEST)/test_casadi.cc $(SRC)/tensor/casadi.h $(COMMON_HEADERS) $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJ)/test_matrix.o : $(TEST)/test_matrix.cc $(TENSOR_HEADERS) $(COMMON_HEADERS) $(GTEST_HEADERS)
+$(OBJ)/test_matrix.o : $(TEST)/test_matrix.cc $(SRC)/tensor/matrix.h $(SRC)/tensor/casadi.h $(COMMON_HEADERS) $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJ)/test_tensor.o : $(TEST)/test_tensor.cc $(TENSOR_HEADERS) $(COMMON_HEADERS) $(GTEST_HEADERS)
+$(OBJ)/test_tensor.o : $(TEST)/test_tensor.cc $(SRC)/tensor/tensor.h $(SRC)/tensor/matrix.h $(SRC)/tensor/casadi.h $(COMMON_HEADERS) $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJ)/test_tree.o : $(TEST)/test_tree.cc $(TENSOR_HEADERS) $(COMMON_HEADERS) $(GTEST_HEADERS)
+$(OBJ)/test_tree.o : $(TEST)/test_tree.cc $(SRC)/tensor/tree_builder.h $(SRC)/tensor/tree.h $(COMMON_HEADERS) $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 # binaries
