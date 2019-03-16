@@ -35,3 +35,16 @@ and run the compilation with
 ```bash
 sh compile.sh
 ```
+
+## gdb commands
+
+```bash
+b test_tree.cc:13
+run
+cont
+del 1
+dis 1
+en 1
+info break
+print x
+```

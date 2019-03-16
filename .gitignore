@@ -1,5 +1,7 @@
 build
 compile.sh
+.vs
+
 
 # Prerequisites
 *.d
