@@ -1,5 +1,7 @@
 build
 compile.sh
+run.sh
+debug.sh
 
 # Prerequisites
 *.d

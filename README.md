@@ -30,8 +30,21 @@ make gtest
 make all -f Makefile
 
 ```
-
 and run the compilation with
 ```bash
 sh compile.sh
+```
+
+## Running
+```
+set -e
+export DYLD_LIBRARY_PATH=../../Software/casadi-osx-matlabR2014b-v3.3.0/
+./build/bin/test_tree
+```
+
+## Debugging
+```
+set -e
+export DYLD_LIBRARY_PATH=../../Software/casadi-osx-matlabR2014b-v3.3.0/
+/Applications/Xcode.app/Contents/Developer/usr/bin/lldb ./build/bin/test_tree
 ```
