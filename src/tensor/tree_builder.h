@@ -43,9 +43,10 @@ public:
   void add(const std::string& id, const Tree& tree)
   {
     int N = tree.size();
-    Tree t = Tree( tree._branches, tree.shape(), {range(_len, N)} );
-    addTree(id, t);
+    Tree t = Tree( tree._branches, tree.shape(), {range(_len, N+_len)} );
     _len += N;
+    addTree(id, t);
+
   }
 
   void addRepeated(const std::vector<std::string>& ids, const std::vector<Tree>& trees, const int N)
