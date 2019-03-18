@@ -28,7 +28,6 @@ export CASADI_LIB="../../software/casadi-linux-matlabR2014b-v3.3.0/"
 export GTEST_INCLUDE="../googletest/googletest/"
 make gtest
 make all -f Makefile
-
 ```
 
 and run the compilation with
