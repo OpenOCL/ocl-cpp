@@ -1,5 +1,5 @@
 
-voi main()
+void main()
 {
 
   auto sys = ocl::System(&variables, &equations, NULL);

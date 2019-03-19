@@ -1,7 +1,4 @@
-
-
 /*
- *
  *    Copyright (C) 2019 Jonas Koenemann
  *
  *    This program is free software; you can redistribute it and/or
