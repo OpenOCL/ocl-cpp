@@ -46,6 +46,7 @@ export DYLD_LIBRARY_PATH=../../Software/casadi-osx-matlabR2014b-v3.3.0/
 set -e
 export DYLD_LIBRARY_PATH=../../Software/casadi-osx-matlabR2014b-v3.3.0/
 /Applications/Xcode.app/Contents/Developer/usr/bin/lldb ./build/bin/main_test
+```
 
 ## gdb commands
 
