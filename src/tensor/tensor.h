@@ -43,8 +43,17 @@ public:
   Tensor(double v) { this->insert(Matrix(v)); }
   Tensor(const Matrix& m) { this->insert(m); }
 
-  // Returns the underlying value
+  Tensor(const std::vector<Matrix>& m) : data(m) { }
 
+  // size of either first or second dimension
+  virtual int size(const int dim) const {
+    return this->data[0].size(dim);
+  }
+
+  // length of Tensor (3rd dimension)
+  int size() const {
+    return data.size();
+  }
 
   void disp()
   {
@@ -65,10 +74,6 @@ public:
 
   unsigned int length() const {
     return this->data.size();
-  }
-
-  virtual int size(const int dim) const {
-    return this->data[0].size(dim);
   }
 
   //

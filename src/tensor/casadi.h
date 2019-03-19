@@ -27,7 +27,7 @@ namespace casadi
 {
 
 static inline CasadiMatrix Sym(int rows, int cols) {
-  return CasadiMatrix::sym('m', rows, cols);
+  return CasadiMatrix::sym("m", rows, cols);
 }
 
 static inline CasadiMatrix Eye(int n) {
@@ -62,7 +62,7 @@ static inline std::vector<int> shape(const CasadiMatrix& m)
 
 static inline int size(const CasadiMatrix& m, const int dim)
 {
-  return m.size(dim);
+  return m.size(dim-1); // one based indexing in casadi
 }
 
 static inline std::vector<double> full(const CasadiMatrix& m)
@@ -82,7 +82,7 @@ static inline std::vector<double> full(const CasadiMatrix& m)
   ::casadi::DM d = dm_out[0];
 
   double *data = d.ptr();
-  int nel = size(m,1)*size(m,2); // one based indexing
+  int nel = size(m,0)*size(m,1);
   std::vector<double> values(data, data + nel);
   return values;
 }

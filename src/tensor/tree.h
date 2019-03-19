@@ -29,7 +29,7 @@ namespace ocl
 // Tree structure with children accessable by id
 // The tree can have multiple roots (number given by length, number of vectors
 // in indizes), each root has the same shape given by nodeShape
-class Tree
+class Tree : Slicable
 {
 
 // TreeBuilder is a friend class so that it can construct trees
@@ -49,19 +49,18 @@ public:
        const std::vector<std::vector<int> >& indizes)
       : _branches(branches), _shape(shape), _indizes(indizes) { }
 
+  virtual int size(int dim) const override {
+    return this->_shape[dim];
+  }
+
   // Check if there are subtrees
   bool hasBranches() const {
     return this->_branches.empty();
   }
 
   // get indizes of trajectory element i
-  std::vector<int> getIndizes(int i) {
+  std::vector<int> indizes(int i) {
     return this->_indizes[i];
-  }
-
-  // Return the shape of the nodes
-  std::vector<int> shape() const {
-    return this->_shape;
   }
 
   // Return indizes vector
@@ -69,14 +68,14 @@ public:
     return this->_indizes;
   }
 
-  // Returns the number of root nodes
-  uint length() const { return this->_indizes.size(); }
+  // Return the shape of the nodes
+  std::vector<int> shape() const {
+    return this->_shape;
+  }
 
-  // Returns total number of elements
-  int size() const
-  {
-    std::vector<int> s = this->shape();
-    return prod(s) * this->length();
+  // Returns the number of root nodes
+  int size() const {
+    return this->_indizes.size();;
   }
 
   // Get subtree by string id
@@ -91,6 +90,13 @@ public:
   Tree at(const int idx) const
   {
     std::vector<std::vector<int> > idz = {this->_indizes[idx]};
+    return Tree(this->_branches, this->_shape, idz);
+  }
+
+  // Cut tree, get multiple elements of trajectory
+  Tree at(const std::vector<int>& indizes) const
+  {
+    std::vector<std::vector<int> > idz = tensor::mergeIndizes(this->_indizes, {indizes});
     return Tree(this->_branches, this->_shape, idz);
   }
 

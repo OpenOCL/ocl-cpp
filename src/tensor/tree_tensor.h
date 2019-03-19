@@ -16,7 +16,8 @@
 #define OCL_TREETENSOR_H_
 
 #include "utils/typedefs.h"
-#include "utils/slicing.h"        // Slicable
+#include "utils/assertions.h"      // assertTrue
+#include "utils/slicing.h"         // Slicable
 #include "tensor/value_storage.h"  // ValueStorage, assign, subsindex
 
 // This file implements class TreeTensor and static functions on TreeTensor
@@ -27,18 +28,18 @@ class TreeTensor : public Slicable
 {
 
  private:
-  ValueStorage& value_storage;
-  const Tree structure;
+  ValueStorage& _value_storage;
+  Tree _structure;
 
  public:
 
   // Constructor
-  TreeTensor(const Tree &structure, const ValueStorage &value_storage)
-      : structure(structure), value_storage(value_storage) { }
+  TreeTensor(const Tree& structure, ValueStorage& value_storage)
+      : _structure(structure), _value_storage(value_storage) { }
 
   // Accessors
-  const ValueStorage& value_storage() const { return this->value_storage; }
-  const Structure& structure() const { return this->structure; }
+  ValueStorage& value_storage() const { return this->_value_storage; }
+  Tree structure() const { return this->_structure; }
 
   // Return a string representation
   std::string str();
@@ -50,14 +51,15 @@ class TreeTensor : public Slicable
   // ValueStorage::assign itself does broadcasting on the matrix level (dim 1 and 2)
   void set(const Tensor& value)
   {
+    std::vector<std::vector<int> > indizes = this->structure().indizes();
     for(unsigned int i=0; i < indizes.size(); i++)
     {
-      assert(structure.indizes().size()==value.size() || value.size() == 1, "Can not broadcast value.");
-      if (structure.indizes().size()==value.size) {
-        value_storage.assign(indizes[i], value.get(i).data(), value.get(i).size(0), value.get(i).size(1));
+      assertTrue(indizes.size()==value.size() || value.size() == 1, "Can not broadcast value.");
+      if (indizes.size()==value.size()) {
+        this->_value_storage.assign(indizes[i], value.get(i).data(), value.get(i).size(0), value.get(i).size(1));
       } else {
         // value.size() == 1, broadcast on the third dimension (repeat first matrix)
-        value_storage.assign(indizes[i], value.get(0).data(), value.get(0).size(0), value.get(0).size(1));
+        this->_value_storage.assign(indizes[i], value.get(0).data(), value.get(0).size(0), value.get(0).size(1));
       }
     }
   }
@@ -65,11 +67,16 @@ class TreeTensor : public Slicable
   // Get tensor value of tree tensor
   Tensor value() const
   {
+    std::vector<std::vector<int> > indizes = this->structure().indizes();
     std::vector<Matrix> matrizes = {};
     for(unsigned int i=0; i < indizes.size(); i++)
     {
-      ValueStorage d = tensor::subindex(value_storage, structure.indizes(i));
-      ocl::Matrix m(structure.shape(), d);
+      ValueStorage vs = this->value_storage().subsindex(this->structure().indizes(i));
+
+      CasadiMatrix d = vs.data();
+      std::vector<int> s = this->structure().shape();
+      d = casadi::reshape(d, s[0], s[1]);
+      ocl::Matrix m(d);
       matrizes.push_back(m);
     }
     return Tensor(matrizes);
@@ -79,23 +86,19 @@ class TreeTensor : public Slicable
   // Returns vector/trajectory of matrizes in column major storage.
   std::vector<ValueStorage> data() const
   {
-    std::vector<std::vector<double> > data = {};
+    std::vector<std::vector<int> > indizes = this->structure().indizes();
+    std::vector<ValueStorage> data;
     for(unsigned int i=0; i < indizes.size(); i++)
     {
-      ValueStorage d = tensor::subindex(value_storage, structure.indizes(i));
-      data.push_back(d);
+      ValueStorage vs = this->value_storage().subsindex(this->structure().indizes(i));
+      data.push_back(vs);
     }
     return data;
   }
 
-  // Return reference to the value storage
-  ValueStorage& data() const {
-    return value_storage;
-  }
-
   // Returns the size of value
-  std::vector<int> size() const { return this->structure().size(); }
-  std::vector<int> size(const int dim) const { return this->structure().size(dim); }
+  int size() const { return this->structure().size(); }
+  virtual int size(const int dim) const override { return this->structure().size(dim); }
 
   // Returns a sub-tree by id
   TreeTensor get(const std::string& id) const
@@ -107,12 +110,12 @@ class TreeTensor : public Slicable
   // Returns a sub-tree by index
   TreeTensor at(const std::vector<int>& indizes) const
   {
-    Tree r = this->structure().get(indizes);
+    Tree r = this->structure().at(indizes);
     return TreeTensor(r, this->value_storage());
   }
 
-  TreeTensor slice(const std::vector<int>& slice1 = slice::all(this, 0),
-                   const std::vector<int>& slice2 = slice::all(this, 1)) const
+  TreeTensor slice(const std::vector<int>& slice1,
+                   const std::vector<int>& slice2) const
   {
     Tree r = this->structure().slice(slice1, slice2);
     return TreeTensor(r, this->value_storage());
@@ -154,26 +157,26 @@ class TreeTensor : public Slicable
   Tensor reshape(int cols, int rows) const;
 
   // binary coefficient wise
-  Tensor plus(const TreeTensor& other) const;
-  Tensor minus(const TreeTensor& other) const;
-  Tensor ctimes(const TreeTensor& other) const;
-  Tensor cdivide(const TreeTensor& other) const;
+  Tensor plus(const Tensor& other) const;
+  Tensor minus(const Tensor& other) const;
+  Tensor ctimes(const Tensor& other) const;
+  Tensor cdivide(const Tensor& other) const;
 
-  Tensor cmin(const TreeTensor& other) const;
-  Tensor cmax(const TreeTensor& other) const;
+  Tensor cmin(const Tensor& other) const;
+  Tensor cmax(const Tensor& other) const;
 
   // binary matrix operations
-  Tensor times(const TreeTensor& other) const;
-  Tensor cross(const TreeTensor& other) const;
-  Tensor dot(const TreeTensor& other) const;
+  Tensor times(const Tensor& other) const;
+  Tensor cross(const Tensor& other) const;
+  Tensor dot(const Tensor& other) const;
 
-  Tensor atan2(const TreeTensor& other) const;
+  Tensor atan2(const Tensor& other) const;
 
   // operator overloading
-  Tensor operator+(const TreeTensor& other) const;
-  Tensor operator-(const TreeTensor& other) const;
-  Tensor operator*(const TreeTensor& other) const;
-  Tensor operator/(const TreeTensor& other) const;
+  Tensor operator+(const Tensor& other) const;
+  Tensor operator-(const Tensor& other) const;
+  Tensor operator*(const Tensor& other) const;
+  Tensor operator/(const Tensor& other) const;
 
 }; // class StructuredTensor
 
@@ -196,8 +199,8 @@ static inline Tensor sinh(const TreeTensor& tt) { return ocl::sinh(tt.value()); 
 static inline Tensor exp(const TreeTensor& tt) { return ocl::exp(tt.value()); }
 static inline Tensor log(const TreeTensor& tt) { return ocl::log(tt.value()); }
 
-static inline Tensor cpow(const TreeTensor& tt, const TreeTensor& exponent) {
-  return ocl::cpow(tt.value(), exponent.value());
+static inline Tensor cpow(const TreeTensor& tt, const Tensor& exponent) {
+  return ocl::cpow(tt.value(), exponent);
 }
 
 static inline Tensor norm(const TreeTensor& tt) { return ocl::norm(tt.value()); }
@@ -209,42 +212,42 @@ static inline Tensor mean(const TreeTensor& tt) { return ocl::mean(tt.value()); 
 
 static inline Tensor transpose(const TreeTensor& tt) { return ocl::transpose(tt.value()); }
 
-static inline Tensor reshape(const TreeTensor& tt, const Integer i, const Integer j) {
+static inline Tensor reshape(const TreeTensor& tt, const int i, const int j) {
   return ocl::reshape(tt.value(), i, j);
 }
 
-static inline Tensor plus(const TreeTensor& tt1, const TreeTensor& tt2) {
-  return ocl::plus(tt1.value(), tt2.value());
+static inline Tensor plus(const TreeTensor& tt1, const Tensor& tt2) {
+  return ocl::plus(tt1.value(), tt2);
 }
-static inline Tensor minus(const TreeTensor& tt1, const TreeTensor& tt2) {
-  return ocl::minus(tt1.value(), tt2.value());
+static inline Tensor minus(const TreeTensor& tt1, const Tensor& tt2) {
+  return ocl::minus(tt1.value(), tt2);
 }
-static inline Tensor ctimes(const TreeTensor& tt1, const TreeTensor& tt2) {
-  return ocl::ctimes(tt1.value(), tt2.value());
+static inline Tensor ctimes(const TreeTensor& tt1, const Tensor& tt2) {
+  return ocl::ctimes(tt1.value(), tt2);
 }
-static inline Tensor cdivide(const TreeTensor& tt1, const TreeTensor& tt2) {
-  return ocl::cdivide(tt1.value(), tt2.value());
-}
-
-static inline Tensor cmin(const TreeTensor& tt1, const TreeTensor& tt2) {
-  return ocl::cmin(tt1.value(), tt2.value());
-}
-static inline Tensor cmax(const TreeTensor& tt1, const TreeTensor& tt2) {
-  return ocl::cmax(tt1.value(), tt2.value());
+static inline Tensor cdivide(const TreeTensor& tt1, const Tensor& tt2) {
+  return ocl::cdivide(tt1.value(), tt2);
 }
 
-static inline Tensor times(const TreeTensor& tt1, const TreeTensor& tt2) {
-  return ocl::times(tt1.value(), tt2.value());
+static inline Tensor cmin(const TreeTensor& tt1, const Tensor& tt2) {
+  return ocl::cmin(tt1.value(), tt2);
 }
-static inline Tensor cross(const TreeTensor& tt1, const TreeTensor& tt2) {
-  return ocl::cross(tt1.value(), tt2.value());
-}
-static inline Tensor dot(const TreeTensor& tt1, const TreeTensor& tt2) {
-  return ocl::dot(tt1.value(), tt2.value());
+static inline Tensor cmax(const TreeTensor& tt1, const Tensor& tt2) {
+  return ocl::cmax(tt1.value(), tt2);
 }
 
-static inline Tensor atan2(const TreeTensor& tt1, const TreeTensor& tt2) {
-  return ocl::atan2(tt1.value(), tt2.value());
+static inline Tensor times(const TreeTensor& tt1, const Tensor& tt2) {
+  return ocl::times(tt1.value(), tt2);
+}
+static inline Tensor cross(const TreeTensor& tt1, const Tensor& tt2) {
+  return ocl::cross(tt1.value(), tt2);
+}
+static inline Tensor dot(const TreeTensor& tt1, const Tensor& tt2) {
+  return ocl::dot(tt1.value(), tt2);
+}
+
+static inline Tensor atan2(const TreeTensor& tt1, const Tensor& tt2) {
+  return ocl::atan2(tt1.value(), tt2);
 }
 
 //
@@ -270,7 +273,7 @@ inline Tensor TreeTensor::exp() const { return ocl::exp(*this); }
 inline Tensor TreeTensor::log() const { return ocl::log(*this); }
 
 // operators - unary element wise + scalar
-inline Tensor TreeTensor::cpow(const TreeTensor& exponent) const { return ocl::cpow(*this, exponent); }
+inline Tensor TreeTensor::cpow(const Tensor& exponent) const { return ocl::cpow(*this, exponent); }
 
 // reduction operations
 inline Tensor TreeTensor::norm() const { return ocl::norm(*this); }
@@ -283,47 +286,37 @@ inline Tensor TreeTensor::mean() const { return ocl::mean(*this); }
 // geometrical operations
 inline Tensor TreeTensor::transpose() const { return ocl::transpose(*this); }
 
-inline Tensor TreeTensor::reshape(Integer cols, Integer rows) const {
+inline Tensor TreeTensor::reshape(const int cols, const int rows) const {
   return ocl::reshape(*this, cols, rows);
 }
 
-// get slice (i:j)
-inline Tensor TreeTensor::slice(Integer i, Integer j) const {
-  return ocl::slice(*this, i, j);
-}
-
-// get block slice of cols (i:j) and rows (k:l)
-inline Tensor TreeTensor::block(Integer i, Integer j, Integer k, Integer l) const {
-  return ocl::block(*this, i, j, k, l);
-}
-
 // binary coefficient wise
-inline Tensor TreeTensor::plus(const TreeTensor& other) const { return ocl::plus(*this, other); }
-inline Tensor TreeTensor::minus(const TreeTensor& other) const { return ocl::minus(*this, other); }
-inline Tensor Tensor::ctimes(const TreeTensor& other) const { return ocl::ctimes(*this, other); }
-inline Tensor Tensor::cdivide(const TreeTensor& other) const { return ocl::cdivide(*this, other); }
+inline Tensor TreeTensor::plus(const Tensor& other) const { return ocl::plus(*this, other); }
+inline Tensor TreeTensor::minus(const Tensor& other) const { return ocl::minus(*this, other); }
+inline Tensor TreeTensor::ctimes(const Tensor& other) const { return ocl::ctimes(*this, other); }
+inline Tensor TreeTensor::cdivide(const Tensor& other) const { return ocl::cdivide(*this, other); }
 
-inline Tensor TreeTensor::cmin(const TreeTensor& other) const { return ocl::cmin(*this, other); }
-inline Tensor TreeTensor::cmax(const TreeTensor& other) const { return ocl::cmax(*this, other); }
+inline Tensor TreeTensor::cmin(const Tensor& other) const { return ocl::cmin(*this, other); }
+inline Tensor TreeTensor::cmax(const Tensor& other) const { return ocl::cmax(*this, other); }
 
 // binary matrix operations
-inline Tensor TreeTensor::times(const TreeTensor& other) const { return ocl::times(*this, other); }
-inline Tensor TreeTensor::cross(const TreeTensor& other) const { return ocl::cross(*this, other); }
-inline Tensor TreeTensor::dot(const TreeTensor& other) const { return ocl::dot(*this, other); }
+inline Tensor TreeTensor::times(const Tensor& other) const { return ocl::times(*this, other); }
+inline Tensor TreeTensor::cross(const Tensor& other) const { return ocl::cross(*this, other); }
+inline Tensor TreeTensor::dot(const Tensor& other) const { return ocl::dot(*this, other); }
 
-inline Tensor TreeTensor::atan2(const TreeTensor& other) const { return ocl::atan2(*this, other); }
+inline Tensor TreeTensor::atan2(const Tensor& other) const { return ocl::atan2(*this, other); }
 
 // operator overloading
-inline Tensor TreeTensor::operator+(const TreeTensor& other) const {
+inline Tensor TreeTensor::operator+(const Tensor& other) const {
   return this->plus(other);
 }
-inline Tensor TreeTensor::operator-(const TreeTensor& other) const {
+inline Tensor TreeTensor::operator-(const Tensor& other) const {
   return this->minus(other);
 }
-inline Tensor TreeTensor::operator*(const TreeTensor& other) const {
+inline Tensor TreeTensor::operator*(const Tensor& other) const {
   return this->times(other);
 }
-inline Tensor TreeTensor::operator/(const TreeTensor& other) const {
+inline Tensor TreeTensor::operator/(const Tensor& other) const {
   return this->cdivide(other);
 }
 
