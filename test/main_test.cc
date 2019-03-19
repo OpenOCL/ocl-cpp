@@ -4,6 +4,7 @@
 #include "test_matrix.h"
 #include "test_tree.h"
 #include "test_tensor.h"
+#include "test_tree_tensor.h"
 
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);

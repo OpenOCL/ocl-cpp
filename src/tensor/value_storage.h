@@ -13,30 +13,28 @@
  *    General Public License for more details.
  *
  */
-#ifndef OCL_COLUMN_MAJOR_H_
-#define OCL_COLUMN_MAJOR_H_
-
-
+#ifndef OCL_VALUE_STORAGE_H_
+#define OCL_VALUE_STORAGE_H_
 
 namespace ocl {
 
 // Stores matrix data in column major format
-class ColumnMajorVector
+class ValueStorage
 {
 public:
 
   // Reshape matrizes to vectors
-  ColumnMajorVector(const CasadiMatrix& m) : m(m.reshape(m.size(0)*m.size(1), 1)) { }
-  ColumnMajorVector(int size) : m(Matrix::Zero(size,1)) { }
+  ValueStorage(const CasadiMatrix& m) : m(m.reshape(m.size(0)*m.size(1), 1)) { }
+  ValueStorage(int size) : m(Matrix::Zero(size,1)) { }
 
   Matrix data() const { return m; }
 
-  ColumnMajorVector subsindex(const std::vector<int>& indizes) const
+  ValueStorage subsindex(const std::vector<int>& indizes) const
   {
     return ColumnMajorVector(m.slice(indizes, 0));
   }
 
-  void assign(const std::vector<int>& indizes, const ColumnMajorVector& values, int size0, int size1)
+  void assign(const std::vector<int>& indizes, const ValueStorage& values, int size0, int size1)
   {
     m.assign(indizes, 0, values.data());
   }
@@ -46,4 +44,4 @@ private:
 };
 
 } // namespace ocl
-#endif // OCL_COLUMN_MAJOR_H_
+#endif // OCL_VALUE_STORAGE_H_

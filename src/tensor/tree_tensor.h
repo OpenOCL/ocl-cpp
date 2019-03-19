@@ -18,9 +18,9 @@
 
 #include "utils/typedefs.h"
 #include "utils/slicing.h"        // Slicable
-#include "tensor/column_major.h"  // ColumnMajorVector, assign, subsindex
+#include "tensor/value_storage.h"  // ValueStorage, assign, subsindex
 
-// This file implements class TreeTensor and static methods on TreeTensor
+// This file implements class TreeTensor and static functions on TreeTensor
 namespace ocl
 {
 
@@ -28,17 +28,17 @@ class TreeTensor : public Slicable
 {
 
  private:
-  ColumnMajorVector& value_storage;
+  ValueStorage& value_storage;
   const Tree structure;
 
  public:
 
   // Constructor
-  TreeTensor(const Tree &structure, const ColumnMajorVector &value_storage)
+  TreeTensor(const Tree &structure, const ValueStorage &value_storage)
       : structure(structure), value_storage(value_storage) { }
 
   // Accessors
-  const ColumnMajorVector& value_storage() const { return this->value_storage; }
+  const ValueStorage& value_storage() const { return this->value_storage; }
   const Structure& structure() const { return this->structure; }
 
   // Return a string representation
@@ -48,7 +48,7 @@ class TreeTensor : public Slicable
   void disp();
 
   // Sets a value, supports broadcasting
-  // ColumnMajorVector::assign itself does broadcasting on the matrix level (dim 1 and 2)
+  // ValueStorage::assign itself does broadcasting on the matrix level (dim 1 and 2)
   void set(const Tensor& value)
   {
     for(unsigned int i=0; i < indizes.size(); i++)
@@ -69,7 +69,7 @@ class TreeTensor : public Slicable
     std::vector<Matrix> matrizes = {};
     for(unsigned int i=0; i < indizes.size(); i++)
     {
-      ColumnMajorVector d = tensor::subindex(value_storage, structure.indizes(i));
+      ValueStorage d = tensor::subindex(value_storage, structure.indizes(i));
       ocl::Matrix m(structure.shape(), d);
       matrizes.push_back(m);
     }
@@ -78,19 +78,19 @@ class TreeTensor : public Slicable
 
   // Get value data of tree tensor.
   // Returns vector/trajectory of matrizes in column major storage.
-  std::vector<ColumnMajorVector> data() const
+  std::vector<ValueStorage> data() const
   {
     std::vector<std::vector<double> > data = {};
     for(unsigned int i=0; i < indizes.size(); i++)
     {
-      ColumnMajorVector d = tensor::subindex(value_storage, structure.indizes(i));
+      ValueStorage d = tensor::subindex(value_storage, structure.indizes(i));
       data.push_back(d);
     }
     return data;
   }
 
   // Return reference to the value storage
-  ColumnMajorVector& data() const {
+  ValueStorage& data() const {
     return value_storage;
   }
 
