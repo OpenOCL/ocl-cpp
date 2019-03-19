@@ -162,8 +162,3 @@ TEST(testGeneralTensor, ScalarOperators) {
     ocl::test::assertDoubleFullEqual( ocl::full(r), 0.08031466966032468 );
   }
 }
-
-int main(int argc, char **argv) {
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}

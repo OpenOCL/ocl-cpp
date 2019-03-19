@@ -13,8 +13,8 @@
  *    General Public License for more details.
  *
  */
-#ifndef OCLCPP_OCL_TREETENSOR_H_
-#define OCLCPP_OCL_TREETENSOR_H_
+#ifndef OCL_TREETENSOR_H_
+#define OCL_TREETENSOR_H_
 
 #include "utils/typedefs.h"
 #include "utils/slicing.h"        // Slicable
@@ -329,4 +329,4 @@ inline Tensor TreeTensor::operator/(const TreeTensor& other) const {
 }
 
 } // namespace ocl
-#endif  // OCLCPP_OCL_TREETENSOR_H_
+#endif  // OCL_TREETENSOR_H_

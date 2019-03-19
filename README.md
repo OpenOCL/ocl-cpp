@@ -50,14 +50,12 @@ export DYLD_LIBRARY_PATH=../../Software/casadi-osx-matlabR2014b-v3.3.0/
 ## gdb commands
 
 ```bash
-b test_tree.cc:13
-run
-cont
-del 1
+(b) break test_tree.cc:13
+(r) run
+(c) cont
+(d) del 1
 dis 1
 en 1
-info break
-print x
+(i) info break
+(p) print x
 ```
-
-

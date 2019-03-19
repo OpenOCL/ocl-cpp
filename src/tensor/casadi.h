@@ -67,7 +67,7 @@ static inline std::vector<double> full(const CasadiMatrix& m)
   ::casadi::DM d = dm_out[0];
 
   double *data = d.ptr();
-  int nel = size(m,0)*size(m,1);
+  int nel = size(m,1)*size(m,2); // one based indexing
   std::vector<double> values(data, data + nel);
   return values;
 }
