@@ -28,7 +28,6 @@ export CASADI_LIB="../../software/casadi-linux-matlabR2014b-v3.3.0/"
 export GTEST_INCLUDE="../googletest/googletest/"
 make gtest
 make all -f Makefile
-
 ```
 and run the compilation with
 ```bash
@@ -47,4 +46,18 @@ export DYLD_LIBRARY_PATH=../../Software/casadi-osx-matlabR2014b-v3.3.0/
 set -e
 export DYLD_LIBRARY_PATH=../../Software/casadi-osx-matlabR2014b-v3.3.0/
 /Applications/Xcode.app/Contents/Developer/usr/bin/lldb ./build/bin/test_tree
+
+## gdb commands
+
+```bash
+b test_tree.cc:13
+run
+cont
+del 1
+dis 1
+en 1
+info break
+print x
 ```
+
+

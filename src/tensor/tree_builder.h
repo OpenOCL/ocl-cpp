@@ -35,17 +35,18 @@ public:
   void add(const std::string& id, const std::vector<int>& shape = {1,1})
   {
     int N = prod(shape);
-    Tree tree = Tree( Tree::Branches(), shape, {range(_len, N)} );
-    this->addTree(id, tree);
+    Tree tree = Tree( Tree::Branches(), shape, {range(_len, N+_len)} );
     _len += N;
+    this->addTree(id, tree);
   }
 
   void add(const std::string& id, const Tree& tree)
   {
     int N = tree.size();
-    Tree t = Tree( tree._branches, tree.shape(), {range(_len, N)} );
-    addTree(id, t);
+    Tree t = Tree( tree._branches, tree.shape(), {range(_len, N+_len)} );
     _len += N;
+    addTree(id, t);
+
   }
 
   void addRepeated(const std::vector<std::string>& ids, const std::vector<Tree>& trees, const int N)
@@ -69,13 +70,13 @@ public:
     }
     else
     {
-      Tree branch = _tree._branches.at(id);
+      Tree& branch = _tree._branches.at(id);
 
-      //append all indizes of
+      // append all indizes of
       branch._indizes = merge<std::vector<int>>(branch._indizes, tree._indizes);
     }
     _tree._shape = {_len, 1};
-    _tree._indizes = {range(0, _len+1)};
+    _tree._indizes = {range(0, _len)};
   }
 
   // Returns a reference to the tree object which the tree builder owns

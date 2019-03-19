@@ -2,6 +2,7 @@ build
 compile.sh
 run.sh
 debug.sh
+.vs
 
 # Prerequisites
 *.d
