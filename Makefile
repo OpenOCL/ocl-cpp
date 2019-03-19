@@ -41,14 +41,13 @@ GTEST_HEADERS = $(GTEST_PATH)/include/gtest/*.h \
                 $(GTEST_PATH)/include/gtest/internal/*.h
 GTEST_SRCS_ = $(GTEST_PATH)/src/*.cc $(GTEST_PATH)/src/*.h $(GTEST_HEADERS)
 
-TESTS = $(BIN)/test_casadi $(BIN)/test_matrix $(BIN)/test_tensor $(BIN)/test_tree $(BIN)/main_test
-TESTS_O = $(OBJ)/test_casadi.o $(OBJ)/test_matrix.o $(OBJ)/test_tensor.o $(OBJ)/test_tree.o $(OBJ)/main_test.o
+TEST_HEADERS = $(TEST)/test_casadi.h $(TEST)/test_matrix.h $(TEST)/test_tensor.h $(TEST)/test_tree.h
 COMMON_HEADERS = $(SRC)/utils/exceptions.h $(SRC)/utils/typedefs.h $(SRC)/utils/testing.h $(SRC)/utils/slicing.h
 TENSOR_HEADERS = $(SRC)/tensor/casadi.h $(SRC)/tensor/functions.h \
  					       $(SRC)/tensor/matrix.h  $(SRC)/tensor/tree.h \
 								 $(SRC)/tensor/tensor.h $(SRC)/tensor/tree_builder.h
 
-all: $(BIN)/dev_playbox $(TESTS)
+all: $(BIN)/dev_playbox $(BIN)/main_test
 gtest: $(GTEST_LIBS)
 clean:
 	rm -f $(TESTS) $(OBJ)/*.o
@@ -75,34 +74,10 @@ $(OBJ)/dev_playbox.o : $(TEST)/dev_playbox.cc $(SRC)/tensor/matrix.h
 $(BIN)/dev_playbox : $(OBJ)/dev_playbox.o
 	$(CXX) $(LDFLAGS) -L$(CASADI_LIB_PATH) $^ -lcasadi -o $@
 
-# tensor classes
-$(OBJ)/test_casadi.o : $(TEST)/test_casadi.cc $(SRC)/tensor/casadi.h $(COMMON_HEADERS) $(GTEST_HEADERS)
+#  compiles main test program
+$(OBJ)/main_test.o : $(TEST)/main_test.cc $(TEST_HEADERS) $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJ)/test_matrix.o : $(TEST)/test_matrix.cc $(SRC)/tensor/matrix.h $(SRC)/tensor/casadi.h $(COMMON_HEADERS) $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
-
-$(OBJ)/test_tensor.o : $(TEST)/test_tensor.cc $(SRC)/tensor/tensor.h $(SRC)/tensor/matrix.h $(SRC)/tensor/casadi.h $(COMMON_HEADERS) $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
-
-$(OBJ)/test_tree.o : $(TEST)/test_tree.cc $(SRC)/tensor/tree_builder.h $(SRC)/tensor/tree.h $(COMMON_HEADERS) $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
-
-$(OBJ)/main_test.o : $(TEST)/main_test.cc $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
-
-# binaries
-$(BIN)/test_casadi : $(OBJ)/test_casadi.o
-	$(CXX) $(LDFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) $^ -lcasadi -lgtest_main -lpthread -o $@
-
-$(BIN)/test_matrix : $(OBJ)/test_matrix.o
-	$(CXX) $(LDFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) $^ -lcasadi -lgtest_main -lpthread -o $@
-
-$(BIN)/test_tensor : $(OBJ)/test_tensor.o
-	$(CXX) $(LDFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) $^ -lcasadi -lgtest_main -lpthread -o $@
-
-$(BIN)/test_tree : $(OBJ)/test_tree.o
-	$(CXX) $(LDFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) $^ -lcasadi -lgtest_main -lpthread -o $@
-
+# links test program
 $(BIN)/main_test : $(OBJ)/main_test.o
 	$(CXX) $(LDFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) $^ -lcasadi -lgtest_main -lpthread -o $@

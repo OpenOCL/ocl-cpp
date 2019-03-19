@@ -1,9 +1,9 @@
-#include "test_casadi.cc"
-#include "test_matrix.cc"
-#include "test_tree.cc"
-#include "test_tensor.cc"
-
 #include <gtest/gtest.h>
+
+#include "test_casadi.h"
+#include "test_matrix.h"
+#include "test_tree.h"
+#include "test_tensor.h"
 
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);
