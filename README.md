@@ -34,18 +34,18 @@ and run the compilation with
 sh compile.sh
 ```
 
-## Running
+## Running tests
 ```
 set -e
 export DYLD_LIBRARY_PATH=../../Software/casadi-osx-matlabR2014b-v3.3.0/
-./build/bin/test_tree
+./build/bin/main_test
 ```
 
 ## Debugging
 ```
 set -e
 export DYLD_LIBRARY_PATH=../../Software/casadi-osx-matlabR2014b-v3.3.0/
-/Applications/Xcode.app/Contents/Developer/usr/bin/lldb ./build/bin/test_tree
+/Applications/Xcode.app/Contents/Developer/usr/bin/lldb ./build/bin/main_test
 
 ## gdb commands
 
