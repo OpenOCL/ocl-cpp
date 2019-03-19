@@ -1,3 +1,21 @@
+/*
+ *
+ *    Copyright (C) 2019 Jonas Koenemann
+ *
+ *    This program is free software; you can redistribute it and/or
+ *    modify it under the terms of the GNU General Public
+ *    License as published by the Free Software Foundation; either
+ *    version 3 of the License, or (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *    General Public License for more details.
+ *
+ */
+#ifndef OCL_TEST_TREE_H_
+#define OCL_TEST_TREE_H_
+
 #include <utils/testing.h>
 #include "tensor/tree_builder.h"
 
@@ -61,3 +79,5 @@ TEST(testTree, dSubTree)
   ocl::Tree r = x.get("u").at(0).get("x1");
   ocl::test::assertEqual(r.indizes(), {{3,4,5},{15,16,17}} );
 }
+
+#endif // OCL_TEST_TREE_H_

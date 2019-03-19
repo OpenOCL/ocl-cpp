@@ -13,8 +13,8 @@
  *    General Public License for more details.
  *
  */
-#ifndef OCL_TEST_H_
-#define OCL_TEST_H_
+#ifndef OCL_TESTING_H_
+#define OCL_TESTING_H_
 
 #include <gtest/gtest.h>
 
@@ -59,7 +59,6 @@ void assertEqual(const std::vector<std::vector<int>>& v1, const std::vector<std:
 }
 
 
-
 } // namespace test
 } //namespace ocl
-#endif // OCL_TEST_H_
+#endif // OCL_TESTING_H_

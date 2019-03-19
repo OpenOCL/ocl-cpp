@@ -41,8 +41,8 @@ GTEST_HEADERS = $(GTEST_PATH)/include/gtest/*.h \
                 $(GTEST_PATH)/include/gtest/internal/*.h
 GTEST_SRCS_ = $(GTEST_PATH)/src/*.cc $(GTEST_PATH)/src/*.h $(GTEST_HEADERS)
 
-TESTS = $(BIN)/test_casadi $(BIN)/test_matrix $(BIN)/test_tensor $(BIN)/test_tree
-TESTS_O = $(OBJ)/test_casadi.o $(OBJ)/test_matrix.o $(OBJ)/test_tensor.o
+TESTS = $(BIN)/test_casadi $(BIN)/test_matrix $(BIN)/test_tensor $(BIN)/test_tree $(BIN)/main_test
+TESTS_O = $(OBJ)/test_casadi.o $(OBJ)/test_matrix.o $(OBJ)/test_tensor.o $(OBJ)/test_tree.o $(OBJ)/main_test.o
 COMMON_HEADERS = $(SRC)/utils/exceptions.h $(SRC)/utils/typedefs.h $(SRC)/utils/testing.h $(SRC)/utils/slicing.h
 TENSOR_HEADERS = $(SRC)/tensor/casadi.h $(SRC)/tensor/functions.h \
  					       $(SRC)/tensor/matrix.h  $(SRC)/tensor/tree.h \
@@ -88,6 +88,9 @@ $(OBJ)/test_tensor.o : $(TEST)/test_tensor.cc $(SRC)/tensor/tensor.h $(SRC)/tens
 $(OBJ)/test_tree.o : $(TEST)/test_tree.cc $(SRC)/tensor/tree_builder.h $(SRC)/tensor/tree.h $(COMMON_HEADERS) $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
+$(OBJ)/main_test.o : $(TEST)/main_test.cc $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
 # binaries
 $(BIN)/test_casadi : $(OBJ)/test_casadi.o
 	$(CXX) $(LDFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) $^ -lcasadi -lgtest_main -lpthread -o $@
@@ -99,4 +102,7 @@ $(BIN)/test_tensor : $(OBJ)/test_tensor.o
 	$(CXX) $(LDFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) $^ -lcasadi -lgtest_main -lpthread -o $@
 
 $(BIN)/test_tree : $(OBJ)/test_tree.o
+	$(CXX) $(LDFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) $^ -lcasadi -lgtest_main -lpthread -o $@
+
+$(BIN)/main_test : $(OBJ)/main_test.o
 	$(CXX) $(LDFLAGS) -L$(GTEST_LIB) -L$(CASADI_LIB_PATH) $^ -lcasadi -lgtest_main -lpthread -o $@
