@@ -26,6 +26,22 @@ typedef int CasadiInteger;
 namespace casadi
 {
 
+static inline CasadiMatrix Sym(int rows, int cols) {
+  return CasadiMatrix::sym('m', rows, cols);
+}
+
+static inline CasadiMatrix Eye(int n) {
+  return CasadiMatrix::eye(n);
+}
+
+static inline CasadiMatrix Zero(int rows, int cols) {
+  return CasadiMatrix::zeros(rows, cols);
+}
+
+static inline CasadiMatrix One(int rows, int cols) {
+  return CasadiMatrix::ones(rows, cols);
+}
+
 static inline void assign(CasadiMatrix& m, const int row, const int col, const double value)
 {
   // false means zero based indexing (true is one based like in Matlab)

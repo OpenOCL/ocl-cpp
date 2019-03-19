@@ -24,13 +24,18 @@ public:
 
   // Reshape matrizes to vectors
   ValueStorage(const CasadiMatrix& m) : m(m.reshape(m.size(0)*m.size(1), 1)) { }
-  ValueStorage(int size) : m(Matrix::Zero(size,1)) { }
+  ValueStorage(int size) : m(CasadiMatrix::zeros(size,1)) { }
+
+  ValueStorage(int size, double val) : m(CasadiMatrix::zeros(size, 1))
+  {
+
+  }
 
   Matrix data() const { return m; }
 
   ValueStorage subsindex(const std::vector<int>& indizes) const
   {
-    return ColumnMajorVector(m.slice(indizes, 0));
+    return ValueStorage(m.slice(indizes, 0));
   }
 
   void assign(const std::vector<int>& indizes, const ValueStorage& values, int size0, int size1)

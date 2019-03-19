@@ -14,12 +14,12 @@ TEST(testTreeTensor, aThreeVariables)
   ocl::ValueStorage vs(x_structure.size(), 4);
   ocl::TreeTensor x(x_structure, vs);
 
-  x.slice(ocl::all(x, 0), 1).set(ocl::linspace(1,10));
-
-  ocl::test::assertEqual(x.data(), ocl::linspace(1,10));
-  ocl::test::assertEqual(x.get("x1").data(), {1,9,2,10});
-
-  ocl::test::assertEqual(x.get("x1").slice(1,1).data(), {1,9});
+  // x.slice(ocl::all(x, 0), 1).set(ocl::linspace(1,10));
+  //
+  // ocl::test::assertEqual(x.data(), ocl::linspace(1,10));
+  // ocl::test::assertEqual(x.get("x1").data(), {1,9,2,10});
+  //
+  // ocl::test::assertEqual(x.get("x1").slice(1,1).data(), {1,9});
 
 }
 

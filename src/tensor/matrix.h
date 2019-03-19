@@ -32,20 +32,19 @@ class Matrix : public Slicable
 public:
 
   static Matrix Sym(const int rows, const int cols) {
-    CasadiMatrix m = CasadiMatrix::sym("m", rows, cols);
-    return Matrix(m);
+    return Matrix(casadi::Sym(rows, cols));
   }
 
   static Matrix Eye(const int n) {
-    return Matrix(CasadiMatrix::eye(n));
+    return Matrix(casadi::Eye(n));
   }
 
   static Matrix Zero(const int rows, const int cols) {
-    return Matrix(CasadiMatrix::zeros(rows, cols));
+    return Matrix(casadi::Zero(rows, cols));
   }
 
   static Matrix One(const int rows, const int cols) {
-    return Matrix(CasadiMatrix::ones(rows, cols));
+    return Matrix(casadi::One(rows, cols));
   }
 
   Matrix(const ::casadi::DM& v) : m(v) { }
