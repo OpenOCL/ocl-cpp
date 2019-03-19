@@ -27,15 +27,11 @@ namespace ocl
 class TreeTensor : public Slicable
 {
 
- private:
-  ValueStorage& _value_storage;
-  Tree _structure;
-
  public:
 
   // Constructor
   TreeTensor(const Tree& structure, ValueStorage& value_storage)
-      : _structure(structure), _value_storage(value_storage) { }
+      : _value_storage(value_storage), _structure(structure) { }
 
   // Accessors
   ValueStorage& value_storage() const { return this->_value_storage; }
@@ -54,12 +50,15 @@ class TreeTensor : public Slicable
     std::vector<std::vector<int> > indizes = this->structure().indizes();
     for(unsigned int i=0; i < indizes.size(); i++)
     {
-      assertTrue(indizes.size()==value.size() || value.size() == 1, "Can not broadcast value.");
       if (indizes.size()==value.size()) {
         this->_value_storage.assign(indizes[i], value.get(i).data(), value.get(i).size(0), value.get(i).size(1));
-      } else {
-        // value.size() == 1, broadcast on the third dimension (repeat first matrix)
+      }
+      else if (value.size() == 1) {
+        // broadcast on the third dimension (repeat first matrix)
         this->_value_storage.assign(indizes[i], value.get(0).data(), value.get(0).size(0), value.get(0).size(1));
+      }
+      else {
+        assertEqual(0,1,"wrong");
       }
     }
   }
@@ -84,14 +83,15 @@ class TreeTensor : public Slicable
 
   // Get value data of tree tensor.
   // Returns vector/trajectory of matrizes in column major storage.
-  std::vector<ValueStorage> data() const
+  std::vector<std::vector<double> > data() const
   {
     std::vector<std::vector<int> > indizes = this->structure().indizes();
-    std::vector<ValueStorage> data;
+    std::vector<std::vector<double> > data;
     for(unsigned int i=0; i < indizes.size(); i++)
     {
-      ValueStorage vs = this->value_storage().subsindex(this->structure().indizes(i));
-      data.push_back(vs);
+      auto idz = this->structure().indizes(i);
+      ValueStorage vs = this->value_storage().subsindex(idz);
+      data.push_back(vs.data());
     }
     return data;
   }
@@ -178,7 +178,11 @@ class TreeTensor : public Slicable
   Tensor operator*(const Tensor& other) const;
   Tensor operator/(const Tensor& other) const;
 
-}; // class StructuredTensor
+private:
+ ValueStorage& _value_storage;
+ Tree _structure;
+
+}; // class TreeTensor
 
 
 static inline Tensor uplus(const TreeTensor& tt) { return ocl::uplus(tt.value()); }

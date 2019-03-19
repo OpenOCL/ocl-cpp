@@ -75,7 +75,11 @@ public:
 
   // Returns the number of root nodes
   int size() const {
-    return this->_indizes.size();;
+    return this->_indizes.size();
+  }
+
+  int numel() const {
+    return this->_indizes.size() * prod(shape());
   }
 
   // Get subtree by string id
@@ -108,7 +112,7 @@ public:
     {
 
       ::casadi::IM m_reshaped = ::casadi::IM(this->_shape[0], this->_shape[1]);
-      m_reshaped.set( this->_indizes[i], false, linspace(0, this->_indizes[i].size()) );
+      m_reshaped.set( this->_indizes[i], false, range(0, this->_indizes[i].size()) );
       ::casadi::IM m_sliced = m_reshaped(slice1, slice2);
 
       // copy data to vector

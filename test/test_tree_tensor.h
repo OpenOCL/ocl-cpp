@@ -11,12 +11,14 @@ TEST(testTreeTensor, aThreeVariables)
 
   ocl::Tree x_structure = tb.tree();
 
-  ocl::ValueStorage vs(x_structure.size(), 4);
+  ocl::ValueStorage vs(x_structure.numel(), 4);
   ocl::TreeTensor x(x_structure, vs);
 
-  // x.slice(ocl::all(x, 0), 1).set(ocl::linspace(1,10));
-  //
-  // ocl::test::assertEqual(x.data(), ocl::linspace(1,10));
+  ocl::Tensor t = ocl::Tensor({1,2,3,4,5,6,7,8,9,10});
+
+  x.slice(ocl::all(x, 0), {0}).set(t);
+
+  ocl::test::assertEqual(x.data(), {{1,2,3,4,5,6,7,8,9,10}});
   // ocl::test::assertEqual(x.get("x1").data(), {1,9,2,10});
   //
   // ocl::test::assertEqual(x.get("x1").slice(1,1).data(), {1,9});

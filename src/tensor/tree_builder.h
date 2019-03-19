@@ -41,7 +41,7 @@ public:
 
   void add(const std::string& id, const Tree& tree)
   {
-    int N = tree.size();
+    int N = tree.size()*prod(tree.shape());
     Tree t = Tree( tree._branches, tree.shape(), {range(_len, N+_len)} );
     _len += N;
     addTree(id, t);

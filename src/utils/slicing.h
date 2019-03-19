@@ -37,7 +37,7 @@ static inline std::vector<int> slice(const std::vector<int>& vector, const std::
 }
 
 static inline std::vector<int> all(const Slicable& obj, const int dim) {
- return linspace(0, obj.size(dim)-1);
+ return range(0, obj.size(dim));
 }
 
 static inline std::vector<int> end(const Slicable& obj, const int dim) {

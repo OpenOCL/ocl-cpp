@@ -62,12 +62,11 @@ static inline std::vector<int> shape(const CasadiMatrix& m)
 
 static inline int size(const CasadiMatrix& m, const int dim)
 {
-  return m.size(dim-1); // one based indexing in casadi
+  return m.size(dim+1); // one based indexing in casadi
 }
 
 static inline std::vector<double> full(const CasadiMatrix& m)
 {
-
   std::string name = "f";
   std::vector<CasadiMatrix> f_inputs;
   std::vector<CasadiMatrix> f_outputs;
@@ -126,7 +125,6 @@ static inline CasadiMatrix reshape(const CasadiMatrix& m, CasadiInteger rows, Ca
 }
 static inline CasadiMatrix transpose(const CasadiMatrix& m) { return m.T(); }
 
-// get block slice of cols (i:j) and rows (k:l)
 static inline CasadiMatrix slice(const CasadiMatrix& m, const std::vector<int>& slice1, const std::vector<int>& slice2) {
   CasadiMatrix ret = m(slice1, slice2);
   return ret;

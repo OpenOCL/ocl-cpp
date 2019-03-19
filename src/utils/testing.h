@@ -57,6 +57,13 @@ void assertEqual(const std::vector<std::vector<int>>& v1, const std::vector<std:
   }
 }
 
+void assertEqual(const std::vector<std::vector<double>>& v1, const std::vector<std::vector<double>>& v2) {
+  ASSERT_EQ(v1.size(), v2.size()) << "Vectors v1 and v2 are of unequal length";
+  for (unsigned int i = 0; i < v1.size(); ++i) {
+    assertEqual(v1[i], v2[i]);
+  }
+}
+
 
 } // namespace test
 } //namespace ocl

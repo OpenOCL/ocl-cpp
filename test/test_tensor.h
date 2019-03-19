@@ -18,12 +18,12 @@
 TEST(testGeneralTensor, Slice) {
 
   auto a = ocl::Tensor::One(5,5)*10;
-  auto r = ocl::slice(a, {3}, ocl::end(a, 2) );
+  auto r = ocl::slice(a, {2}, ocl::end(a, 1) );
 
   ocl::test::assertDoubleFullEqual( ocl::full(r), 10 );
 }
 
-TEST(testGeneralTensor, ScalarOperators) {
+TEST(testTensor, ScalarOperators) {
   // scalar unary operations
   {
     auto a = ocl::Tensor(4);

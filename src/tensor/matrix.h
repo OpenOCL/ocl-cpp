@@ -58,7 +58,7 @@ public:
   CasadiMatrix data() const { return casadi::reshape(m, size(0)*size(1), 1); }
 
   virtual int size(const int dim) const override {
-    return this->m.size(dim);
+    return casadi::size(m, dim);
   }
 
   // Member functions are defined inline below class (after static functions).

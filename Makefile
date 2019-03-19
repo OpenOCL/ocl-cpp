@@ -26,7 +26,7 @@ BIN = ./build/bin
 OBJ = ./build/obj
 
 CPPFLAGS += -isystem $(GTEST_PATH)/include -isystem $(CASADI_INCLUDE_PATH)
-CXXFLAGS += -g -Wall -Wextra -std=c++11
+CXXFLAGS += -g -Wall -Wextra -std=c++11 -fPIC -Wno-delete-non-virtual-dtor
 
 LDFLAGS +=
 
@@ -41,11 +41,12 @@ GTEST_HEADERS = $(GTEST_PATH)/include/gtest/*.h \
                 $(GTEST_PATH)/include/gtest/internal/*.h
 GTEST_SRCS_ = $(GTEST_PATH)/src/*.cc $(GTEST_PATH)/src/*.h $(GTEST_HEADERS)
 
-TEST_HEADERS = $(TEST)/test_casadi.h $(TEST)/test_matrix.h $(TEST)/test_tensor.h $(TEST)/test_tree.h
+TEST_HEADERS = $(TEST)/test_casadi.h $(TEST)/test_matrix.h $(TEST)/test_tensor.h $(TEST)/test_tree.h $(TEST)/test_tree_tensor.h
 COMMON_HEADERS = $(SRC)/utils/exceptions.h $(SRC)/utils/typedefs.h $(SRC)/utils/testing.h $(SRC)/utils/slicing.h
 TENSOR_HEADERS = $(SRC)/tensor/casadi.h $(SRC)/tensor/functions.h \
  					       $(SRC)/tensor/matrix.h  $(SRC)/tensor/tree.h \
-								 $(SRC)/tensor/tensor.h $(SRC)/tensor/tree_builder.h
+								 $(SRC)/tensor/tensor.h $(SRC)/tensor/tree_builder.h \
+								 $(SRC)/tensor/tree_tensor.h $(SRC)/tensor/value_storage.h
 
 all: $(BIN)/dev_playbox $(BIN)/main_test
 gtest: $(GTEST_LIBS)
@@ -75,7 +76,7 @@ $(BIN)/dev_playbox : $(OBJ)/dev_playbox.o
 	$(CXX) $(LDFLAGS) -L$(CASADI_LIB_PATH) $^ -lcasadi -o $@
 
 #  compiles main test program
-$(OBJ)/main_test.o : $(TEST)/main_test.cc $(TEST_HEADERS) $(GTEST_HEADERS)
+$(OBJ)/main_test.o : $(TEST)/main_test.cc $(TEST_HEADERS) $(TENSOR_HEADERS) $(COMMON_HEADERS) $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 # links test program
