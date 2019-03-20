@@ -78,7 +78,7 @@ static inline std::vector<double> full(const CasadiMatrix& m)
   std::vector< ::casadi::DM > dm_out;
   f.call({},dm_out);
 
-  ::casadi::DM d = dm_out[0];
+  ::casadi::DM d = ::casadi::DM::densify(dm_out[0]);
 
   double *data = d.ptr();
   int nel = size(m,0)*size(m,1);

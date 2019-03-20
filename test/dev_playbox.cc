@@ -8,10 +8,10 @@ int main()
 
   x.set(3, false, 0, 2);
 
-  std::cout << x << std::endl;
-
   ocl::TreeBuilder tb;
   tb.add("x1", {1,2});
   tb.add("x2", {3,2});
+
+  std::cout << ocl::casadi::full(ocl::casadi::Eye(3)) << std::endl;
 
 }

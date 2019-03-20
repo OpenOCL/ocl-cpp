@@ -115,7 +115,7 @@ public:
       m_reshaped.set( this->_indizes[i], false, range(0, this->_indizes[i].size()) );
       ::casadi::IM m_sliced = ::casadi::IM::densify(m_reshaped(slice1, slice2));
 
-      // copy data to vector casadi uses long long
+      // copy data to vector, casadi uses long long
       long long *data = m_sliced.ptr();
       int nel = m_sliced.size1()*m_sliced.size2();
       a.push_back(toVector(data, nel));
