@@ -2,7 +2,7 @@
 #include "tensor/tree_builder.h"
 #include "tensor/tree_tensor.h"
 
-TEST(testTreeTensor, aThreeVariables)
+TEST(testTreeTensor, aThreeVariablesSet)
 {
   ocl::TreeBuilder tb;
   tb.add("x1", {1,2});
@@ -14,18 +14,51 @@ TEST(testTreeTensor, aThreeVariables)
   ocl::ValueStorage vs(x_structure.numel(), 4);
   ocl::TreeTensor x(x_structure, vs);
 
-  ocl::Tensor t = ocl::Tensor({1,2,3,4,5,6,7,8,9,10});
+  ocl::Tensor t = ocl::Tensor(ocl::Matrix({1,2,3,4,5,6,7,8,9,10}));
+  x.set(t);
+  ocl::test::assertEqual(x.data(), {{1,2,3,4,5,6,7,8,9,10}});
+}
+
+TEST(testTreeTensor, bThreeVariablesAllSlice)
+{
+  ocl::TreeBuilder tb;
+  tb.add("x1", {1,2});
+  tb.add("x2", {3,2});
+  tb.add("x1", {1,2});
+
+  ocl::Tree x_structure = tb.tree();
+
+  ocl::ValueStorage vs(x_structure.numel(), 4);
+  ocl::TreeTensor x(x_structure, vs);
+
+  ocl::Tensor t = ocl::Tensor(ocl::Matrix({1,2,3,4,5,6,7,8,9,10}));
 
   x.slice(ocl::all(x, 0), {0}).set(t);
 
   ocl::test::assertEqual(x.data(), {{1,2,3,4,5,6,7,8,9,10}});
-  // ocl::test::assertEqual(x.get("x1").data(), {1,9,2,10});
-  //
-  // ocl::test::assertEqual(x.get("x1").slice(1,1).data(), {1,9});
-
+  ocl::test::assertEqual(vs.data(), {1,2,3,4,5,6,7,8,9,10});
 }
 
-// TEST(testTreeTensor, bStateTensor)
+// TEST(testTreeTensor, cThreeVariablesSubsref)
+// {
+//   ocl::TreeBuilder tb;
+//   tb.add("x1", {1,2});
+//   tb.add("x2", {3,2});
+//   tb.add("x1", {1,2});
+//
+//   ocl::Tree x_structure = tb.tree();
+//
+//   ocl::ValueStorage vs(x_structure.numel(), 4);
+//   ocl::TreeTensor x(x_structure, vs);
+//
+//   ocl::Tensor t = ocl::Tensor(ocl::Matrix({1,2,3,4,5,6,7,8,9,10}));
+//   x.set(t);
+//   ocl::test::assertEqual(x.get("x1").data(), {1,9,2,10});
+//   //
+//   // ocl::test::assertEqual(x.get("x1").slice(1,1).data(), {1,9});
+// }
+
+// TEST(testTreeTensor, cStateTensor)
 // {
 //   ocl::TreeBuilder tb_x;
 //   tb_x.add("p",{3,1});
@@ -50,7 +83,7 @@ TEST(testTreeTensor, aThreeVariables)
 //   ocl::test::assertEqual( state.size(),   {18, 1} );
 // }
 //
-// TEST(testTreeTensor, bOcpTensor)
+// TEST(testTreeTensor, dOcpTensor)
 // {
 //   ocl::TreeBuilder tb_x;
 //   tb_x.add("p",{3,1});

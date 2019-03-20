@@ -43,6 +43,14 @@ static inline std::vector<int> toVector(const int* data, int nel)
 }
 
 // Array to vector.
+static inline std::vector<int> toVector(const long long* data, int nel)
+{
+  std::vector<long long> values(data, data + nel);
+  std::vector<int> r(values.begin(), values.end());
+  return r;
+}
+
+// Array to vector.
 static inline std::vector<double> toVector(const double* data, int nel)
 {
   std::vector<double> values(data, data + nel);

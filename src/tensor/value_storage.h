@@ -49,7 +49,7 @@ public:
   }
 
   void assign(const std::vector<int>& indizes, const Matrix& values, int size0, int size1) {
-    ::ocl::assign(m, indizes, 0, values);
+    m.assign(indizes, 0, values);
   }
 
   void assign(const std::vector<int>& indizes, const std::vector<double>& values, int size0, int size1)

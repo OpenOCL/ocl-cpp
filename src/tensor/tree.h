@@ -113,10 +113,10 @@ public:
 
       ::casadi::IM m_reshaped = ::casadi::IM(this->_shape[0], this->_shape[1]);
       m_reshaped.set( this->_indizes[i], false, range(0, this->_indizes[i].size()) );
-      ::casadi::IM m_sliced = m_reshaped(slice1, slice2);
+      ::casadi::IM m_sliced = ::casadi::IM::densify(m_reshaped(slice1, slice2));
 
-      // copy data to vector
-      int *data = (int *) m_sliced.ptr();
+      // copy data to vector casadi uses long long
+      long long *data = m_sliced.ptr();
       int nel = m_sliced.size1()*m_sliced.size2();
       a.push_back(toVector(data, nel));
     }
@@ -136,6 +136,7 @@ private:
 
 // A tree with no children/branches
 class Leaf : public Tree {
+public:
   Leaf(const std::vector<int>& shape)
     : Tree(std::map<std::string, Tree>(), shape, {range(0, prod(shape))}) { }
 };
