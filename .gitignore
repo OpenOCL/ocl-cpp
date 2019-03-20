@@ -3,6 +3,7 @@ compile.sh
 run.sh
 debug.sh
 .vs
+*.profraw
 
 # Prerequisites
 *.d

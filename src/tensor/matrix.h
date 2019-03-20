@@ -49,6 +49,7 @@ public:
 
   Matrix(const ::casadi::DM& v) : m(v) { }
   Matrix(const double v) : m(v) { }
+  Matrix(const std::vector<double>& v) : m(v) { }
   Matrix(const CasadiMatrix& m) : m(m) { }
 
   // Get underlying data type
@@ -59,6 +60,10 @@ public:
 
   virtual int size(const int dim) const override {
     return casadi::size(m, dim);
+  }
+
+  std::vector<double> full() {
+    return casadi::full(m);
   }
 
   // Member functions are defined inline below class (after static functions).
@@ -125,6 +130,11 @@ static inline std::vector<double> full(const Matrix& m) {
 // Static functions
 static inline void assign(Matrix& m, int row, int col, double val) {
   casadi::assign(m.rawRef(), row, col, val);
+}
+
+static inline void assign(Matrix& m, const std::vector<int>& rows, int col,
+                          const Matrix& v) {
+  casadi::assign(m.rawRef(), rows, col, v.raw());
 }
 
 static inline void assign(Matrix& m, const std::vector<int>& rows, int col,

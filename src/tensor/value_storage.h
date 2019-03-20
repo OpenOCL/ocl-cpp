@@ -30,7 +30,7 @@ public:
       : m(Matrix::Zero(size, 1)) { }
 
   ValueStorage(const int size, const double val)
-      : m(Matrix::One(size, 1) * val) { }
+      : m( ctimes(Matrix::One(size, 1), Matrix(val)) ) { }
 
   // ValueStorage(const int size, const std::vector<double>& values) {
   //   this->assign(all(*this, 0), values, size, 1);
@@ -41,7 +41,7 @@ public:
   }
 
   std::vector<double> data() const {
-    return m.full();
+    return full(m);
   }
 
   ValueStorage subsindex(const std::vector<int>& indizes) const {
@@ -49,7 +49,7 @@ public:
   }
 
   void assign(const std::vector<int>& indizes, const Matrix& values, int size0, int size1) {
-    assign(m, indizes, 0, values);
+    ::ocl::assign(m, indizes, 0, values);
   }
 
   void assign(const std::vector<int>& indizes, const std::vector<double>& values, int size0, int size1)

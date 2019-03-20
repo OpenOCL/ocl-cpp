@@ -116,7 +116,7 @@ public:
       ::casadi::IM m_sliced = m_reshaped(slice1, slice2);
 
       // copy data to vector
-      int *data = m_sliced.ptr();
+      int *data = (int *) m_sliced.ptr();
       int nel = m_sliced.size1()*m_sliced.size2();
       a.push_back(toVector(data, nel));
     }

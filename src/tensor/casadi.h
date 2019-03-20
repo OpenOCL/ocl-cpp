@@ -57,7 +57,7 @@ static inline void assign(CasadiMatrix& m, const std::vector<int>& rows,
 
 static inline std::vector<int> shape(const CasadiMatrix& m)
 {
-  return {m.rows(), m.columns()};
+  return {(int)m.rows(), (int)m.columns()};
 }
 
 static inline int size(const CasadiMatrix& m, const int dim)

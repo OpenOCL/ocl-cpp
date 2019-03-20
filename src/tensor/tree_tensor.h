@@ -72,9 +72,9 @@ class TreeTensor : public Slicable
     {
       ValueStorage vs = this->value_storage().subsindex(this->structure().indizes(i));
 
-      Matrix d = vs.data();
+      Matrix m = vs.data();
       std::vector<int> s = this->structure().shape();
-      d = d.reshape(s[0], s[1]);
+      m = m.reshape(s[0], s[1]);
       matrizes.push_back(m);
     }
     return Tensor(matrizes);
