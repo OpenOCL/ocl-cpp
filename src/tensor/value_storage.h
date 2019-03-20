@@ -23,14 +23,14 @@ class ValueStorage : public Slicable
 public:
 
   // Reshape matrizes to vectors
-  ValueStorage(const CasadiMatrix& m)
-      : m( casadi::reshape(m, casadi::size(m, 0)*casadi::size(m, 1), 1) ) { }
+  ValueStorage(const Matrix& m)
+      : m( reshape(m, m.size(0) * m.size(1), 1) ) { }
 
   ValueStorage(const int size)
-      : m(casadi::Zero(size, 1)) { }
+      : m(Matrix::Zero(size, 1)) { }
 
   ValueStorage(const int size, const double val)
-      : m(casadi::One(size, 1) * val) { }
+      : m(Matrix::One(size, 1) * val) { }
 
   // ValueStorage(const int size, const std::vector<double>& values) {
   //   this->assign(all(*this, 0), values, size, 1);
@@ -41,25 +41,25 @@ public:
   }
 
   std::vector<double> data() const {
-    return casadi::full(m);
+    return m.full();
   }
 
   ValueStorage subsindex(const std::vector<int>& indizes) const {
-    return ValueStorage(casadi::slice(m, indizes, {0}));
+    return ValueStorage(slice(m, indizes, {0}));
   }
 
-  void assign(const std::vector<int>& indizes, const CasadiMatrix& values, int size0, int size1) {
-    casadi::assign(m, indizes, 0, values);
+  void assign(const std::vector<int>& indizes, const Matrix& values, int size0, int size1) {
+    assign(m, indizes, 0, values);
   }
 
   void assign(const std::vector<int>& indizes, const std::vector<double>& values, int size0, int size1)
   {
-    CasadiMatrix values_m(values);
+    Matrix values_m(values);
     assign(indizes, values_m, size0, size1);
   }
 
 private:
-  CasadiMatrix m;
+  Matrix m;
 };
 
 } // namespace ocl
