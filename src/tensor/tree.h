@@ -19,8 +19,8 @@
 #include <map>  // branches
 
 #include "utils/typedefs.h"
-#include "utils/functions.h"   // prod
-#include "tensor/functions.h"  // tensor::range
+#include "utils/functions.h"   // prod, range
+#include "tensor/functions.h"  // tensor::mergeIndizes
 #include "tensor/casadi.h"     // slice
 
 // This file defines classes Tree and Leaf

@@ -98,7 +98,7 @@ TEST(testTreeTensor, dOcpTensor)
   ocl::ValueStorage vs(ocp_tree.numel(), 0);
   ocl::TreeTensor v(ocp_tree, vs);
 
-  v.get("x").get("p").set(ocl::Matrix(1));
+  v.get("x").get("p");
 
   // v.get("x").get("p").set(ocl::Matrix({100, 0, -50}));
   // v.get("R").set(ocl::Matrix::Eye(3));
