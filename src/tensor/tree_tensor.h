@@ -31,7 +31,7 @@ class TreeTensor : public Slicable
 
   // Constructor
   TreeTensor(const Tree& structure, ValueStorage& value_storage)
-      : _value_storage(value_storage), _structure(structure) { }
+      : _structure(structure), _value_storage(value_storage) { }
 
   // Accessors
   ValueStorage& value_storage() const { return this->_value_storage; }
@@ -103,7 +103,7 @@ class TreeTensor : public Slicable
   TreeTensor get(const std::string& id) const
   {
     Tree r = this->structure().get(id);
-    return TreeTensor(r, this->value_storage());
+    return TreeTensor(r, this->_value_storage);
   }
 
   // Returns a sub-tree by index
@@ -178,8 +178,8 @@ class TreeTensor : public Slicable
   Tensor operator/(const Tensor& other) const;
 
 private:
- ValueStorage& _value_storage;
  Tree _structure;
+ ValueStorage& _value_storage;
 
 }; // class TreeTensor
 

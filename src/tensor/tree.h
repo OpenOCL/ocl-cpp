@@ -49,6 +49,26 @@ public:
        const std::vector<std::vector<int> >& indizes)
       : _branches(branches), _shape(shape), _indizes(indizes) { }
 
+  // copy constructor makes deep copy of tree
+  Tree(const Tree& other)
+  {
+    std::map<std::string, Tree> branches = other.branches();
+    std::map<std::string, Tree>::iterator it;
+    for (it = branches.begin(); it != branches.end(); it++)
+    {
+      std::string id = it->first;
+      Tree t = it->second;
+      std::pair<std::string, Tree> el(id, t);
+      _branches.insert(el);
+      _shape = other._shape;
+      _indizes = other._indizes;
+    }
+  }
+
+  std::map<std::string, Tree> branches() const {
+    return this->_branches;
+  }
+
   virtual int size(int dim) const override {
     return this->_shape[dim];
   }

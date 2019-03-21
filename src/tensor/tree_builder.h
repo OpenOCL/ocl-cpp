@@ -79,7 +79,7 @@ public:
   }
 
   // Returns a reference to the tree object which the tree builder owns
-  Tree tree() { return _tree; };
+  Tree& tree() { return _tree; };
 
  private:
   int _len;
