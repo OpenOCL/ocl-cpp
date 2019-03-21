@@ -26,7 +26,7 @@ static inline void assertTrue(const int expr, const std::string& msg)
 
 static inline void assertEqual(const int i, const int j, const std::string& msg)
 {
-  assert(i != j);
+  assert(i == j);
 }
 
 } // namespace ocl

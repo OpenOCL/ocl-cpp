@@ -52,8 +52,8 @@ public:
   {
     assertEqual(ids.size(), trees.size(), "Number of ids must correspond to the number of trees to add.");
 
-    for (int i=0; i<N; i++) {
-      for (unsigned int j=0; j<ids.size(); j++) {
+    for (int i = 0; i < N; i++) {
+      for (unsigned int j = 0; j < ids.size(); j++) {
         add(ids[j], trees[j]);
       }
     }
