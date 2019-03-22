@@ -15,7 +15,7 @@ TEST(TreeTensor, aThreeVariablesSet)
   ocl::TreeTensor x(x_structure, vs);
 
   x.set(ocl::Matrix({1,2,3,4,5,6,7,8,9,10}));
-  ocl::test::assertEqual(x.data(), {{1,2,3,4,5,6,7,8,9,10}});
+  ocl::test::assertEqual(x.data(), {{1,2,3,4,5,6,7,8,9,10}}, OCL_INFO);
 }
 
 TEST(TreeTensor, bThreeVariablesAllSlice)
@@ -30,10 +30,10 @@ TEST(TreeTensor, bThreeVariablesAllSlice)
   ocl::ValueStorage vs(x_structure.numel(), 4);
   ocl::TreeTensor x(x_structure, vs);
 
-  // x.slice(ocl::all(x, 0), {0}).set(ocl::Matrix({1,2,3,4,5,6,7,8,9,10}));
+  x.slice(ocl::all(x, 0), {0}).set(ocl::Matrix({1,2,3,4,5,6,7,8,9,10}));
 
-  // ocl::test::assertEqual(x.data(), {{1,2,3,4,5,6,7,8,9,10}});
-  // ocl::test::assertEqual(vs.data(), {1,2,3,4,5,6,7,8,9,10});
+  ocl::test::assertEqual(x.data(), {{1,2,3,4,5,6,7,8,9,10}}, OCL_INFO);
+  ocl::test::assertEqual(vs.data(), {1,2,3,4,5,6,7,8,9,10}, OCL_INFO);
 }
 
 TEST(TreeTensor, cThreeVariablesSubsrefSlice)
@@ -49,9 +49,9 @@ TEST(TreeTensor, cThreeVariablesSubsrefSlice)
   ocl::TreeTensor x(x_structure, vs);
 
   x.set(ocl::Matrix({1,2,3,4,5,6,7,8,9,10}));
-  ocl::test::assertEqual(x.get("x1").data(), {{1,2},{9,10}});
+  ocl::test::assertEqual(x.get("x1").data(), {{1,2},{9,10}}, OCL_INFO);
 
-  ocl::test::assertEqual(x.get("x1").slice({0},{0}).data(), {{1},{9}});
+  ocl::test::assertEqual(x.get("x1").slice({0},{0}).data(), {{1},{9}}, OCL_INFO);
 }
 
 TEST(TreeTensor, dStateTensor)
@@ -71,10 +71,10 @@ TEST(TreeTensor, dStateTensor)
   state.get("v").set(ocl::Matrix({20, 0, 0}));
   state.get("w").set(ocl::Matrix({0, 1, 0.1}));
 
-  ocl::test::assertEqual( state.get("p").data(),   {{100, 0, -50}} );
-  ocl::test::assertEqual( state.get("R").data(),   {ocl::Matrix::Eye(3).full()} );
-  ocl::test::assertEqual( state.get("v").data(),   {{20, 0, 0}} );
-  ocl::test::assertEqual( state.get("w").data(),   {{0, 1, 0.1}} );
+  ocl::test::assertEqual( state.get("p").data(),   {{100, 0, -50}}, OCL_INFO);
+  ocl::test::assertEqual( state.get("R").data(),   {ocl::Matrix::Eye(3).full()}, OCL_INFO);
+  ocl::test::assertEqual( state.get("v").data(),   {{20, 0, 0}}, OCL_INFO);
+  ocl::test::assertEqual( state.get("w").data(),   {{0, 1, 0.1}}, OCL_INFO);
 }
 
 TEST(TreeTensor, eOcpTensor)
@@ -98,15 +98,12 @@ TEST(TreeTensor, eOcpTensor)
   ocl::ValueStorage vs(ocp_tree.numel(), 0);
   ocl::TreeTensor v(ocp_tree, vs);
 
-  v.get("x").get("p");
+  v.get("x").get("p").set(ocl::Matrix({100, 0, -50}));
+  v.get("R").set(ocl::Matrix::Eye(3));
+  v.get("v").set(ocl::Matrix({20, 0, 0}));
+  v.get("w").set(ocl::Matrix({0, 1, 0.1}));
 
-  // v.get("x").get("p").set(ocl::Matrix({100, 0, -50}));
-  // v.get("R").set(ocl::Matrix::Eye(3));
-  // v.get("v").set(ocl::Matrix({20, 0, 0}));
-  // v.get("w").set(ocl::Matrix({0, 1, 0.1}));
-
-  //
-  // ocl::test::assertEqual( v.get("x").slice(1, ocl::all(v.get("x"), 1)).at(linspace(3,5)).data(), {100, 100, 100});
+  // ocl::test::assertEqual( v.get("x").slice(1, ocl::all(v.get("x"), 1)).at(linspace(3,5)).data(), {100, 100, 100}, OCL_INFO);
   //
   // v.get("x").get("R").set(ocl::Matrix::Eye(3));
   //
