@@ -24,9 +24,9 @@ TEST(Tree, bTwoVariables)
   ocl::Tree x = tb.tree();
 
   std::vector<std::vector<int>> a = {{0,1}};
-  ocl::test::assertEqual(x.get("x1").indizes(), a, _INFO);
-  ocl::test::assertEqual(x.get("x2").indizes(),{{2,3,4,5,6,7}}, _INFO);
-  ocl::test::assertEqual(x.shape(),{8,1}, _INFO);
+  ocl::test::assertEqual(x.get("x1").indizes(), a, INFO);
+  ocl::test::assertEqual(x.get("x2").indizes(),{{2,3,4,5,6,7}}, INFO);
+  ocl::test::assertEqual(x.shape(),{8,1}, INFO);
 }
 
 TEST(Tree, cShape)
@@ -47,8 +47,8 @@ TEST(Tree, dRepeatedVar) {
 
   ocl::Tree x = tb.tree();
 
-  ocl::test::assertEqual(x.get("x1").indizes(),{{0,1,2},{9,10,11}}, _INFO);
-  ocl::test::assertEqual(x.get("x2").indizes(),{{3,4,5,6,7,8}}, _INFO);
+  ocl::test::assertEqual(x.get("x1").indizes(),{{0,1,2},{9,10,11}}, INFO);
+  ocl::test::assertEqual(x.get("x2").indizes(),{{3,4,5,6,7,8}}, INFO);
 }
 
 TEST(Tree, eSubTree)
@@ -70,7 +70,7 @@ TEST(Tree, eSubTree)
 
   ocl::Tree x = tb_x.tree();
 
-  ocl::test::assertEqual(x.get("u").get("x1").indizes(), {{3,4,5},{15,16,17},{27,28,29},{39,40,41}}, _INFO);
+  ocl::test::assertEqual(x.get("u").get("x1").indizes(), {{3,4,5},{15,16,17},{27,28,29},{39,40,41}}, INFO);
   //
   // ocl::Tree r = x.get("u").at(0).get("x1");
   // ocl::test::assertEqual(r.indizes(), {{3,4,5},{15,16,17}} );
@@ -81,9 +81,9 @@ TEST(Tree, fSliceMatrix)
 
   ocl::Tree m = ocl::Leaf({4,4});
 
-  ocl::test::assertEqual(m.indizes(), {ocl::linspace(0,15)}, _INFO);
+  ocl::test::assertEqual(m.indizes(), {ocl::linspace(0,15)}, INFO);
 
   ocl::Tree n = m.slice({0,1},{1,2});
 
-  ocl::test::assertEqual(n.indizes(), {{4,5,8,9}}, _INFO);
+  ocl::test::assertEqual(n.indizes(), {{4,5,8,9}}, INFO);
 }
