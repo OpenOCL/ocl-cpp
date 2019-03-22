@@ -37,7 +37,7 @@ INCLUDES_EIGEN = -I $(EXTERN)/eigen
 INCLUDES = -I$(SRC) -I$(TEST) -I$(INCLUDE) \
 					 $(INCLUDES_EIGEN) -I$(CASADI_INCLUDE_PATH) -I$(CASADI_EXPORT_PATH)
 
-GTEST_STATIC = $(GTEST_LIB)/libgtest.a
+GTEST_STATIC = $(GTEST_LIB)/libgtest.a 
 GTEST_HEADERS = $(GTEST_PATH)/include/gtest/*.h \
                 $(GTEST_PATH)/include/gtest/internal/*.h
 GTEST_SRCS_ = $(GTEST_PATH)/src/*.cc $(GTEST_PATH)/src/*.h $(GTEST_HEADERS)

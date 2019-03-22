@@ -15,19 +15,6 @@
 #include <utils/testing.h>
 #include "tensor/tree_builder.h"
 
-// TEST(Tree, aTwoVariables)
-// {
-//   ocl::TreeBuilder tb;
-//   tb.add("x1", {1,2});
-//   tb.add("x2", {3,2});
-//
-//   ocl::Tree x = tb.tree();
-//
-//   ocl::test::assertEqual(x.get("x1").indizes(), {{0,1}}, __LINE__, __FILE__);
-//   ocl::test::assertEqual(x.get("x2").indizes(),{{2,3,4,5,6,7}});
-//   ocl::test::assertEqual(x.shape(),{8,1});
-// }
-
 TEST(Tree, bTwoVariables)
 {
   ocl::TreeBuilder tb;
@@ -37,10 +24,8 @@ TEST(Tree, bTwoVariables)
   ocl::Tree x = tb.tree();
 
   ocl::test::assertEqual(x.get("x1").indizes(), {{0,1}}, __LINE__, __FILE__);
-  ocl::test::assertEqual(x.get("x2").indizes(),{{2,3,4,5,6,7}});
-  ocl::test::assertEqual(x.shape(),{8,1});
-
-  ocl::test::assertEqual(1,{2,3});
+  ocl::test::assertEqual(x.get("x2").indizes(),{{2,3,4,5,6,7}}, __LINE__, __FILE__);
+  ocl::test::assertEqual(x.shape(),{8,1}, __LINE__, __FILE__);
 }
 
 TEST(Tree, cShape)
@@ -50,7 +35,7 @@ TEST(Tree, cShape)
 
   ocl::Tree x = tb.tree();
 
-  ocl::test::assertEqual(x.shape(), {8,1});
+  ocl::test::assertEqual(x.shape(), {8,1}, __LINE__, __FILE__);
 }
 
 TEST(Tree, dRepeatedVar) {
@@ -61,8 +46,8 @@ TEST(Tree, dRepeatedVar) {
 
   ocl::Tree x = tb.tree();
 
-  ocl::test::assertEqual(x.get("x1").indizes(),{{0,1,2},{9,10,11}});
-  ocl::test::assertEqual(x.get("x2").indizes(),{{3,4,5,6,7,8}});
+  ocl::test::assertEqual(x.get("x1").indizes(),{{0,1,2},{9,10,11}}, __LINE__, __FILE__);
+  ocl::test::assertEqual(x.get("x2").indizes(),{{3,4,5,6,7,8}}, __LINE__, __FILE__);
 }
 
 TEST(Tree, eSubTree)
@@ -84,7 +69,7 @@ TEST(Tree, eSubTree)
 
   ocl::Tree x = tb_x.tree();
 
-  ocl::test::assertEqual(x.get("u").get("x1").indizes(), {{3,4,5},{15,16,17},{27,28,29},{39,40,41}} );
+  ocl::test::assertEqual(x.get("u").get("x1").indizes(), {{3,4,5},{15,16,17},{27,28,29},{39,40,41}}, __LINE__, __FILE__);
   //
   // ocl::Tree r = x.get("u").at(0).get("x1");
   // ocl::test::assertEqual(r.indizes(), {{3,4,5},{15,16,17}} );
@@ -95,9 +80,9 @@ TEST(Tree, fSliceMatrix)
 
   ocl::Tree m = ocl::Leaf({4,4});
 
-  ocl::test::assertEqual(m.indizes(), {ocl::linspace(0,15)} );
+  ocl::test::assertEqual(m.indizes(), {ocl::linspace(0,15)}, __LINE__, __FILE__);
 
   ocl::Tree n = m.slice({0,1},{1,2});
 
-  ocl::test::assertEqual(n.indizes(), {{4,5,8,9}} );
+  ocl::test::assertEqual(n.indizes(), {{4,5,8,9}}, __LINE__, __FILE__);
 }
