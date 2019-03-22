@@ -15,7 +15,7 @@
 #include <utils/testing.h>
 #include "tensor/tree_builder.h"
 
-TEST(testTree, aTwoVariables)
+TEST(Tree, aTwoVariables)
 {
   ocl::TreeBuilder tb;
   tb.add("x1", {1,2});
@@ -28,7 +28,7 @@ TEST(testTree, aTwoVariables)
   ocl::test::assertEqual(x.shape(),{8,1});
 }
 
-TEST(testTree, bShape)
+TEST(Tree, bShape)
 {
   ocl::TreeBuilder tb;
   tb.add("x1",{1,8});
@@ -38,7 +38,7 @@ TEST(testTree, bShape)
   ocl::test::assertEqual(x.shape(), {8,1});
 }
 
-TEST(testTree, cRepeatedVar) {
+TEST(Tree, cRepeatedVar) {
   ocl::TreeBuilder tb;
   tb.add("x1",{1,3});
   tb.add("x2",{3,2});
@@ -50,7 +50,7 @@ TEST(testTree, cRepeatedVar) {
   ocl::test::assertEqual(x.get("x2").indizes(),{{3,4,5,6,7,8}});
 }
 
-TEST(testTree, dSubTree)
+TEST(Tree, dSubTree)
 {
   ocl::TreeBuilder tb_u;
   tb_u.add("x1",{1,3});
@@ -75,7 +75,7 @@ TEST(testTree, dSubTree)
   // ocl::test::assertEqual(r.indizes(), {{3,4,5},{15,16,17}} );
 }
 
-TEST(testTree, eSliceMatrix)
+TEST(Tree, eSliceMatrix)
 {
 
   ocl::Tree m = ocl::Leaf({4,4});

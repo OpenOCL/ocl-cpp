@@ -2,7 +2,7 @@
 #include "tensor/tree_builder.h"
 #include "tensor/tree_tensor.h"
 
-TEST(testTreeTensor, aThreeVariablesSet)
+TEST(TreeTensor, aThreeVariablesSet)
 {
   ocl::TreeBuilder tb;
   tb.add("x1", {1,2});
@@ -18,7 +18,7 @@ TEST(testTreeTensor, aThreeVariablesSet)
   ocl::test::assertEqual(x.data(), {{1,2,3,4,5,6,7,8,9,10}});
 }
 
-TEST(testTreeTensor, bThreeVariablesAllSlice)
+TEST(TreeTensor, bThreeVariablesAllSlice)
 {
   ocl::TreeBuilder tb;
   tb.add("x1", {1,2});
@@ -36,7 +36,7 @@ TEST(testTreeTensor, bThreeVariablesAllSlice)
   // ocl::test::assertEqual(vs.data(), {1,2,3,4,5,6,7,8,9,10});
 }
 
-TEST(testTreeTensor, cThreeVariablesSubsrefSlice)
+TEST(TreeTensor, cThreeVariablesSubsrefSlice)
 {
   ocl::TreeBuilder tb;
   tb.add("x1", {1,2});
@@ -54,7 +54,7 @@ TEST(testTreeTensor, cThreeVariablesSubsrefSlice)
   ocl::test::assertEqual(x.get("x1").slice({0},{0}).data(), {{1},{9}});
 }
 
-TEST(testTreeTensor, dStateTensor)
+TEST(TreeTensor, dStateTensor)
 {
   ocl::TreeBuilder tb_x;
   tb_x.add("p",{3,1});
@@ -77,7 +77,7 @@ TEST(testTreeTensor, dStateTensor)
   ocl::test::assertEqual( state.get("w").data(),   {{0, 1, 0.1}} );
 }
 
-TEST(testTreeTensor, eOcpTensor)
+TEST(TreeTensor, eOcpTensor)
 {
   ocl::TreeBuilder tb_x;
   tb_x.add("p",{3,1});

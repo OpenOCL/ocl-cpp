@@ -15,7 +15,7 @@
 #include "utils/testing.h"
 #include "tensor/matrix.h"
 
-TEST(testMatrix, ScalarOperators)
+TEST(Matrix, aScalarOperators)
 {
   // scalar unary operations
   {

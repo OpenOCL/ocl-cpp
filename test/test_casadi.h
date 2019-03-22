@@ -15,7 +15,7 @@
 #include <utils/testing.h>
 #include "tensor/casadi.h"
 
-TEST(testCasadi, ScalarOperators)
+TEST(Casadi, aScalarOperators)
 {
   // scalar unary operations
   {
