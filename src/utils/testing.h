@@ -20,9 +20,7 @@
 #include <cstring>
 #include <stdlib.h>         // exit, EXIT_FAILURE
 
-#define _F __FILE__
-#define _L __LINE__
-
+// Use the _INFO macro to pass filename and line to the assertions
 #define _INFO ocl::test::Info(__FILE__, __LINE__)
 
 namespace ocl
