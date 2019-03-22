@@ -21,6 +21,7 @@
 #include <stdlib.h>         // exit, EXIT_FAILURE
 
 // Use the _INFO macro to pass filename and line to the assertions
+// e.g. ocl::test::assertEqual(4-1, 3, _INFO);
 #define _INFO ocl::test::Info(__FILE__, __LINE__)
 
 namespace ocl
@@ -33,6 +34,7 @@ const std::string ansi_emph = "\x1b[1m";
 namespace test
 {
 
+// Struct carrying filename and line number
 struct Info
 {
   Info(std::string file, int line) : file(file), line(line) { }
