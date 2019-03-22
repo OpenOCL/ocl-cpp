@@ -59,10 +59,10 @@ public:
       std::string id = it->first;
       Tree t = it->second;
       std::pair<std::string, Tree> el(id, t);
-      _branches.insert(el);
-      _shape = other._shape;
-      _indizes = other._indizes;
+      this->_branches.insert(el);
     }
+    this->_shape = other._shape;
+    this->_indizes = other._indizes;
   }
 
   std::map<std::string, Tree> branches() const {

@@ -15,7 +15,20 @@
 #include <utils/testing.h>
 #include "tensor/tree_builder.h"
 
-TEST(Tree, aTwoVariables)
+// TEST(Tree, aTwoVariables)
+// {
+//   ocl::TreeBuilder tb;
+//   tb.add("x1", {1,2});
+//   tb.add("x2", {3,2});
+//
+//   ocl::Tree x = tb.tree();
+//
+//   ocl::test::assertEqual(x.get("x1").indizes(), {{0,1}}, __LINE__, __FILE__);
+//   ocl::test::assertEqual(x.get("x2").indizes(),{{2,3,4,5,6,7}});
+//   ocl::test::assertEqual(x.shape(),{8,1});
+// }
+
+TEST(Tree, bTwoVariables)
 {
   ocl::TreeBuilder tb;
   tb.add("x1", {1,2});
@@ -23,12 +36,14 @@ TEST(Tree, aTwoVariables)
 
   ocl::Tree x = tb.tree();
 
-  ocl::test::assertEqual(x.get("x1").indizes(),{{0,1}});
+  ocl::test::assertEqual(x.get("x1").indizes(), {{0,1}}, __LINE__, __FILE__);
   ocl::test::assertEqual(x.get("x2").indizes(),{{2,3,4,5,6,7}});
   ocl::test::assertEqual(x.shape(),{8,1});
+
+  ocl::test::assertEqual({1},{2,3});
 }
 
-TEST(Tree, bShape)
+TEST(Tree, cShape)
 {
   ocl::TreeBuilder tb;
   tb.add("x1",{1,8});
@@ -38,7 +53,7 @@ TEST(Tree, bShape)
   ocl::test::assertEqual(x.shape(), {8,1});
 }
 
-TEST(Tree, cRepeatedVar) {
+TEST(Tree, dRepeatedVar) {
   ocl::TreeBuilder tb;
   tb.add("x1",{1,3});
   tb.add("x2",{3,2});
@@ -50,7 +65,7 @@ TEST(Tree, cRepeatedVar) {
   ocl::test::assertEqual(x.get("x2").indizes(),{{3,4,5,6,7,8}});
 }
 
-TEST(Tree, dSubTree)
+TEST(Tree, eSubTree)
 {
   ocl::TreeBuilder tb_u;
   tb_u.add("x1",{1,3});
@@ -75,7 +90,7 @@ TEST(Tree, dSubTree)
   // ocl::test::assertEqual(r.indizes(), {{3,4,5},{15,16,17}} );
 }
 
-TEST(Tree, eSliceMatrix)
+TEST(Tree, fSliceMatrix)
 {
 
   ocl::Tree m = ocl::Leaf({4,4});

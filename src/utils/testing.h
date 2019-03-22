@@ -15,55 +15,110 @@
 #ifndef OCL_TESTING_H_
 #define OCL_TESTING_H_
 
-#include <gtest/gtest.h>
+#include <gtest/gtest.h>    // EXPECT_EQ, EXPECT_NEAR, ASSERT_EQ
+#include <ostream>
+#include <cstring>
+#include <stdlib.h>         // exit, EXIT_FAILURE
 
 namespace ocl
 {
 namespace test
 {
 
-void assertDoubleFullEqual(const std::vector<double>& v1, const std::vector<double>& v2,
-                           const double eps=1e-4) {
+void assertEqual(const int given, const int expected,
+                 const int line_number = -1, const std::string& filename = "unknown")
+{
 
-  ASSERT_EQ(v1.size(), v2.size()) << "Vectors v1 and v2 are of unequal length";
-  for (unsigned int i = 0; i < v1.size(); ++i) {
-    EXPECT_NEAR(v1[i], v2[i], eps) << "Vectors v1 and v2 differ at index " << i;
+  std::ostringstream str;
+  str << std::endl;
+  if (std::strcmp(filename.c_str(), "unknown") != 0) {
+    str << "Assertion failed in file " << filename << " at line " << line_number << std::endl;
+  }
+  str << "Value should be " << expected << " but was " << given << std::endl;
+
+  EXPECT_EQ(given, expected) << str.str();
+}
+
+void assertEqual(const double given, const double expected,
+                 const int line_number = -1, const std::string& filename = "unknown",
+                 const double eps=1e-4)
+{
+  std::ostringstream str;
+  str << std::endl;
+  if (std::strcmp(filename.c_str(), "unknown") != 0) {
+    str << "Assertion failed in file " << filename << " at line " << line_number << std::endl;
+  }
+  str << "Value should be " << expected << " but was " << given << std::endl;
+
+  EXPECT_NEAR(given, expected, eps) << str.str();
+}
+
+void assertEqualLength(const int length_given, const int length_expected,
+                       const int line_number = -1, const std::string& filename = "unknown")
+{
+  std::ostringstream str;
+  str << std::endl;
+  if (std::strcmp(filename.c_str(), "unknown") != 0) {
+    str << "Assertion failed in file " << filename << " at line " << line_number << std::endl;
+  }
+  str << "Vectors have different length, expected length is " << length_expected << " but was " << length_given << std::endl;
+
+  ASSERT_EQ(length_given, length_expected) << str.str();
+  // somehow gtest does not exit/fatal here..
+  exit(EXIT_FAILURE);
+}
+
+void assertEqual(const std::vector<double>& given, const std::vector<double>& expected,
+                 const int line_number = -1, const std::string& filename = "unknown",
+                 const double eps = 1e-4)
+{
+  assertEqualLength(given.size(), expected.size(), line_number, filename);
+  for (unsigned int i = 0; i < expected.size(); ++i) {
+    assertEqual(given[i], expected[i], line_number, filename, eps);
   }
 }
 
-void assertDoubleFullEqual(const std::vector<double>& v1, const double v2,
-                           const double eps=1e-4) {
-
-
-  std::vector<double> v2vec = {v2};
-  assertDoubleFullEqual(v1, v2vec, eps);
-}
-
-void assertEqual(const std::vector<double>& v1, const std::vector<double>& v2) {
-  assertDoubleFullEqual(v1,v2);
-}
-
-void assertEqual(const std::vector<int>& v1, const std::vector<int>& v2) {
-  ASSERT_EQ(v1.size(), v2.size()) << "Vectors v1 and v2 are of unequal length";
-  for (unsigned int i = 0; i < v1.size(); ++i) {
-    EXPECT_EQ(v1[i], v2[i]) << "Vectors v1 and v2 differ at index " << i;
+void assertEqual(const std::vector<int>& given, const std::vector<int>& expected,
+                 const int line_number = -1, const std::string& filename = "unknown")
+{
+  assertEqualLength(given.size(), expected.size(), line_number, filename);
+  for (unsigned int i = 0; i < expected.size(); ++i) {
+    assertEqual(given[i], expected[i], line_number, filename);
   }
 }
 
-void assertEqual(const std::vector<std::vector<int>>& v1, const std::vector<std::vector<int>>& v2) {
-  ASSERT_EQ(v1.size(), v2.size()) << "Vectors v1 and v2 are of unequal length";
-  for (unsigned int i = 0; i < v1.size(); ++i) {
-    assertEqual(v1[i], v2[i]);
+void assertEqual(const std::vector<double>& given, const double expected,
+                 const int line_number = -1, const std::string& filename = "unknown",
+                 const double eps=1e-4)
+{
+  assertEqual(given, {expected}, line_number, filename, eps);
+}
+
+void assertEqual(const double given, const std::vector<double>& expected,
+                 const int line_number = -1, const std::string& filename = "unknown",
+                 const double eps=1e-4)
+{
+  assertEqual({given}, expected, line_number, filename, eps);
+}
+
+void assertEqual(const std::vector<std::vector<int>>& given, const std::vector<std::vector<int>>& expected,
+                 const int line_number = -1, const std::string& filename = "unknown")
+{
+  assertEqualLength(given.size(), expected.size(), line_number, filename);
+  for (unsigned int i = 0; i < expected.size(); ++i) {
+    assertEqual(given[i], expected[i], line_number, filename);
   }
 }
 
-void assertEqual(const std::vector<std::vector<double>>& v1, const std::vector<std::vector<double>>& v2) {
-  ASSERT_EQ(v1.size(), v2.size()) << "Vectors v1 and v2 are of unequal length";
-  for (unsigned int i = 0; i < v1.size(); ++i) {
-    assertEqual(v1[i], v2[i]);
+void assertEqual(const std::vector<std::vector<double>>& given, const std::vector<std::vector<double>>& expected,
+                 const int line_number = -1, const std::string& filename = "unknown",
+                 const double eps=1e-4)
+{
+  assertEqualLength(given.size(), expected.size(), line_number, filename);
+  for (unsigned int i = 0; i < expected.size(); ++i) {
+    assertEqual(given[i], expected[i], line_number, filename, eps);
   }
 }
-
 
 } // namespace test
 } //namespace ocl

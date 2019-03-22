@@ -9,7 +9,7 @@ TEST(TreeTensor, aThreeVariablesSet)
   tb.add("x2", {3,2});
   tb.add("x1", {1,2});
 
-  ocl::Tree& x_structure = tb.tree();
+  ocl::Tree x_structure = tb.tree();
 
   ocl::ValueStorage vs(x_structure.numel(), 4);
   ocl::TreeTensor x(x_structure, vs);
@@ -25,7 +25,7 @@ TEST(TreeTensor, bThreeVariablesAllSlice)
   tb.add("x2", {3,2});
   tb.add("x1", {1,2});
 
-  ocl::Tree& x_structure = tb.tree();
+  ocl::Tree x_structure = tb.tree();
 
   ocl::ValueStorage vs(x_structure.numel(), 4);
   ocl::TreeTensor x(x_structure, vs);
@@ -43,7 +43,7 @@ TEST(TreeTensor, cThreeVariablesSubsrefSlice)
   tb.add("x2", {3,2});
   tb.add("x1", {1,2});
 
-  ocl::Tree& x_structure = tb.tree();
+  ocl::Tree x_structure = tb.tree();
 
   ocl::ValueStorage vs(x_structure.numel(), 4);
   ocl::TreeTensor x(x_structure, vs);
