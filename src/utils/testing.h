@@ -20,18 +20,30 @@
 #include <cstring>
 #include <stdlib.h>         // exit, EXIT_FAILURE
 
-#define DEFAULT_FILENAME "unknown"
-#define ANSI_ERROR "\x1b[31m"
-#define ANSI_RESET "\x1b[0m"
-#define ANSI_HIGHLIGHT "\x1b[36m"
-#define ANSI_EMPH "\x1b[1m"
+#define _F __FILE__
+#define _L __LINE__
+
+#define _INFO ocl::test::Info(__FILE__, __LINE__)
 
 namespace ocl
 {
+const std::string ansi_error = "\x1b[31m";
+const std::string ansi_reset = "\x1b[0m";
+const std::string ansi_highlight = "\x1b[36m";
+const std::string ansi_emph = "\x1b[1m";
+
 namespace test
 {
 
-std::string toString(const std::vector<std::vector<int> >& vec)
+struct Info
+{
+  Info(std::string file, int line) : file(file), line(line) { }
+  Info() : file("unknown"), line(-1) { }
+  std::string file;
+  int line;
+};
+
+static inline std::string toString(const std::vector<std::vector<int> >& vec)
 {
   std::ostringstream str;
   str << "{";
@@ -45,7 +57,7 @@ std::string toString(const std::vector<std::vector<int> >& vec)
   return str.str();
 }
 
-std::string toString(const std::vector<std::vector<double> >& vec)
+static inline std::string toString(const std::vector<std::vector<double> >& vec)
 {
   std::ostringstream str;
   str << "{";
@@ -59,7 +71,7 @@ std::string toString(const std::vector<std::vector<double> >& vec)
   return str.str();
 }
 
-std::string toString(const std::vector<double>& vec)
+static inline std::string toString(const std::vector<double>& vec)
 {
   std::ostringstream str;
   str << "{";
@@ -68,7 +80,7 @@ std::string toString(const std::vector<double>& vec)
   return str.str();
 }
 
-std::string toString(const std::vector<int>& vec)
+static inline std::string toString(const std::vector<int>& vec)
 {
   std::ostringstream str;
   str << "{";
@@ -77,42 +89,40 @@ std::string toString(const std::vector<int>& vec)
   return str.str();
 }
 
-void assertEqual(const int given, const int expected,
-                 const int line_number = -1, const std::string& filename = DEFAULT_FILENAME)
+static inline void assertEqual(const int given, const int expected, const Info& info = Info())
 {
   std::ostringstream str;
   str << std::endl;
-  if (std::strcmp(filename.c_str(), DEFAULT_FILENAME) != 0) {
-    str << ANSI_ERROR << "Assertion failed "<< ANSI_RESET << "in file " << ANSI_HIGHLIGHT << filename << ANSI_RESET << " at line " << ANSI_HIGHLIGHT << line_number << ANSI_RESET << std::endl;
-  }
+  str << ocl::ansi_error << "Assertion failed "<< ocl::ansi_reset << "in file "
+      << ocl::ansi_highlight << info.file << ocl::ansi_reset << " at line "
+      << ocl::ansi_highlight << info.line << ocl::ansi_reset << std::endl;
   str << "Value should be " << expected << " but was " << given << std::endl;
 
   EXPECT_EQ(given, expected) << str.str();
 }
 
-void assertEqual(const double given, const double expected,
-                 const int line_number = -1, const std::string& filename = DEFAULT_FILENAME,
-                 const double eps=1e-4)
+static inline void assertEqual( const double given, const double expected,
+                                const Info& info = Info(),
+                                const double eps=1e-4)
 {
   std::ostringstream str;
   str << std::endl;
-  if (std::strcmp(filename.c_str(), DEFAULT_FILENAME) != 0) {
-        str << ANSI_ERROR << "Assertion failed "<< ANSI_RESET << "in file " << ANSI_HIGHLIGHT << filename << ANSI_RESET << " at line " << ANSI_HIGHLIGHT << line_number << ANSI_RESET << std::endl;
-  }
+  str << ocl::ansi_error << "Assertion failed "<< ocl::ansi_reset << "in file "
+      << ocl::ansi_highlight << info.file << ocl::ansi_reset << " at line "
+      << ocl::ansi_highlight << info.line << ocl::ansi_reset << std::endl;
   str << "Value should be " << expected << " but was " << given << std::endl;
 
   EXPECT_NEAR(given, expected, eps) << str.str();
 }
 
-void assertEqualLength(const int length_given, const int length_expected,
-                       const int line_number = -1, const std::string& filename = DEFAULT_FILENAME,
-                       const std::string& given_str = "", const std::string& expected_str = "")
+static inline void assertEqualLength( const double length_given, const double length_expected,
+                                      const Info& info, const std::string& given_str, const std::string& expected_str)
 {
   std::ostringstream str;
   str << std::endl;
-  if (std::strcmp(filename.c_str(), DEFAULT_FILENAME) != 0) {
-        str << ANSI_ERROR << "Assertion failed "<< ANSI_RESET << "in file " << ANSI_HIGHLIGHT << filename << ANSI_RESET << " at line " << ANSI_HIGHLIGHT << line_number << ANSI_RESET << std::endl;
-  }
+  str << ocl::ansi_error << "Assertion failed "<< ocl::ansi_reset << "in file "
+      << ocl::ansi_highlight << info.file << ocl::ansi_reset << " at line "
+      << ocl::ansi_highlight << info.line << ocl::ansi_reset << std::endl;
   str << "Vectors have different length, expected length is " << length_expected << " but was " << length_given << std::endl;
   str << "Expected vector: " << expected_str << ", given " <<  given_str << std::endl;
 
@@ -121,57 +131,57 @@ void assertEqualLength(const int length_given, const int length_expected,
   assert(0);
 }
 
-void assertEqual(const std::vector<double>& given, const std::vector<double>& expected,
-                 const int line_number = -1, const std::string& filename = DEFAULT_FILENAME,
-                 const double eps = 1e-4)
+static inline void assertEqual( const std::vector<double>& given, const std::vector<double>& expected,
+                                const Info& info = Info(),
+                                const double eps = 1e-4)
 {
-  assertEqualLength(given.size(), expected.size(), line_number, filename, toString(given), toString(expected));
+  assertEqualLength(given.size(), expected.size(), info, toString(given), toString(expected));
   for (unsigned int i = 0; i < expected.size(); ++i) {
-    assertEqual(given[i], expected[i], line_number, filename, eps);
+    assertEqual(given[i], expected[i], info, eps);
   }
 }
 
-void assertEqual(const std::vector<int>& given, const std::vector<int>& expected,
-                 const int line_number = -1, const std::string& filename = DEFAULT_FILENAME)
+static inline void assertEqual( const std::vector<int>& given, const std::vector<int>& expected,
+                                const Info& info = Info())
 {
-  assertEqualLength(given.size(), expected.size(), line_number, filename, toString(given), toString(expected));
+  assertEqualLength(given.size(), expected.size(), info, toString(given), toString(expected));
   for (unsigned int i = 0; i < expected.size(); ++i) {
-    assertEqual(given[i], expected[i], line_number, filename);
+    assertEqual(given[i], expected[i], info);
   }
 }
 
-void assertEqual(const std::vector<double>& given, const double expected,
-                 const int line_number = -1, const std::string& filename = DEFAULT_FILENAME,
-                 const double eps=1e-4)
+static inline void assertEqual( const std::vector<double>& given, const double expected,
+                                const Info& info = Info(),
+                                const double eps=1e-4)
 {
   std::vector<double> exp_vec = {expected};
-  assertEqual(given, exp_vec, line_number, filename, eps);
+  assertEqual(given, exp_vec, info, eps);
 }
 
-void assertEqual(const double given, const std::vector<double>& expected,
-                 const int line_number = -1, const std::string& filename = DEFAULT_FILENAME,
-                 const double eps=1e-4)
+static inline void assertEqual( const double given, const std::vector<double>& expected,
+                                const Info& info = Info(),
+                                const double eps=1e-4)
 {
   std::vector<double> given_vec = {given};
-  assertEqual(given_vec, expected, line_number, filename, eps);
+  assertEqual(given_vec, expected, info, eps);
 }
 
-void assertEqual(const std::vector<std::vector<int>>& given, const std::vector<std::vector<int>>& expected,
-                 const int line_number = -1, const std::string& filename = DEFAULT_FILENAME)
+static inline void assertEqual( const std::vector<std::vector<int>>& given, const std::vector<std::vector<int>>& expected,
+                                const Info& info = Info())
 {
-  assertEqualLength(given.size(), expected.size(), line_number, filename, toString(given), toString(expected));
+  assertEqualLength(given.size(), expected.size(), info, toString(given), toString(expected));
   for (unsigned int i = 0; i < expected.size(); ++i) {
-    assertEqual(given[i], expected[i], line_number, filename);
+    assertEqual(given[i], expected[i], info);
   }
 }
 
-void assertEqual(const std::vector<std::vector<double>>& given, const std::vector<std::vector<double>>& expected,
-                 const int line_number = -1, const std::string& filename = DEFAULT_FILENAME,
-                 const double eps=1e-4)
+static inline void assertEqual( const std::vector<std::vector<double>>& given, const std::vector<std::vector<double>>& expected,
+                                const Info& info = Info(),
+                                const double eps=1e-4)
 {
-  assertEqualLength(given.size(), expected.size(), line_number, filename, toString(given), toString(expected));
+  assertEqualLength(given.size(), expected.size(), info, toString(given), toString(expected));
   for (unsigned int i = 0; i < expected.size(); ++i) {
-    assertEqual(given[i], expected[i], line_number, filename, eps);
+    assertEqual(given[i], expected[i], info, eps);
   }
 }
 
