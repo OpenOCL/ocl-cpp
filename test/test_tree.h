@@ -40,7 +40,7 @@ TEST(Tree, bTwoVariables)
   ocl::test::assertEqual(x.get("x2").indizes(),{{2,3,4,5,6,7}});
   ocl::test::assertEqual(x.shape(),{8,1});
 
-  ocl::test::assertEqual({1},{2,3});
+  ocl::test::assertEqual(1,{2,3});
 }
 
 TEST(Tree, cShape)

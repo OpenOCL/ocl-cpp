@@ -50,7 +50,7 @@ class TreeTensor : public Slicable
     std::vector<std::vector<int> > indizes = this->structure().indizes();
     for(unsigned int i=0; i < indizes.size(); i++)
     {
-      if (indizes.size()==value.size()) {
+      if ((int)indizes.size()==value.size()) {
         this->_value_storage.assign(indizes[i], value.get(i).data(), value.get(i).size(0), value.get(i).size(1));
       }
       else if (value.size() == 1) {

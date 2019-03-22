@@ -19,7 +19,7 @@ TEST(Casadi, aScalarOperators)
 {
   // scalar unary operations
   {
-    ocl::CasadiMatrix m = ocl::CasadiMatrix(4);
-    ocl::test::assertEqual( ocl::casadi::full(m), {4} );
+    ocl::CasadiMatrix m = ocl::CasadiMatrix(4.0);
+    ocl::test::assertEqual( ocl::casadi::full(m), 4.0 );
   }
 }

@@ -15,18 +15,25 @@
 #ifndef OCL_UTILS_ASSERTIONS_H_
 #define OCL_UTILS_ASSERTIONS_H_
 
-#include <cassert>
+#include <stdlib.h>         // exit, EXIT_FAILURE
+#include <ostream>
 
 namespace ocl {
 
-static inline void assertTrue(const int expr, const std::string& msg)
+static inline void assertTrue(const bool expr, const std::string& msg)
 {
-  assert(expr);
+  if (~expr) {
+    std::cout << "Assertion failed: " << msg << std::endl;
+  }
+  exit(EXIT_FAILURE);
 }
 
 static inline void assertEqual(const int i, const int j, const std::string& msg)
 {
-  assert(i == j);
+  if (i!=j) {
+    std::cout << "Assertion failed: " << msg << std::endl;
+  }
+  exit(EXIT_FAILURE);
 }
 
 } // namespace ocl
