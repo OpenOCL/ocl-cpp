@@ -20,7 +20,7 @@
 #include <cstring>
 #include <stdlib.h>         // exit, EXIT_FAILURE
 
-#define DEF_FILENAME "unknown"
+#define DEFAULT_FILENAME "unknown"
 #define ANSI_ERROR "\x1b[31m"
 #define ANSI_RESET "\x1b[0m"
 #define ANSI_HIGHLIGHT "\x1b[36m"
@@ -78,11 +78,11 @@ std::string toString(const std::vector<int>& vec)
 }
 
 void assertEqual(const int given, const int expected,
-                 const int line_number = -1, const std::string& filename = DEF_FILENAME)
+                 const int line_number = -1, const std::string& filename = DEFAULT_FILENAME)
 {
   std::ostringstream str;
   str << std::endl;
-  if (std::strcmp(filename.c_str(), DEF_FILENAME) != 0) {
+  if (std::strcmp(filename.c_str(), DEFAULT_FILENAME) != 0) {
     str << ANSI_ERROR << "Assertion failed "<< ANSI_RESET << "in file " << ANSI_HIGHLIGHT << filename << ANSI_RESET << " at line " << ANSI_HIGHLIGHT << line_number << ANSI_RESET << std::endl;
   }
   str << "Value should be " << expected << " but was " << given << std::endl;
@@ -91,12 +91,12 @@ void assertEqual(const int given, const int expected,
 }
 
 void assertEqual(const double given, const double expected,
-                 const int line_number = -1, const std::string& filename = DEF_FILENAME,
+                 const int line_number = -1, const std::string& filename = DEFAULT_FILENAME,
                  const double eps=1e-4)
 {
   std::ostringstream str;
   str << std::endl;
-  if (std::strcmp(filename.c_str(), DEF_FILENAME) != 0) {
+  if (std::strcmp(filename.c_str(), DEFAULT_FILENAME) != 0) {
         str << ANSI_ERROR << "Assertion failed "<< ANSI_RESET << "in file " << ANSI_HIGHLIGHT << filename << ANSI_RESET << " at line " << ANSI_HIGHLIGHT << line_number << ANSI_RESET << std::endl;
   }
   str << "Value should be " << expected << " but was " << given << std::endl;
@@ -105,12 +105,12 @@ void assertEqual(const double given, const double expected,
 }
 
 void assertEqualLength(const int length_given, const int length_expected,
-                       const int line_number = -1, const std::string& filename = DEF_FILENAME,
+                       const int line_number = -1, const std::string& filename = DEFAULT_FILENAME,
                        const std::string& given_str = "", const std::string& expected_str = "")
 {
   std::ostringstream str;
   str << std::endl;
-  if (std::strcmp(filename.c_str(), DEF_FILENAME) != 0) {
+  if (std::strcmp(filename.c_str(), DEFAULT_FILENAME) != 0) {
         str << ANSI_ERROR << "Assertion failed "<< ANSI_RESET << "in file " << ANSI_HIGHLIGHT << filename << ANSI_RESET << " at line " << ANSI_HIGHLIGHT << line_number << ANSI_RESET << std::endl;
   }
   str << "Vectors have different length, expected length is " << length_expected << " but was " << length_given << std::endl;
@@ -122,7 +122,7 @@ void assertEqualLength(const int length_given, const int length_expected,
 }
 
 void assertEqual(const std::vector<double>& given, const std::vector<double>& expected,
-                 const int line_number = -1, const std::string& filename = DEF_FILENAME,
+                 const int line_number = -1, const std::string& filename = DEFAULT_FILENAME,
                  const double eps = 1e-4)
 {
   assertEqualLength(given.size(), expected.size(), line_number, filename, toString(given), toString(expected));
@@ -132,7 +132,7 @@ void assertEqual(const std::vector<double>& given, const std::vector<double>& ex
 }
 
 void assertEqual(const std::vector<int>& given, const std::vector<int>& expected,
-                 const int line_number = -1, const std::string& filename = DEF_FILENAME)
+                 const int line_number = -1, const std::string& filename = DEFAULT_FILENAME)
 {
   assertEqualLength(given.size(), expected.size(), line_number, filename, toString(given), toString(expected));
   for (unsigned int i = 0; i < expected.size(); ++i) {
@@ -141,7 +141,7 @@ void assertEqual(const std::vector<int>& given, const std::vector<int>& expected
 }
 
 void assertEqual(const std::vector<double>& given, const double expected,
-                 const int line_number = -1, const std::string& filename = DEF_FILENAME,
+                 const int line_number = -1, const std::string& filename = DEFAULT_FILENAME,
                  const double eps=1e-4)
 {
   std::vector<double> exp_vec = {expected};
@@ -149,7 +149,7 @@ void assertEqual(const std::vector<double>& given, const double expected,
 }
 
 void assertEqual(const double given, const std::vector<double>& expected,
-                 const int line_number = -1, const std::string& filename = DEF_FILENAME,
+                 const int line_number = -1, const std::string& filename = DEFAULT_FILENAME,
                  const double eps=1e-4)
 {
   std::vector<double> given_vec = {given};
@@ -157,7 +157,7 @@ void assertEqual(const double given, const std::vector<double>& expected,
 }
 
 void assertEqual(const std::vector<std::vector<int>>& given, const std::vector<std::vector<int>>& expected,
-                 const int line_number = -1, const std::string& filename = DEF_FILENAME)
+                 const int line_number = -1, const std::string& filename = DEFAULT_FILENAME)
 {
   assertEqualLength(given.size(), expected.size(), line_number, filename, toString(given), toString(expected));
   for (unsigned int i = 0; i < expected.size(); ++i) {
@@ -166,7 +166,7 @@ void assertEqual(const std::vector<std::vector<int>>& given, const std::vector<s
 }
 
 void assertEqual(const std::vector<std::vector<double>>& given, const std::vector<std::vector<double>>& expected,
-                 const int line_number = -1, const std::string& filename = DEF_FILENAME,
+                 const int line_number = -1, const std::string& filename = DEFAULT_FILENAME,
                  const double eps=1e-4)
 {
   assertEqualLength(given.size(), expected.size(), line_number, filename, toString(given), toString(expected));
