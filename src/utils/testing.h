@@ -20,9 +20,9 @@
 #include <cstring>
 #include <stdlib.h>         // exit, EXIT_FAILURE
 
-// Use the INFO macro to pass filename and line to the assertions
-// e.g. ocl::test::assertEqual(4-1, 3, _INFO);
-#define INFO ocl::test::Info(__FILE__, __LINE__)
+// Use the OCL_INFO macro to pass filename and line to the assertions
+// e.g. ocl::test::assertEqual(4-1, 3, OCL_INFO);
+#define OCL_INFO ocl::test::Info(__FILE__, __LINE__)
 
 namespace ocl
 {
