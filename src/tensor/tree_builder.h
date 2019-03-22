@@ -69,7 +69,7 @@ public:
     }
     else
     {
-      Tree branch = _tree._branches.at(id);
+      Tree& branch = _tree._branches.at(id);
 
       // append all indizes of
       branch._indizes = merge<std::vector<int>>(branch._indizes, tree._indizes);

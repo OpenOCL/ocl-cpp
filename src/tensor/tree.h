@@ -50,19 +50,25 @@ public:
       : _branches(branches), _shape(shape), _indizes(indizes) { }
 
   // copy constructor makes deep copy of tree
-  Tree(const Tree& other)
-  {
+  // calls assignment constructor
+  Tree(const Tree& other) {
+    *this = other;
+  }
+
+  // assignment constructor makes deep copy of tree
+  Tree& operator=(const Tree& other) {
     std::map<std::string, Tree> branches = other.branches();
     std::map<std::string, Tree>::iterator it;
     for (it = branches.begin(); it != branches.end(); it++)
     {
       std::string id = it->first;
-      Tree t = it->second;
+      Tree t = Tree(it->second); // calls (assignment) constructor recursively Tree(it->second)
       std::pair<std::string, Tree> el(id, t);
       this->_branches.insert(el);
     }
     this->_shape = other._shape;
     this->_indizes = other._indizes;
+    return *this;
   }
 
   std::map<std::string, Tree> branches() const {

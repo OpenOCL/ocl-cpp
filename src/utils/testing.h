@@ -127,8 +127,6 @@ static inline void assertEqualLength( const double length_given, const double le
   str << "Expected vector: " << expected_str << ", given " <<  given_str << std::endl;
 
   ASSERT_EQ(length_given, length_expected) << str.str();
-  // somehow gtest does not exit/fatal here..
-  assert(0);
 }
 
 static inline void assertEqual( const std::vector<double>& given, const std::vector<double>& expected,
