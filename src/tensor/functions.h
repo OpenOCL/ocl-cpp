@@ -33,14 +33,16 @@ static inline std::vector<std::vector<int> > mergeIndizes(
   int s1 = p1.size();
   int s2 = p2.size();
 
-  std::vector<std::vector<int> > pout(s1*s2);
+  std::vector<int> empty = {};
+  std::vector<std::vector<int> > pout(s1*s2, empty);
   for(int k=0; k<s1; k++)
   {
     std::vector<int> ap1 = p1[k];
     for(int l=0; l<s2; l++)
     {
       std::vector<int> ap2 = p2[l];
-      pout[l+k*s1] = slice(ap1, ap2);
+      std::cout << l+k*s1 << std::endl;
+      pout[l+k*s2] = slice(ap1, ap2);
     }
   }
   return pout;

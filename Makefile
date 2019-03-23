@@ -27,7 +27,7 @@ BIN = ./build/bin
 OBJ = ./build/obj
 
 CPPFLAGS += -isystem $(GTEST_PATH)/include -isystem $(CASADI_INCLUDE_PATH)
-CXXFLAGS += -g -Wall -Wextra -std=c++11 -fPIC -Wno-delete-non-virtual-dtor
+CXXFLAGS += -g -O0 -Wall -Wextra -std=c++11 -fPIC -Wno-delete-non-virtual-dtor
 
 LDFLAGS +=
 
