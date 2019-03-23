@@ -23,17 +23,17 @@ namespace ocl {
 static inline void assertTrue(const bool expr, const std::string& msg)
 {
   if (~expr) {
-    std::cout << "Assertion failed: " << msg << std::endl;
+    std::cout << "Assertion failed: " << msg << std::endl << std::flush;
+    exit(EXIT_FAILURE);
   }
-  exit(EXIT_FAILURE);
 }
 
 static inline void assertEqual(const int i, const int j, const std::string& msg)
 {
   if (i!=j) {
-    std::cout << "Assertion failed: " << msg << std::endl;
+    std::cout << "Assertion failed: " << msg << std::endl << std::flush;
+    exit(EXIT_FAILURE);
   }
-  exit(EXIT_FAILURE);
 }
 
 } // namespace ocl

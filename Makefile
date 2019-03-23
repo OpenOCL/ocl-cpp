@@ -37,13 +37,13 @@ INCLUDES_EIGEN = -I $(EXTERN)/eigen
 INCLUDES = -I$(SRC) -I$(TEST) -I$(INCLUDE) \
 					 $(INCLUDES_EIGEN) -I$(CASADI_INCLUDE_PATH) -I$(CASADI_EXPORT_PATH)
 
-GTEST_STATIC = $(GTEST_LIB)/libgtest.a 
+GTEST_STATIC = $(GTEST_LIB)/libgtest.a
 GTEST_HEADERS = $(GTEST_PATH)/include/gtest/*.h \
                 $(GTEST_PATH)/include/gtest/internal/*.h
 GTEST_SRCS_ = $(GTEST_PATH)/src/*.cc $(GTEST_PATH)/src/*.h $(GTEST_HEADERS)
 
 TEST_HEADERS = $(TEST)/test_casadi.h $(TEST)/test_matrix.h $(TEST)/test_tensor.h $(TEST)/test_tree.h $(TEST)/test_tree_tensor.h
-COMMON_HEADERS = $(SRC)/utils/exceptions.h $(SRC)/utils/typedefs.h $(SRC)/utils/testing.h $(SRC)/utils/slicing.h
+COMMON_HEADERS = $(SRC)/utils/exceptions.h $(SRC)/utils/typedefs.h $(SRC)/utils/testing.h $(SRC)/utils/slicing.h $(SRC)/utils/assertions.h
 TENSOR_HEADERS = $(SRC)/tensor/casadi.h $(SRC)/tensor/functions.h \
  					       $(SRC)/tensor/matrix.h  $(SRC)/tensor/tree.h \
 								 $(SRC)/tensor/tensor.h $(SRC)/tensor/tree_builder.h \

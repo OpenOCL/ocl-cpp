@@ -103,7 +103,7 @@ TEST(TreeTensor, eOcpTensor)
   v.get("v").set(ocl::Matrix({20, 0, 0}));
   v.get("w").set(ocl::Matrix({0, 1, 0.1}));
 
-  // ocl::test::assertEqual( v.get("x").slice(1, ocl::all(v.get("x"), 1)).at(linspace(3,5)).data(), {100, 100, 100}, OCL_INFO);
+  ocl::test::assertEqual( v.get("x").slice({1}, ocl::all(v.get("x"), 1)).at(ocl::linspace(3,5)).data(), {{100, 100, 100}}, OCL_INFO);
   //
   // v.get("x").get("R").set(ocl::Matrix::Eye(3));
   //
