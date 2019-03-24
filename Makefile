@@ -26,7 +26,7 @@ EXTERN = ./extern
 BIN = ./build/bin
 OBJ = ./build/obj
 
-CPPFLAGS += -isystem $(GTEST_PATH)/include -isystem $(CASADI_INCLUDE_PATH)
+CPPFLAGS += -isystem $(GTEST_PATH)\include -isystem $(CASADI_INCLUDE_PATH)
 CXXFLAGS += -g -O0 -Wall -Wextra -std=c++11 -fPIC -Wno-delete-non-virtual-dtor
 
 LDFLAGS +=

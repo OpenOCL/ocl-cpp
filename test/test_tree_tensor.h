@@ -107,7 +107,10 @@ TEST(TreeTensor, eOcpTensor)
   v.get("x").get("v").set(ocl::Matrix({20, 0, 0}));
   v.get("x").get("w").set(ocl::Matrix({0, 1, 0.1}));
 
-  ocl::test::assertEqual( v.get("x").slice({1}, ocl::all(v.get("x"), 1)).at(ocl::linspace(3,5)).data(), {{100, 100, 100}}, OCL_INFO);
+  std::vector<int> all = ocl::all(v.get("x"), 1);
+  ocl::TreeTensor sliced = v.get("x").slice({0}, all);
+  ocl::TreeTensor subsindexed = sliced.at(ocl::linspace(3,5));
+  ocl::test::assertEqual( subsindexed.data(), {{100}, {100}, {100}}, OCL_INFO);
   //
   // v.get("x").get("R").set(ocl::Matrix::Eye(3));
   //

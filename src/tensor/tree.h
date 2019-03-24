@@ -126,8 +126,12 @@ public:
   // Cut tree, get multiple elements of trajectory
   Tree at(const std::vector<int>& indizes) const
   {
-    std::vector<std::vector<int> > idz = tensor::mergeIndizes(this->_indizes, {indizes});
-    return Tree(this->_branches, this->_shape, idz);
+    std::vector<int> empty {};
+    std::vector<std::vector<int> > idz_out(indizes.size(), empty);
+    for (unsigned int i=0; i<indizes.size(); i++) {
+      idz_out[i] = this->_indizes[indizes[i]];
+    }
+    return Tree(this->_branches, this->_shape, idz_out);
   }
 
   // Slice matrizes in trajectory
