@@ -1,4 +1,6 @@
 build
+.atom-gdb.json
+.gdbinit
 compile.sh
 run.sh
 debug.sh
@@ -37,3 +39,6 @@ debug.sh
 *.exe
 *.out
 *.app
+
+
+

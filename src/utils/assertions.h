@@ -22,7 +22,7 @@ namespace ocl {
 
 static inline void assertTrue(const bool expr, const std::string& msg)
 {
-  if (~expr) {
+  if (!expr) {
     std::cout << "Assertion failed: " << msg << std::endl << std::flush;
     exit(EXIT_FAILURE);
   }
