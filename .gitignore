@@ -2,6 +2,7 @@ build
 compile.sh
 run.sh
 debug.sh
+setup.sh
 .vs
 *.profraw
 
