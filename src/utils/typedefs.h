@@ -15,6 +15,7 @@
 #ifndef OCLCPP_OCL_TYPEDEFS_H_
 #define OCLCPP_OCL_TYPEDEFS_H_
 
+#include <math.h>
 #include <cmath>
 #include <functional>
 #include <vector>
@@ -27,10 +28,10 @@ typedef std::string String;
 typedef unsigned int uint;
 
 // program specific types
-typedef double_t float_p
-typedef double_t double_p
-typedef int64_t int_p
-typedef uint64_t uint_p
+typedef double_t float_p;
+typedef double_t double_p;
+typedef int64_t int_p;
+typedef uint64_t uint_p;
 
 }
 #endif // OCLCPP_OCL_TYPEDEFS_H_

@@ -89,7 +89,7 @@ struct DifferentialEquation {
 }
 
 struct ImplicitEquation {
-  void insert(const TreeTensor& el) {
+  void append(const TreeTensor& el) {
     eq.push_back(eq);
   }
   std::vector<TreeTensor> eq;
@@ -114,7 +114,7 @@ public:
   }
 
   void implicitEquation(const TreeTensor& eq) {
-    eq.implicit.insert(eq);
+    eq.implicit.append(eq);
   }
 
   SystemEquation equation()
