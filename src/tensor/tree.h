@@ -76,7 +76,10 @@ public:
   }
 
   virtual int size(int dim) const override {
-    return this->_shape[dim];
+    if (dim<=1)
+      return this->_shape[dim];
+    else
+      return this->_indizes.size();
   }
 
   // Check if there are subtrees
