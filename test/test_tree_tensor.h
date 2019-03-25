@@ -122,13 +122,9 @@ TEST(TreeTensor, eOcpTensor)
   ocl::test::assertEqual(v.get("x").get("p").at({1}).data(), {{100, 0, -50}}, OCL_INFO);
 
   v.get("x").at(ocl::end(v.get("x"), 2)).set({ocl::linspace(2., 19.)});
-  ocl::test::assertEqual(v.get("x").at(ocl::end(v.get("x"), 2)).slice({2},{1}).data(), {{3.}}, OCL_INFO);
-  //
-  // ocl::TreeTensor xend = v.get("x").at( ocl::end(v.get("x")) );
-  // ocl::test::assertEqual( xend.slice( ocl::end(v.get("x"), 0)).data(), {19} );
-  // ocl::test::assertEqual( xend.slice(2, 1)..data(), {3} );
-  //
-  // v.str();
-  // v.get("x").str();
-  // v.get("x").get("R").str();
+  ocl::test::assertEqual(v.get("x").at(ocl::end(v.get("x"), 2)).slice({1},{0}).data(), {{3.}}, OCL_INFO);
+
+  ocl::TreeTensor xend = v.get("x").at( ocl::end(v.get("x"), 2) );
+  ocl::test::assertEqual( xend.slice( ocl::end(v.get("x"), 0), {0}).data(), {{19}}, OCL_INFO);
+  ocl::test::assertEqual( xend.slice({1}, {0}).data(), {{3.}}, OCL_INFO);
 }
