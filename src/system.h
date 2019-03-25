@@ -126,7 +126,6 @@ private:
   SystemEquation eq;
 }
 
-
 class System
 {
 public:
