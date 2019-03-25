@@ -21,9 +21,16 @@
 
 namespace ocl
 {
-typedef float Scalar;
-typedef int Integer;
+typedef double Scalar;
+typedef int64_t Integer;
 typedef std::string String;
 typedef unsigned int uint;
+
+// program specific types
+typedef double_t float_p
+typedef double_t double_p
+typedef int64_t int_p
+typedef uint64_t uint_p
+
 }
 #endif // OCLCPP_OCL_TYPEDEFS_H_

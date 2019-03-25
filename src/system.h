@@ -21,62 +21,111 @@ typedef SystemHandler SH;
 typedef ImplicitEquationsHandler IEH;
 typedef TreeTensor TT;
 
-class NumericVector {
 
-}
 
-class SystemHandler {
+struct Bound
+{
+  Bound(const float_p lower_bound, const float_p upper_bound)
+      : lower_bound(lower_bound), upper_bound(upper_bound) { }
+  float_p lower_bound;
+  float_p upper_bound;
+};
+
+class SystemVariablesHandler {
 
 public:
-  void addState(const std::string& id, const Shape& shape = {1,1},
-                const Scalar& lower_bound = std::numeric_limits<double>::infinity(),
-                const Scalar& upper_bound = -std::numeric_limits<double>::infinity())
+  void state( const std::string& id, const std::vector<int>& shape = {1,1},
+              const double& lower_bound = -std::numeric_limits<double>::infinity(),
+              const double& upper_bound = std::numeric_limits<double>::infinity())
   {
     states_struct.add(id, shape);
     bounds[id] = Bound(lower_bound,upper_bound);
   }
 
-  void addAlgvar(const std::string& id, const Shape& shape = {1,1},
-                 const Scalar& lower_bound = std::numeric_limits<double>::infinity(),
-                 const Scalar& upper_bound = -std::numeric_limits<double>::infinity())
+  void algebraic( const std::string& id, const std::vector<int>& shape = {1,1},
+                  const double& lower_bound = -std::numeric_limits<double>::infinity(),
+                  const double& upper_bound = std::numeric_limits<double>::infinity())
   {
-    algvars_struct.add(id, shape);
+    algebraics_struct.add(id, shape);
     bounds[id] = Bound(lower_bound,upper_bound);
   }
 
-  void addControl(const std::string& id, const Shape& shape = {1,1},
-                  const Scalar& lower_bound = std::numeric_limits<double>::infinity(),
-                  const Scalar& upper_bound = -std::numeric_limits<double>::infinity())
+  void control( const std::string& id, const std::vector<int>& shape = {1,1},
+                const double& lower_bound = -std::numeric_limits<double>::infinity(),
+                const double& upper_bound = std::numeric_limits<double>::infinity())
   {
     controls_struct.add(id, shape);
     bounds[id] = Bound(lower_bound,upper_bound);
   }
 
-  void addParameter(const std::string& id, const Shape& shape = {1,1},
-                    const Scalar& lower_bound = std::numeric_limits<double>::infinity(),
-                    const Scalar& upper_bound = -std::numeric_limits<double>::infinity())
+  void parameter( const std::string& id, const std::vector<int>& shape = {1,1},
+                  const double& lower_bound = -std::numeric_limits<double>::infinity(),
+                  const double& upper_bound = std::numeric_limits<double>::infinity())
   {
     parameters_struct.add(id, shape);
     bounds[id] = Bound(lower_bound,upper_bound);
   }
 
+  Tree getStates() { return states_struct; }
+  Tree getAlgebraics() { return algebraics_struct; }
+  Tree getControls() { return controls_struct; }
+  Tree getParameters() { return parameters_struct; }
+
 private:
   std::map<std::string, Bound> bounds;
-  RootNode states_struct;
-  RootNode algvars_struct;
-  RootNode controls_struct;
-  RootNode parameters_struct;
+  Tree states_struct;
+  Tree algebraics_struct;
+  Tree controls_struct;
+  Tree parameters_struct;
 }
 
-class ImplicitEquationsHandler
+struct DifferentialEquation {
+  void insert(const std::string& id, const TreeTensor& el)
+  {
+    std::pair<std::string, TreeTensor> pair(id, el);
+    eq.insert(pair);
+  }
+  std::map<std::string, TreeTensor> eq;
+}
+
+struct ImplicitEquation {
+  void insert(const TreeTensor& el) {
+    eq.push_back(eq);
+  }
+  std::vector<TreeTensor> eq;
+}
+
+struct SystemEquation
 {
-
+  DifferentialEquation differential;
+  ImplicitEquation implicit;
 }
 
-class ImplicitEquations
+class SystemEquationsHandler
 {
+public:
+  // sh.diff("x") = 2*u + x
+  Equation& diff(const std::string& id)
+  {
+  }
 
+  void differentialEquation(const std::string& id, const TreeTensor& eq) {
+    eq.differential.insert(id, eq);
+  }
+
+  void implicitEquation(const TreeTensor& eq) {
+    eq.implicit.insert(eq);
+  }
+
+  SystemEquation equation()
+  {
+    return eq;
+  }
+
+private:
+  SystemEquation eq;
 }
+
 
 class System
 {
@@ -85,50 +134,47 @@ public:
          const FunctionHandle initial_conditions
   {
 
-    SystemHandler sh;
-    variables.eval(sh);
+    SystemVariablesHandler svh;
+    variables.eval(svh);
 
-    states_struct = sh.getStatesStruct();
-    algvars_struct = sh.getAlgvarsStruct();
-    controls_struct = sh.getControlsStruct();
-    parameters_struct = sh.getParametersStruct();
+    this->states_struct = svh.getStates();
+    this->algvars_struct = svh.getAlgebraics();
+    this->controls_struct = svh.getControls();
+    this->parameters_struct = svh.getParameters();
 
-    int sx = statesStruct.size();
-    int sz = algVarsStruct.size();
-    int su = controlsStruct.size();
-    int sp = parametersStruct.size();
+    int sx = this->states_struct.size();
+    int sz = this->algvars_struct.size();
+    int su = this->controls_struct.size();
+    int sp = this->parameters_struct.size();
 
     equations_fcn = Function(equations, {sx,sz,su,sp}, 2);
     ic_fcn = Function(initial_conditions, {sx,sp}, 1);
   }
 
-  void setup();
-  ImplicitEquations evalEquations(const NumericVector& states, const NumericVector& algvars,
-                                 const NumericVector& controls, const NumericVector& parameters)
+  SystemEquation evaluate(const std::vector<float_p>& states, const std::vector<float_p>& algvars,
+                          const std::vector<float_p>& controls, const std::vector<float_p>& parameters)
   {
-    ImplicitEquationsHandler eh;
-    x = Tensor.create(states_struct, states);
-    z = Tensor.create(algvars_struct, algvars);
-    u = Tensor.create(controls_struct, controls);
-    p = Tensor.create(parameters_struct, parameters);
-    equations_fcn.eval(eh, x, z, u, p);
-    return eh.equations();
-  }
+    ValueStorage xvs(states);
+    ValueStorage zvs(algvars);
+    ValueStorage uvs(controls);
+    ValueStorage pvs(parameters);
 
-  ImplicitEquation evalInitialConditions(const NumericVector& states, const NumericVector& parameters)
-  {
-    ImplicitEquationsHandler eh;
-    x = Tensor.create(states_struct, states);
-    p = Tensor.create(parameters_struct, parameters);
-    equations_fcn.eval(eh, x, p);
+    SystemEquationsHandler eh;
+    TT x = TreeTensor(states_struct, xvs);
+    TT z = TreeTensor(algvars_struct, zvs);
+    TT u = TreeTensor(controls_struct, uvs);
+    TT p = TreeTensor(parameters_struct, pvs);
+
+    equations_fcn.eval(eh, x, z, u, p);
+
     return eh.equations();
   }
 
 private:
-  RootNode states_struct;
-  RootNode algvars_struct;
-  RootNode controls_struct;
-  RootNode parameters_struct;
+  Tree states_struct;
+  Tree algvars_struct;
+  Tree controls_struct;
+  Tree parameters_struct;
 
   Function equations_fcn;
   Function ic_fcn;
