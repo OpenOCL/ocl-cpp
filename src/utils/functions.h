@@ -26,6 +26,14 @@ static inline std::vector<int> linspace(int start, int end, int stride = 1) {
   return v;
 }
 
+static inline std::vector<double> linspace(double start, double end, double stride = 1.) {
+  std::vector<double> v;
+  for(double idx = start; idx <= end; idx += stride) {
+    v.push_back(idx);
+  }
+  return v;
+}
+
 // End is not included (open interval)
 static inline std::vector<int> range(int start, int end, int stride = 1) {
   std::vector<int> v;

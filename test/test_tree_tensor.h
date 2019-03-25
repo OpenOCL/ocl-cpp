@@ -111,19 +111,18 @@ TEST(TreeTensor, eOcpTensor)
   ocl::TreeTensor sliced = v.get("x").slice({0}, all);
   ocl::TreeTensor subsindexed = sliced.at(ocl::linspace(3,5));
   ocl::test::assertEqual( subsindexed.data(), {{100}, {100}, {100}}, OCL_INFO);
-  //
-  // v.get("x").get("R").set(ocl::Matrix::Eye(3));
-  //
-  // ocl::test::assertEqual(v.get("x").get("R").data(), repeat(ocl::Matrix::Eye(3), 6).data() );
-  // ocl::test::assertEqual(v.get("x").get("R").at(1).data(), ocl::Matrix::Eye(3).data() );
-  //
-  // v.get("x").get("R").set(ocl::Matrix::One(3,3));
-  // ocl::test::assertEqual(v.get("x").get("R").data(), ocl::repeat(ocl::Matrix::One(3,3),6) );
-  //
-  // ocl::test::assertEqual(v.get("x").get("p").at(1).data(), {100, 0, 50});
-  // v.get("x").at(ocl::end(v.get("x")).set(linspace(2,19));
-  //
-  // ocl::test::assertEqual(v.get("x").at(ocl::end(v.get("x")).slice(2,1).data(),3);
+
+  v.get("x").get("R").set(ocl::Matrix::Eye(3));
+
+  ocl::test::assertEqual(v.get("x").get("R").data(), {{1,0,0,0,1,0,0,0,1},{1,0,0,0,1,0,0,0,1},{1,0,0,0,1,0,0,0,1},{1,0,0,0,1,0,0,0,1},{1,0,0,0,1,0,0,0,1},{1,0,0,0,1,0,0,0,1}}, OCL_INFO);
+  ocl::test::assertEqual(v.get("x").get("R").at({1}).data(), {ocl::Matrix::Eye(3).full()}, OCL_INFO);
+
+  v.get("x").get("R").set(ocl::Matrix::One(3,3));
+  ocl::test::assertEqual(v.get("x").get("R").at({0,1}).data(), {{1,1,1,1,1,1,1,1,1},{1,1,1,1,1,1,1,1,1}}, OCL_INFO);
+  ocl::test::assertEqual(v.get("x").get("p").at({1}).data(), {{100, 0, -50}}, OCL_INFO);
+
+  v.get("x").at(ocl::end(v.get("x"), 2)).set({ocl::linspace(2., 19.)});
+  ocl::test::assertEqual(v.get("x").at(ocl::end(v.get("x"), 2)).slice({2},{1}).data(), {{3.}}, OCL_INFO);
   //
   // ocl::TreeTensor xend = v.get("x").at( ocl::end(v.get("x")) );
   // ocl::test::assertEqual( xend.slice( ocl::end(v.get("x"), 0)).data(), {19} );

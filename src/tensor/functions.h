@@ -41,7 +41,6 @@ static inline std::vector<std::vector<int> > mergeIndizes(
     for(int l=0; l<s2; l++)
     {
       std::vector<int> ap2 = p2[l];
-      std::cout << l+k*s1 << std::endl;
       pout[l+k*s2] = slice(ap1, ap2);
     }
   }
