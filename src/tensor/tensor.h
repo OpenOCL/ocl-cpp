@@ -145,23 +145,18 @@ private:
 }; // class Tensor<M>
 
 
-static inline std::vector<double> full(const Tensor& t,
-                                       const std::vector<Tensor>& variables = {},
-                                       const std::vector<Tensor>& values = {})
+static inline std::vector<std::vector<double> > full(
+    const Tensor& t,
+    const std::vector<Matrix>& variables = {},
+    const std::vector<Matrix>& values = {})
 {
+  std::vector<std::vector<double> > vec_out(t.length());
 
-  std::vector<Matrix>
-
-  // convert vectors of Matrix into vectors of CasadiMatrix (casadi::SX)
-  std::vector<CasadiMatrix> casadi_variables(variables.size());
-  std::vector<CasadiMatrix> casadi_values(values.size());
-  std::transform (variables.begin(), variables.end(), casadi_variables.begin(), raw);
-  std::transform (values.begin(), values.end(), casadi_values.begin(), raw);
-
-
-
-  std::vector<Matrix> data = t.data();
-  return ocl::full(t.get(0));
+  for (unsigned int i=0; i<t.length(); i++)
+  {
+    vec_out[i] = full(t.get(i), variables, values);
+  }
+  return vec_out;
 }
 
 namespace tensor
