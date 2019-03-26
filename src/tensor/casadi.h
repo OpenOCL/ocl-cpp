@@ -65,6 +65,13 @@ static inline int size(const CasadiMatrix& m, const int dim)
   return m.size(dim+1); // one based indexing in casadi
 }
 
+// Returns numeric values of the CasadiMatrix (casadi::SX).
+// If the CasadiMatrix contains symbolic variables, the symbolic variables
+// specified by the argument variables can be replaced by numeric values
+// given in the argument values.
+//
+// This function fails if there are symbolic variables left that are not specified by
+// the argument variables.
 static inline std::vector<double> full(
     const CasadiMatrix& m,
     const std::vector<CasadiMatrix>& variables = std::vector<CasadiMatrix>(),
