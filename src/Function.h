@@ -17,7 +17,25 @@
 
 namespace ocl {
 
+class Function
+{
+public:
+  Function() {}
+  Function(void (*fcn_ptr)(const std::vector<TreeTensor>&), const std::vector<int>& inputs, const int n_outputs) : fcn_ptr(fcn_ptr)
+  {
+    // does nothing, disables warning of unused input
+    (void)inputs;
+    (void)n_outputs;
+  }
 
+  void evaluate(const std::vector<TreeTensor>& args)
+  {
+    this->fcn_ptr(args);
+  }
+
+private:
+  void (*fcn_ptr)(const std::vector<TreeTensor>&);
+};
 
 } // namespace ocl
 #endif // OCL_FUNCTION_H_

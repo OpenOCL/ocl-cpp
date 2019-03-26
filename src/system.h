@@ -17,6 +17,7 @@
 
 #include "utils/typedefs.h"
 #include "tensor/tree_tensor.h"
+#include "Function.h"
 
 namespace ocl {
 
@@ -137,8 +138,10 @@ class System
 {
 public:
 
-typedef void (*VariablesFunction)(SystemVariablesHandler& sh);
-typedef void (*EquationsFunction)(SystemEquationsHandler& eh, const TreeTensor& x, const TreeTensor& z, const TreeTensor& u, const TreeTensor& p);
+  typedef void (*VariablesFunctionPtr)(SystemVariablesHandler& sh);
+  typedef void (*EquationsFunctionPtr)(SystemEquationsHandler& eh, const TreeTensor& x, const TreeTensor& z, const TreeTensor& u, const TreeTensor& p);
+
+
 
   System(const VariablesFunctionPtr variables_fcn_ptr, const EquationsFunctionPtr equations_fcn_ptr)
   {
@@ -155,27 +158,29 @@ typedef void (*EquationsFunction)(SystemEquationsHandler& eh, const TreeTensor& 
     int su = this->controls_struct.size();
     int sp = this->parameters_struct.size();
 
-    void equations_fcn_remapped(SystemEquationsHandler& eh, const std::vector<TreeTensor>& args) {
+
+    void equations_fcn_ptr_remapped(SystemEquationsHandler& eh, const std::vector<TreeTensor>& args) {
       equations_fcn_ptr(eh, args[0], args[1], args[2], args[3]);
     }
-    equations_fcn = Function(&equations_fcn_remapped, {sx,sz,su,sp}, 2);
+
+    equations_fcn = Function(&equations_fcn_ptr_remapped, {sx,sz,su,sp}, 2);
   }
 
-  SystemEquation evaluate(const std::vector<float_p>& states, const std::vector<float_p>& algvars,
-                          const std::vector<float_p>& controls, const std::vector<float_p>& parameters)
+  SystemEquation evaluate(const Matrix& states, const Matrix& algvars,
+                          const Matrix& controls, const Matrix& parameters)
   {
-    ValueStorage xvs(states);
-    ValueStorage zvs(algvars);
-    ValueStorage uvs(controls);
-    ValueStorage pvs(parameters);
+    ValueStorage x_vs(states);
+    ValueStorage z_vs(algvars);
+    ValueStorage u_vs(controls);
+    ValueStorage p_vs(parameters);
 
     SystemEquationsHandler eh;
-    TT x = TreeTensor(states_struct, xvs);
-    TT z = TreeTensor(algvars_struct, zvs);
-    TT u = TreeTensor(controls_struct, uvs);
-    TT p = TreeTensor(parameters_struct, pvs);
+    TreeTensor x = TreeTensor(this->states_struct, x_vs);
+    TreeTensor z = TreeTensor(this->algvars_struct, z_vs);
+    TreeTensor u = TreeTensor(this->controls_struct, u_vs);
+    TreeTensor p = TreeTensor(this->parameters_struct, p_vs);
 
-    equations_fcn.eval(eh, x, z, u, p);
+    equations_fcn.eval(eh, {x, z, u, p});
 
     return eh.equations();
   }
@@ -188,6 +193,8 @@ private:
 
   Function equations_fcn;
   Function ic_fcn;
+
+};
 
 } // namespace ocl
 #endif // OCL_SYSTEM_H_
