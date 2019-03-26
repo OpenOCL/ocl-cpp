@@ -15,13 +15,10 @@
 #ifndef OCL_SYSTEM_H_
 #define OCL_SYSTEM_H_
 
+#include "utils/typedefs.h"
+#include "tensor/tree_tensor.h"
+
 namespace ocl {
-
-typedef SystemHandler SH;
-typedef ImplicitEquationsHandler IEH;
-typedef TreeTensor TT;
-
-
 
 struct Bound
 {
@@ -66,18 +63,18 @@ public:
     bounds[id] = Bound(lower_bound,upper_bound);
   }
 
-  Tree getStates() { return states_struct; }
-  Tree getAlgebraics() { return algebraics_struct; }
-  Tree getControls() { return controls_struct; }
-  Tree getParameters() { return parameters_struct; }
+  Tree getStates() { return states_struct.tree(); }
+  Tree getAlgebraics() { return algebraics_struct.tree(); }
+  Tree getControls() { return controls_struct.tree(); }
+  Tree getParameters() { return parameters_struct.tree(); }
 
 private:
   std::map<std::string, Bound> bounds;
-  Tree states_struct;
-  Tree algebraics_struct;
-  Tree controls_struct;
-  Tree parameters_struct;
-}
+  TreeBuilder states_struct;
+  TreeBuilder algebraics_struct;
+  TreeBuilder controls_struct;
+  TreeBuilder parameters_struct;
+};
 
 struct DifferentialEquation {
   void insert(const std::string& id, const TreeTensor& el)
@@ -85,56 +82,68 @@ struct DifferentialEquation {
     std::pair<std::string, TreeTensor> pair(id, el);
     eq.insert(pair);
   }
-  std::map<std::string, TreeTensor> eq;
-}
 
-struct ImplicitEquation {
+  TreeTensor get(const std::string& id) {
+    return eq.at(id);
+  }
+
+  std::map<std::string, TreeTensor> eq;
+};
+
+struct ImplicitEquation
+{
   void append(const TreeTensor& el) {
-    eq.push_back(eq);
+    eq.push_back(el);
   }
   std::vector<TreeTensor> eq;
-}
+};
 
 struct SystemEquation
 {
   DifferentialEquation differential;
   ImplicitEquation implicit;
-}
+};
 
 class SystemEquationsHandler
 {
 public:
   // sh.diff("x") << 2*u + x or sh.diff("x") = 2*u + x
-  TreeTensor& diff(const std::string& id)
-  {
+  // TreeTensor& diff(const std::string& id)
+  // {
+  // }
+
+  void differentialEquation(const std::string& id, const TreeTensor& ode) {
+    sys_eq.differential.insert(id, ode);
   }
 
-  void differentialEquation(const std::string& id, const TreeTensor& eq) {
-    eq.differential.insert(id, eq);
-  }
-
-  void implicitEquation(const TreeTensor& eq) {
-    eq.implicit.append(eq);
+  void implicitEquation(const TreeTensor& alg) {
+    sys_eq.implicit.append(alg);
   }
 
   SystemEquation equation()
   {
-    return eq;
+    return sys_eq;
   }
 
 private:
-  SystemEquation eq;
-}
+  SystemEquation sys_eq;
+};
+
+typedef SystemVariablesHandler SVH;
+typedef SystemEquationsHandler SEH;
+typedef TreeTensor TT;
 
 class System
 {
 public:
-  System(const FunctionHandle variables, const FunctionHandle equations,
-         const FunctionHandle initial_conditions
-  {
 
+typedef void (*VariablesFunction)(SystemVariablesHandler& sh);
+typedef void (*EquationsFunction)(SystemEquationsHandler& eh, const TreeTensor& x, const TreeTensor& z, const TreeTensor& u, const TreeTensor& p);
+
+  System(const VariablesFunctionPtr variables_fcn_ptr, const EquationsFunctionPtr equations_fcn_ptr)
+  {
     SystemVariablesHandler svh;
-    variables.eval(svh);
+    variables_fcn_ptr(svh);
 
     this->states_struct = svh.getStates();
     this->algvars_struct = svh.getAlgebraics();
@@ -146,8 +155,10 @@ public:
     int su = this->controls_struct.size();
     int sp = this->parameters_struct.size();
 
-    equations_fcn = Function(equations, {sx,sz,su,sp}, 2);
-    ic_fcn = Function(initial_conditions, {sx,sp}, 1);
+    void equations_fcn_remapped(SystemEquationsHandler& eh, const std::vector<TreeTensor>& args) {
+      equations_fcn_ptr(eh, args[0], args[1], args[2], args[3]);
+    }
+    equations_fcn = Function(&equations_fcn_remapped, {sx,sz,su,sp}, 2);
   }
 
   SystemEquation evaluate(const std::vector<float_p>& states, const std::vector<float_p>& algvars,

@@ -15,44 +15,26 @@
 #include <utils/testing.h>
 #include "system.h"
 
-TEST(System, aVariablesHandler)
-{
-  ocl::SystemVariablesHandler sh;
+void vars01Pendulum(ocl::SVH& sh);
+void eq01Pendulum(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::TT& u, const ocl::TT& p);
 
+TEST(System, aSystemEvaluation)
+{
+  auto sys = ocl::System(&vars01Pendulum, &eq01Pendulum);
+  ocl::SystemEquation sys_eq = sys.eval(0, 0, 0, 0);
+
+  ocl::test::assertEqual( ocl::full(sys_eq.differential.get("p")), {{0}}, OCL_INFO);
+
+}
+
+void vars01Pendulum(ocl::SVH& sh)
+{
   sh.state("p", Bounds(-5, 5));
   sh.state("theta", Bounds(-2*ocl::pi, 2*ocl::pi));
   sh.state("v");
   sh.state("omega");
 
   sh.control("F", Bounds(-20, 20));
-}
-
-TEST(System, bSystemConstruction)
-{
-  auto sys = ocl::System(&vars01Pendulum, &eq01Pendulum);
-}
-
-TEST(System, cSystemEvaluation)
-{
-  auto sys = ocl::System(&vars01Pendulum, &eq01Pendulum);
-  ocl::IE eq = sys.eval(0, 0, 0, 0);
-
-  ocl::TT x = ocl::SymTT(sys.states_struct);
-  ocl::TT z = ocl::SymTT(sys.algvars_struct);
-  ocl::TT u = ocl::SymTT(sys.controls_struct);
-  ocl::TT p = ocl::SymTT(sys.parameters_struct);
-
-  ocl::IE eq = sys.sym_eval(x, z, u, p);
-}
-
-void vars01Pendulum(ocl::SVH& sh)
-{
-  sh.addState("p", Bounds(-5, 5));
-  sh.addState("theta", Bounds(-2*ocl::pi, 2*ocl::pi));
-  sh.addState("v");
-  sh.addState("omega");
-
-  sh.addConstrol("F", Bounds(-20, 20));
 }
 
 void eq01Pendulum(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::TT& u, const ocl::TT& p)
@@ -66,16 +48,16 @@ void eq01Pendulum(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::T
   double m = cm + pm;
   double pml = pm * phl; // pole mass length
 
-  auto ctheta = ocl::cos( x("theta") );
-  auto stheta = ocl::sin( x("theta") );
+  auto ctheta = ocl::cos( x.get("theta") );
+  auto stheta = ocl::sin( x.get("theta") );
 
-  auto domega = (g*stheta + ctheta * (-u("F") - pml * x("omega").square() * stheta) / m) /
+  auto domega = (g*stheta + ctheta * (-u("F") - pml * x.get("omega").square() * stheta) / m) /
                 (phl * (4.0/3.0 - pm * ctheta.square() / m));
 
-  auto a = (u.F + pml* (x("omega").square() * stheta - domega * ctheta)) / m;
+  auto a = (u.F + pml* (x.get("omega").square() * stheta - domega * ctheta)) / m;
 
-  eh.setODE("p", x("v"));
-  eh.setODE("theta", x("omega"));
+  eh.setODE("p", x.get("v"));
+  eh.setODE("theta", x.get("omega"));
   eh.setODE("v", a);
   eh.setODE("omega", domega);
 
