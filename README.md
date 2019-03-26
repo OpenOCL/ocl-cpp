@@ -4,7 +4,6 @@
 
 You can create a bash script `compile.sh` which will be ignored by git for your personal configuration, with the content along the lines of:
 ```bash
-set -e
 export CXX=g++-4.8
 export LD_LIBRARY_PATH=/path/to/casadi/
 
@@ -18,8 +17,6 @@ where `INCLUDE` are the directories with the header files (`.h`) and LIB are the
 
 For example:
 ```bash
-#!/bin/bash
-set -e
 export CXX=g++-4.8
 export LD_LIBRARY_PATH=../../software/casadi-linux-matlabR2014b-v3.3.0/
 
@@ -35,15 +32,13 @@ sh compile.sh
 ```
 
 ## Running tests
-```
-set -e
+```bash
 export DYLD_LIBRARY_PATH=../../Software/casadi-osx-matlabR2014b-v3.3.0/
 ./build/bin/main_test
 ```
 
 ## Debugging
-```
-set -e
+```bash
 export DYLD_LIBRARY_PATH=../../Software/casadi-osx-matlabR2014b-v3.3.0/
 /Applications/Xcode.app/Contents/Developer/usr/bin/lldb ./build/bin/main_test
 ```
