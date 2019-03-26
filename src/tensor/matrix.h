@@ -62,9 +62,7 @@ public:
     return casadi::size(m, dim);
   }
 
-  std::vector<double> full() {
-    return casadi::full(m);
-  }
+  std::vector<double> full(const std::vector<Matrix>& variables, const std::vector<Matrix>& values) const;
 
   // Member functions are defined inline below class (after static functions).
   void assign(int row, int col, double val);
@@ -119,12 +117,23 @@ private:
   CasadiMatrix m;
 };
 
+static inline CasadiMatrix raw(const Matrix& m) { return m.raw(); }
+
 static inline std::vector<int> shape(const Matrix& m) {
   return casadi::shape(m.raw());
 }
 
-static inline std::vector<double> full(const Matrix& m) {
-  return casadi::full(m.raw());
+static inline std::vector<double> full(const Matrix& m,
+                                       const std::vector<Matrix>& variables = {},
+                                       const std::vector<Matrix>& values = {})
+{
+  // convert vectors of Matrix into vectors of CasadiMatrix (casadi::SX)
+  std::vector<CasadiMatrix> casadi_variables(variables.size());
+  std::vector<CasadiMatrix> casadi_values(values.size());
+  std::transform (variables.begin(), variables.end(), casadi_variables.begin(), raw);
+  std::transform (values.begin(), values.end(), casadi_values.begin(), raw);
+
+  return casadi::full(m.raw(), casadi_variables, casadi_values);
 }
 
 // Static functions
@@ -195,6 +204,8 @@ static inline Matrix dot(const Matrix& m1, const Matrix& m2) { return Matrix(cas
 static inline Matrix atan2(const Matrix& m1, const Matrix& m2) { return Matrix(casadi::atan2(m1.raw(), m2.raw())); }
 
 // Member functions (calling the static functions above)
+inline std::vector<double> Matrix::full(const std::vector<Matrix>& variables = {}, const std::vector<Matrix>& values = {}) const { return ocl::full(*this, variables, values); }
+
 inline void Matrix::assign(int row, int col, double val) { return ocl::assign(*this, row, col, val); }
 inline void Matrix::assign(const std::vector<int>& rows, int col, const Matrix& values) { return ocl::assign(*this, rows, col, values); }
 

@@ -145,7 +145,22 @@ private:
 }; // class Tensor<M>
 
 
-std::vector<double> full(const Tensor& t) {
+static inline std::vector<double> full(const Tensor& t,
+                                       const std::vector<Tensor>& variables = {},
+                                       const std::vector<Tensor>& values = {})
+{
+
+  std::vector<Matrix>
+
+  // convert vectors of Matrix into vectors of CasadiMatrix (casadi::SX)
+  std::vector<CasadiMatrix> casadi_variables(variables.size());
+  std::vector<CasadiMatrix> casadi_values(values.size());
+  std::transform (variables.begin(), variables.end(), casadi_variables.begin(), raw);
+  std::transform (values.begin(), values.end(), casadi_values.begin(), raw);
+
+
+
+  std::vector<Matrix> data = t.data();
   return ocl::full(t.get(0));
 }
 
