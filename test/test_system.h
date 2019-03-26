@@ -47,14 +47,12 @@ TEST(System, cSystemEvaluation)
 
 void vars01Pendulum(ocl::SVH& sh)
 {
-
   sh.addState("p", Bounds(-5, 5));
   sh.addState("theta", Bounds(-2*ocl::pi, 2*ocl::pi));
   sh.addState("v");
   sh.addState("omega");
 
   sh.addConstrol("F", Bounds(-20, 20));
-
 }
 
 void eq01Pendulum(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::TT& u, const ocl::TT& p)

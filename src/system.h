@@ -104,8 +104,8 @@ struct SystemEquation
 class SystemEquationsHandler
 {
 public:
-  // sh.diff("x") = 2*u + x
-  Equation& diff(const std::string& id)
+  // sh.diff("x") << 2*u + x or sh.diff("x") = 2*u + x
+  TreeTensor& diff(const std::string& id)
   {
   }
 

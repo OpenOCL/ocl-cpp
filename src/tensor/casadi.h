@@ -65,25 +65,34 @@ static inline int size(const CasadiMatrix& m, const int dim)
   return m.size(dim+1); // one based indexing in casadi
 }
 
-static inline std::vector<double> full(const CasadiMatrix& m)
+static inline std::vector<double> full(
+    const CasadiMatrix& m,
+    const std::vector<CasadiMatrix>& variables = std::vector<CasadiMatrix>(),
+    const std::vector<CasadiMatrix>& values = std::vector<CasadiMatrix>())
 {
   std::string name = "f";
-  std::vector<CasadiMatrix> f_inputs;
+  std::vector<CasadiMatrix> f_inputs = variables;
   std::vector<CasadiMatrix> f_outputs;
   f_outputs.push_back(m);
 
+  // turn values (casadi::SX) into casadi::DM and evaluate by calling function
+  // this will fail if values contains symbolics
   ::casadi::Dict opts = ::casadi::Dict();
-
   ::casadi::Function f = ::casadi::Function(name, f_inputs, f_outputs, opts);
+  std::vector< ::casadi::DM > dm_in(values.size());
+  for (unsigned int i=0; i < values.size(); i++) {
+    dm_in[i] = ::casadi::DM(values[i]);
+  }
   std::vector< ::casadi::DM > dm_out;
-  f.call({},dm_out);
+  f.call(dm_in,dm_out);
 
+  // convert casadi::DM to std::vector
+  // this will fail if function has free variables
   ::casadi::DM d = ::casadi::DM::densify(dm_out[0]);
-
   double *data = d.ptr();
   int nel = size(m,0)*size(m,1);
-  std::vector<double> values(data, data + nel);
-  return values;
+  std::vector<double> values_out(data, data + nel);
+  return values_out;
 }
 
 // native casadi type operations
