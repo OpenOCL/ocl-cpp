@@ -2,7 +2,7 @@
 
 ## C++ code compilation
 
-You can create a bash script `compile.sh` which will be ignored by git for your personal configuration, with the content along the lines of:
+You can create a bash script `setup.sh` which will be ignored by git for your personal configuration, with the content along the lines of:
 ```bash
 export CXX=g++
 export LD_LIBRARY_PATH="/path/to/casadi/"
@@ -32,12 +32,19 @@ and setup the environment variables with
 source setup.sh
 ```
 
+compile with
+```bash
+make
+```
+
 ## Running tests
+
 ```bash
 ./build/bin/main_test
 ```
 
 ## Debugging
+
 ```bash
 gdb ./build/bin/main_test
 /Applications/Xcode.app/Contents/Developer/usr/bin/lldb ./build/bin/main_test # for mac os
