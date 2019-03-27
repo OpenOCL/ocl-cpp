@@ -23,6 +23,7 @@ namespace ocl {
 
 struct Bound
 {
+  Bound() : lower_bound(-std::numeric_limits<double>::infinity()), upper_bound(std::numeric_limits<double>::infinity()) { }
   Bound(const float_p lower_bound, const float_p upper_bound)
       : lower_bound(lower_bound), upper_bound(upper_bound) { }
   float_p lower_bound;
