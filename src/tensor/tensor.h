@@ -138,6 +138,8 @@ public:
   Tensor operator-(const Tensor& other) const;
   Tensor operator*(const Tensor& other) const;
   Tensor operator/(const Tensor& other) const;
+  Tensor operator+() const;
+  Tensor operator-() const;
 
 private:
   std::vector<Matrix> data;
@@ -443,6 +445,14 @@ inline Tensor Tensor::operator*(const Tensor& other) const {
 }
 inline Tensor Tensor::operator/(const Tensor& other) const {
   return this->cdivide(other);
+}
+
+inline Tensor Tensor::operator+() const {
+  return this->uplus();
+}
+
+inline Tensor Tensor::operator-() const {
+  return this->uminus();
 }
 
 } // namespace ocl
