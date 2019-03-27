@@ -117,9 +117,9 @@ private:
   CasadiMatrix m;
 };
 
-static inline Matrix concat(const Matrix& m1, const Matrix& m2) const
+static inline Matrix vertcat(const Matrix& m1, const Matrix& m2)
 {
-  return m1.raw()
+  return vertcat(m1.raw(),m2.raw());
 }
 
 static inline CasadiMatrix raw(const Matrix& m) { return m.raw(); }

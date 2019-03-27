@@ -1,13 +1,16 @@
 #include <iostream>
 #include "tensor/casadi.h"
 #include "tensor/tree_builder.h"
+#include "tensor/matrix.h"
+#include "tensor/tensor.h"
+#include "tensor/tree_tensor.h"
 
 int main()
 {
   ::casadi::DM x = ::casadi::DM::zeros(3,3);
 
   x = vertcat(x,x);
- 
+
   std::cout << x << std::endl;
 
 

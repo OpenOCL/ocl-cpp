@@ -71,6 +71,8 @@ $(GTEST_LIB)/libgtest.a : $(OBJ)/gtest-all.o
 $(GTEST_LIB)/libgtest_main.a : $(OBJ)/gtest-all.o $(OBJ)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
+# playbox
+
 $(OBJ)/dev_playbox.o : $(TEST)/dev_playbox.cc $(SRC)/tensor/matrix.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
