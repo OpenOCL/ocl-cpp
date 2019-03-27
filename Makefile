@@ -49,7 +49,8 @@ TENSOR_HEADERS = $(SRC)/tensor/casadi.h $(SRC)/tensor/functions.h \
 								 $(SRC)/tensor/tensor.h $(SRC)/tensor/tree_builder.h \
 								 $(SRC)/tensor/tree_tensor.h $(SRC)/tensor/value_storage.h
 
-all: $(BIN)/dev_playbox $(BIN)/main_test
+all: $(BIN)/main_test
+playbox: $(BIN)/dev_playbox
 gtest: $(GTEST_LIBS)
 clean:
 	rm -f $(TESTS) $(OBJ)/*.o

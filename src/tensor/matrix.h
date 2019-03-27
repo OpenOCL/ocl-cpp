@@ -117,6 +117,11 @@ private:
   CasadiMatrix m;
 };
 
+static inline Matrix concat(const Matrix& m1, const Matrix& m2) const
+{
+  return m1.raw()
+}
+
 static inline CasadiMatrix raw(const Matrix& m) { return m.raw(); }
 
 static inline std::vector<int> shape(const Matrix& m) {

@@ -6,6 +6,11 @@ int main()
 {
   ::casadi::DM x = ::casadi::DM::zeros(3,3);
 
+  x = vertcat(x,x);
+ 
+  std::cout << x << std::endl;
+
+
   x.set(3, false, 0, 2);
 
   ocl::TreeBuilder tb;
