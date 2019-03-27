@@ -88,7 +88,7 @@ struct DifferentialEquation {
     return eq.at(id);
   }
 
-  std::map<std::string, TreeTensor> eq;
+  std::map<std::string, Tensor> eq;
 };
 
 struct ImplicitEquation
@@ -154,13 +154,13 @@ public:
     equations_fcn = Function(this, {sx,sz,su,sp}, 2);
   }
 
-  SystemEquation evaluate(const Matrix& x, const Matrix& z, const Matrix& u, const Matrix& p) {
+  void evaluate(const Matrix& x, const Matrix& z, const Matrix& u, const Matrix& p, Matrix& diff_out, Matrix& implicit_out)
+  {
+    std::vector<Matrix> inputs = {x,z,u,p};
     std::vector<Matrix> outputs;
-    outputs = this->equations_fcn.evaluate({x,z,u,p});
-    SystemEquation eq;
-    eq.differential = outputs[0];
-    eq.implicit = outputs[1];
-    return eq;
+    outputs = this->equations_fcn.evaluate(inputs);
+    diff_out = outputs[0];
+    implicit_out = outputs[1];
   }
 
   std::vector<Matrix> fcnEvaluate(const std::vector<Matrix>& args)
@@ -183,9 +183,23 @@ public:
 
     this->equations_fcn_ptr(eh, {x, z, u, p});
 
+    // concatenate differential equation in the same order as the states
+    Matrix diff_eq;
+    for (auto& kv : this->states_struct.branches()) {
+      std::string id = kv.first;
+      assertEqual(eh.sys_eq.differential[id].length(), 1, "Support for matrix (2-dimensional) variables and equations only.");
+      diff_eq = concat(diff_eq, eh.sys_eq.differential[id].get(0));
+    }
+
+    Matrix implicit_eq;
+    for (auto el : eh.sys_eq.implicit) {
+      assertEqual(el.length(), 1, "Support for matrix (2-dimensional) variables and equations only.");
+      implicit_eq = concat(implicit_eq, el.get(0));
+    }
+
     std::vector<Matrix> outputs(2);
-    outputs[0] = eh.sys_eq.differential;
-    outputs[1] = eh.sys_eq.implicit;
+    outputs[0] = diff_eq;
+    outputs[1] = implicit_eq;
 
     return outputs;
   }
