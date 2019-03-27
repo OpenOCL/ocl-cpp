@@ -44,18 +44,18 @@ class TreeTensor : public Slicable
   void disp();
 
   // Sets a value, supports broadcasting
-  // ValueStorage::assign itself does broadcasting on the matrix level (dim 1 and 2)
+  // TODO: ValueStorage::assign itself should support broadcasting on the matrix level (dim 1 and 2)
   void set(const Tensor& value)
   {
     std::vector<std::vector<int> > indizes = this->structure().indizes();
     for(unsigned int i=0; i < indizes.size(); i++)
     {
       if ((int)indizes.size()==value.size()) {
-        this->_value_storage.assign(indizes[i], value.get(i).data(), value.get(i).size(0), value.get(i).size(1));
+        this->_value_storage.assign(indizes[i], value.get(i).data());
       }
       else if (value.size() == 1) {
         // broadcast on the third dimension (repeat first matrix)
-        this->_value_storage.assign(indizes[i], value.get(0).data(), value.get(0).size(0), value.get(0).size(1));
+        this->_value_storage.assign(indizes[i], value.get(0).data());
       }
       else {
         assertEqual(0,1,"wrong");

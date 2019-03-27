@@ -48,14 +48,14 @@ public:
     return ValueStorage(slice(m, indizes, {0}));
   }
 
-  void assign(const std::vector<int>& indizes, const Matrix& values, int size0, int size1) {
+  void assign(const std::vector<int>& indizes, const Matrix& values) {
     m.assign(indizes, 0, values);
   }
 
-  void assign(const std::vector<int>& indizes, const std::vector<double>& values, int size0, int size1)
+  void assign(const std::vector<int>& indizes, const std::vector<double>& values)
   {
     Matrix values_m(values);
-    assign(indizes, values_m, size0, size1);
+    assign(indizes, values_m);
   }
 
 private:
