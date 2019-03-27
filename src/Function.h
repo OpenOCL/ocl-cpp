@@ -17,24 +17,31 @@
 
 namespace ocl {
 
+class FunctionInterface
+{
+public:
+  virtual std::vector<Matrix> fcnEvaluate(const std::vector<Matrix>& args) const = 0;
+};
+
 class Function
 {
 public:
+
   Function() {}
-  Function(void (*fcn_ptr)(const std::vector<TreeTensor>&), const std::vector<int>& inputs, const int n_outputs) : fcn_ptr(fcn_ptr)
+  Function(FunctionInterface *input_obj_ptr, const std::vector<int>& inputs, const int n_outputs) : obj_ptr(input_obj_ptr)
   {
     // does nothing, disables warning of unused input
     (void)inputs;
     (void)n_outputs;
   }
 
-  void evaluate(const std::vector<TreeTensor>& args)
+  std::vector<Matrix> evaluate(const std::vector<Matrix>& args)
   {
-    this->fcn_ptr(args);
+    return this->obj_ptr->fcnEvaluate(args);
   }
 
 private:
-  void (*fcn_ptr)(const std::vector<TreeTensor>&);
+  FunctionInterface *obj_ptr;
 };
 
 } // namespace ocl

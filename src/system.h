@@ -121,12 +121,6 @@ public:
     sys_eq.implicit.append(alg);
   }
 
-  SystemEquation equation()
-  {
-    return sys_eq;
-  }
-
-private:
   SystemEquation sys_eq;
 };
 
@@ -134,16 +128,15 @@ typedef SystemVariablesHandler SVH;
 typedef SystemEquationsHandler SEH;
 typedef TreeTensor TT;
 
-class System
+class System : public FunctionInterface
 {
 public:
 
   typedef void (*VariablesFunctionPtr)(SystemVariablesHandler& sh);
   typedef void (*EquationsFunctionPtr)(SystemEquationsHandler& eh, const TreeTensor& x, const TreeTensor& z, const TreeTensor& u, const TreeTensor& p);
 
-
-
   System(const VariablesFunctionPtr variables_fcn_ptr, const EquationsFunctionPtr equations_fcn_ptr)
+      : equations_fcn_ptr(equations_fcn_ptr)
   {
     SystemVariablesHandler svh;
     variables_fcn_ptr(svh);
@@ -158,17 +151,25 @@ public:
     int su = this->controls_struct.size();
     int sp = this->parameters_struct.size();
 
-
-    void equations_fcn_ptr_remapped(SystemEquationsHandler& eh, const std::vector<TreeTensor>& args) {
-      equations_fcn_ptr(eh, args[0], args[1], args[2], args[3]);
-    }
-
-    equations_fcn = Function(&equations_fcn_ptr_remapped, {sx,sz,su,sp}, 2);
+    equations_fcn = Function(this, {sx,sz,su,sp}, 2);
   }
 
-  SystemEquation evaluate(const Matrix& states, const Matrix& algvars,
-                          const Matrix& controls, const Matrix& parameters)
+  SystemEquation evaluate(const Matrix& x, const Matrix& z, const Matrix& u, const Matrix& p) {
+    std::vector<Matrix> outputs;
+    outputs = this->equations_fcn.evaluate({x,z,u,p});
+    SystemEquation eq;
+    eq.differential = outputs[0];
+    eq.implicit = outputs[1];
+    return eq;
+  }
+
+  std::vector<Matrix> fcnEvaluate(const std::vector<Matrix>& args)
   {
+    Matrix states = args[0];
+    Matrix algvars = args[1];
+    Matrix controls = args[2];
+    Matrix parameters = args[3];
+
     ValueStorage x_vs(states);
     ValueStorage z_vs(algvars);
     ValueStorage u_vs(controls);
@@ -180,9 +181,13 @@ public:
     TreeTensor u = TreeTensor(this->controls_struct, u_vs);
     TreeTensor p = TreeTensor(this->parameters_struct, p_vs);
 
-    equations_fcn.eval(eh, {x, z, u, p});
+    this->equations_fcn_ptr(eh, {x, z, u, p});
 
-    return eh.equations();
+    std::vector<Matrix> outputs(2);
+    outputs[0] = eh.sys_eq.differential;
+    outputs[1] = eh.sys_eq.implicit;
+
+    return outputs;
   }
 
 private:
@@ -191,9 +196,8 @@ private:
   Tree controls_struct;
   Tree parameters_struct;
 
+  EquationsFunctionPtr equations_fcn_ptr;
   Function equations_fcn;
-  Function ic_fcn;
-
 };
 
 } // namespace ocl
