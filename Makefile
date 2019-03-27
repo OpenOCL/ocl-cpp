@@ -50,7 +50,7 @@ TENSOR_HEADERS = $(SRC)/tensor/casadi.h $(SRC)/tensor/functions.h \
 								 $(SRC)/tensor/tree_tensor.h $(SRC)/tensor/value_storage.h
 
 all: $(BIN)/main_test
-playbox: $(BIN)/dev_playbox
+playbox: $(BIN)/tensor_playbox
 gtest: $(GTEST_LIBS)
 clean:
 	rm -f $(TESTS) $(OBJ)/*.o
@@ -73,10 +73,10 @@ $(GTEST_LIB)/libgtest_main.a : $(OBJ)/gtest-all.o $(OBJ)/gtest_main.o
 
 # playbox
 
-$(OBJ)/dev_playbox.o : $(TEST)/dev_playbox.cc $(SRC)/tensor/matrix.h
+$(OBJ)/tensor_playbox.o : $(TEST)/tensor_playbox.cc $(SRC)/tensor/matrix.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-$(BIN)/dev_playbox : $(OBJ)/dev_playbox.o
+$(BIN)/tensor_playbox : $(OBJ)/tensor_playbox.o
 	$(CXX) $(LDFLAGS) -L$(CASADI_LIB_PATH) $^ -lcasadi -o $@
 
 #  compiles main test program

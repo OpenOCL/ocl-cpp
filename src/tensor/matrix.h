@@ -47,6 +47,7 @@ public:
     return Matrix(casadi::One(rows, cols));
   }
 
+  Matrix() { }
   Matrix(const ::casadi::DM& v) : m(v) { }
   Matrix(const double v) : m(v) { }
   Matrix(const std::vector<double>& v) : m(v) { }

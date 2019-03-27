@@ -21,20 +21,23 @@ void eq01Pendulum(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::T
 TEST(System, aSystemEvaluation)
 {
   auto sys = ocl::System(&vars01Pendulum, &eq01Pendulum);
-  ocl::SystemEquation sys_eq = sys.eval(0, 0, 0, 0);
 
-  ocl::test::assertEqual( ocl::full(sys_eq.differential.get("p")), {{0}}, OCL_INFO);
+  ocl::Matrix diff_out;
+  ocl::Matrix implicit_out;
+  sys.evaluate(0, 0, 0, 0, diff_out, implicit_out);
+
+  ocl::test::assertEqual( ocl::full(diff_out), {{0,0,0,0}}, OCL_INFO);
 
 }
 
 void vars01Pendulum(ocl::SVH& sh)
 {
-  sh.state("p", Bounds(-5, 5));
-  sh.state("theta", Bounds(-2*ocl::pi, 2*ocl::pi));
+  sh.state("p", ocl::Bounds(-5, 5));
+  sh.state("theta", ocl::Bounds(-2*ocl::pi, 2*ocl::pi));
   sh.state("v");
   sh.state("omega");
 
-  sh.control("F", Bounds(-20, 20));
+  sh.control("F", ocl::Bounds(-20, 20));
 }
 
 void eq01Pendulum(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::TT& u, const ocl::TT& p)
@@ -56,8 +59,8 @@ void eq01Pendulum(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::T
 
   auto a = (u.F + pml* (x.get("omega").square() * stheta - domega * ctheta)) / m;
 
-  eh.differentialEquation("p", x.get("v"));
-  eh.differentialEquation("theta", x.get("omega"));
+  eh.differentialEquation("p", x.get("v").value());
+  eh.differentialEquation("theta", x.get("omega").value());
   eh.differentialEquation("v", a);
   eh.differentialEquation("omega", domega);
 

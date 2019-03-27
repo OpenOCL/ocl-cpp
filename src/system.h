@@ -163,7 +163,7 @@ public:
     implicit_out = outputs[1];
   }
 
-  std::vector<Matrix> fcnEvaluate(const std::vector<Matrix>& args)
+  std::vector<Matrix> fcnEvaluate(const std::vector<Matrix>& args) const override
   {
     Matrix states = args[0];
     Matrix algvars = args[1];
