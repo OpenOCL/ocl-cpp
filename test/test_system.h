@@ -14,6 +14,7 @@
  */
 #include <utils/testing.h>
 #include "system.h"
+#include "utils/constants.h"
 
 void vars01Pendulum(ocl::SVH& sh);
 void eq01Pendulum(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::TT& u, const ocl::TT& p);
@@ -32,12 +33,12 @@ TEST(System, aSystemEvaluation)
 
 void vars01Pendulum(ocl::SVH& sh)
 {
-  sh.state("p", ocl::Bounds(-5, 5));
-  sh.state("theta", ocl::Bounds(-2*ocl::pi, 2*ocl::pi));
+  sh.state("p", ocl::Bound(-5, 5));
+  sh.state("theta", ocl::Bound(-2*ocl::pi, 2*ocl::pi));
   sh.state("v");
   sh.state("omega");
 
-  sh.control("F", ocl::Bounds(-20, 20));
+  sh.control("F", ocl::Bound(-20, 20));
 }
 
 void eq01Pendulum(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::TT& u, const ocl::TT& p)
