@@ -6,7 +6,7 @@ You can create a bash script `setup.sh` which will be ignored by git for your pe
 ```bash
 export CXX=g++
 export LD_LIBRARY_PATH="/path/to/casadi/"
-export DYLD_LIBRARY_PATH="/path/to/casadi/" # for mac os
+export DYLD_FALLBACK_LIBRARY_PATH="/path/to/casadi/" # for mac os
 
 export CASADI_INCLUDE="/path/to/casadi/include"
 export CASADI_EXPORT="/path/to/casadi/build/"
@@ -19,7 +19,7 @@ For example:
 ```bash
 export CXX=g++
 export LD_LIBRARY_PATH=/home/jonas/casadi/build/lib
-export DYLD_LIBRARY_PATH=/home/jonas/casadi/build/lib # for mac os
+export DYLD_FALLBACK_LIBRARY_PATH=/home/jonas/casadi/build/lib # for mac os
 
 export CASADI_INCLUDE="/home/jonas/casadi"
 export CASADI_EXPORT="/home/jonas/casadi/build/"
