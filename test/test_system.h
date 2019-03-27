@@ -23,12 +23,11 @@ TEST(System, aSystemEvaluation)
 {
   auto sys = ocl::System(&vars01Pendulum, &eq01Pendulum);
 
-  // ocl::Matrix diff_out;
-  // ocl::Matrix implicit_out;
-  // sys.evaluate(0, 0, 0, 0, diff_out, implicit_out);
+  ocl::Matrix diff_out;
+  ocl::Matrix implicit_out;
+  sys.evaluate(0, 0, 0, 0, diff_out, implicit_out);
   //
   // ocl::test::assertEqual( ocl::full(diff_out), {{0,0,0,0}}, OCL_INFO);
-
 }
 
 void vars01Pendulum(ocl::SVH& sh)
@@ -43,10 +42,6 @@ void vars01Pendulum(ocl::SVH& sh)
 
 void eq01Pendulum(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::TT& u, const ocl::TT& p)
 {
-  // suppress warning of unused z, p
-  (void) z;
-  (void) p;
-
   ocl::Tensor g = 9.8;
   ocl::Tensor cm = 1.0;  // cart mass
   ocl::Tensor pm = 0.1;  // pole mass
@@ -62,6 +57,7 @@ void eq01Pendulum(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::T
 
   ocl::Tensor u_F = u.get("F").value();
 
+
   auto ctheta = ocl::cos( x_theta );
   auto stheta = ocl::sin( x_theta );
 
@@ -75,4 +71,7 @@ void eq01Pendulum(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::T
   eh.differentialEquation("v", a);
   eh.differentialEquation("omega", domega);
 
+  // suppress warning of unused z, p
+  (void) z;
+  (void) p;
 }

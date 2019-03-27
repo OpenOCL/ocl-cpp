@@ -48,6 +48,9 @@ make
 ```bash
 gdb ./build/bin/main_test
 /Applications/Xcode.app/Contents/Developer/usr/bin/lldb ./build/bin/main_test # for mac os
+
+# with gtest filter
+gdb --args ./build/bin/main_test --gtest_filter=System*
 ```
 
 ## gdb commands
@@ -61,4 +64,5 @@ dis 1
 en 1
 (i) info break
 (p) print x
+catch throw
 ```
