@@ -16,12 +16,12 @@
 #include "system.h"
 #include "utils/constants.h"
 
-void vars01Pendulum(ocl::SVH& sh);
-void eq01Pendulum(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::TT& u, const ocl::TT& p);
+void vars01Particle(ocl::SVH& sh);
+void eq01Particle(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::TT& u, const ocl::TT& p);
 
 TEST(System, aSystemEvaluation)
 {
-  auto sys = ocl::System(&vars01Pendulum, &eq01Pendulum);
+  auto sys = ocl::System(&vars01Particle, &eq01Particle);
 
   ocl::Matrix x = ocl::Matrix::Zero(2,1);
   ocl::Matrix z = ocl::Matrix::Zero(0,1);
@@ -35,7 +35,7 @@ TEST(System, aSystemEvaluation)
   ocl::test::assertEqual( ocl::full(diff_out), {{0,-9.8}}, OCL_INFO);
 }
 
-void vars01Pendulum(ocl::SVH& sh)
+void vars01Particle(ocl::SVH& sh)
 {
   sh.state("p", {1,1}, -5, 5);
   sh.state("v");
@@ -43,7 +43,7 @@ void vars01Pendulum(ocl::SVH& sh)
   sh.control("F", {1,1}, -20, 20);
 }
 
-void eq01Pendulum(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::TT& u, const ocl::TT& p)
+void eq01Particle(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::TT& u, const ocl::TT& p)
 {
   ocl::Tensor g = 9.8;
 
