@@ -78,13 +78,13 @@ private:
 };
 
 struct DifferentialEquation {
-  void insert(const std::string& id, const TreeTensor& el)
+  void insert(const std::string& id, const Tensor& el)
   {
-    std::pair<std::string, TreeTensor> pair(id, el);
+    std::pair<std::string, Tensor> pair(id, el);
     eq.insert(pair);
   }
 
-  TreeTensor get(const std::string& id) {
+  Tensor get(const std::string& id) {
     return eq.at(id);
   }
 
@@ -93,10 +93,10 @@ struct DifferentialEquation {
 
 struct ImplicitEquation
 {
-  void append(const TreeTensor& el) {
+  void append(const Tensor& el) {
     eq.push_back(el);
   }
-  std::vector<TreeTensor> eq;
+  std::vector<Tensor> eq;
 };
 
 struct SystemEquation
@@ -113,11 +113,11 @@ public:
   // {
   // }
 
-  void differentialEquation(const std::string& id, const TreeTensor& ode) {
+  void differentialEquation(const std::string& id, const Tensor& ode) {
     sys_eq.differential.insert(id, ode);
   }
 
-  void implicitEquation(const TreeTensor& alg) {
+  void implicitEquation(const Tensor& alg) {
     sys_eq.implicit.append(alg);
   }
 
@@ -181,20 +181,29 @@ public:
     TreeTensor u = TreeTensor(this->controls_struct, u_vs);
     TreeTensor p = TreeTensor(this->parameters_struct, p_vs);
 
-    this->equations_fcn_ptr(eh, {x, z, u, p});
+    this->equations_fcn_ptr(eh, x, z, u, p);
 
-    // concatenate differential equation in the same order as the states
-    Matrix diff_eq;
-    for (auto& kv : this->states_struct.branches()) {
+    // Concatenate differential equation in the same order as the states
+    //
+    Matrix diff_eq = Matrix::Zero(0,1);
+    for (auto& kv : this->states_struct.branches())
+    {
       std::string id = kv.first;
-      assertEqual(eh.sys_eq.differential[id].length(), 1, "Support for matrix (2-dimensional) variables and equations only.");
-      diff_eq = concat(diff_eq, eh.sys_eq.differential[id].get(0));
+      assertEqual(eh.sys_eq.differential.eq[id].length(), 1, "Support for matrix (2-dimensional) variables and equations only.");
+
+      Matrix eq = eh.sys_eq.differential.eq[id].get(0);
+      eq = column(eq);
+      diff_eq = vertcat(diff_eq, eq);
     }
 
-    Matrix implicit_eq;
-    for (auto el : eh.sys_eq.implicit) {
+    Matrix implicit_eq = Matrix::Zero(0,1);
+    for (auto el : eh.sys_eq.implicit.eq)
+    {
       assertEqual(el.length(), 1, "Support for matrix (2-dimensional) variables and equations only.");
-      implicit_eq = concat(implicit_eq, el.get(0));
+
+      Matrix eq = el.get(0);
+      eq = column(eq);
+      implicit_eq = vertcat(implicit_eq, eq);
     }
 
     std::vector<Matrix> outputs(2);

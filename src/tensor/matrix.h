@@ -186,6 +186,12 @@ static inline Matrix trace(const Matrix& m) { return Matrix(casadi::trace(m.raw(
 static inline Matrix reshape(const Matrix& m, const Integer rows, const Integer cols) {
   return Matrix(casadi::reshape(m.raw(), rows, cols));
 }
+
+static inline Matrix column(const Matrix& m)
+{
+  return reshape(m, m.size(0)*m.size(1), 1);
+}
+
 static inline Matrix transpose(const Matrix& m) {
   return Matrix(casadi::transpose(m.raw()));
 }

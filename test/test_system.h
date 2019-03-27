@@ -56,9 +56,9 @@ void eq01Pendulum(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::T
 
   auto a = (u.F + pml* (x.get("omega").square() * stheta - domega * ctheta)) / m;
 
-  eh.setODE("p", x.get("v"));
-  eh.setODE("theta", x.get("omega"));
-  eh.setODE("v", a);
-  eh.setODE("omega", domega);
+  eh.differentialEquation("p", x.get("v"));
+  eh.differentialEquation("theta", x.get("omega"));
+  eh.differentialEquation("v", a);
+  eh.differentialEquation("omega", domega);
 
 }
