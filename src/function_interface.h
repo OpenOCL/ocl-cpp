@@ -12,37 +12,33 @@
  *    General Public License for more details.
  *
  */
-#ifndef OCL_FUNCTION_H_
-#define OCL_FUNCTION_H_
+#ifndef OCL_FUNCTION_INTERFACE_H_
+#define OCL_FUNCTION_INTERFACE_H_
 
 namespace ocl {
 
 class FunctionInterface
 {
 public:
-  virtual std::vector<Matrix> fcnEvaluate(const std::vector<Matrix>& args) const = 0;
-};
 
-class Function
-{
-public:
-
-  Function() {}
-  Function(FunctionInterface *input_obj_ptr, const std::vector<int>& inputs, const int n_outputs) : obj_ptr(input_obj_ptr)
+  FunctionInterface() {}
+  FunctionInterface(const std::vector<Tree>& inputs, const int n_outputs)
   {
     // does nothing, disables warning of unused input
     (void)inputs;
     (void)n_outputs;
   }
 
+  virtual std::vector<Matrix> fcnEvaluate(const std::vector<Matrix>& args) const = 0;
+
   std::vector<Matrix> evaluate(const std::vector<Matrix>& args)
   {
-    return this->obj_ptr->fcnEvaluate(args);
+    return this->fcnEvaluate(args);
   }
 
 private:
-  FunctionInterface *obj_ptr;
+
 };
 
 } // namespace ocl
-#endif // OCL_FUNCTION_H_
+#endif // OCL_FUNCTION_INTERFACE_H_

@@ -109,11 +109,6 @@ struct SystemEquation
 class SystemEquationsHandler
 {
 public:
-  // sh.diff("x") << 2*u + x or sh.diff("x") = 2*u + x
-  // TreeTensor& diff(const std::string& id)
-  // {
-  // }
-
   void differentialEquation(const std::string& id, const Tensor& ode) {
     sys_eq.differential.insert(id, ode);
   }
@@ -125,43 +120,17 @@ public:
   SystemEquation sys_eq;
 };
 
-typedef SystemVariablesHandler SVH;
-typedef SystemEquationsHandler SEH;
-typedef TreeTensor TT;
 
-class System : public FunctionInterface
+typedef void (*VariablesFunctionPtr)(SystemVariablesHandler& sh);
+typedef void (*EquationsFunctionPtr)(SystemEquationsHandler& eh, const TreeTensor& x, const TreeTensor& z, const TreeTensor& u, const TreeTensor& p);
+
+class SystemFunction : public FunctionInterface
 {
 public:
-
-  typedef void (*VariablesFunctionPtr)(SystemVariablesHandler& sh);
-  typedef void (*EquationsFunctionPtr)(SystemEquationsHandler& eh, const TreeTensor& x, const TreeTensor& z, const TreeTensor& u, const TreeTensor& p);
-
-  System(const VariablesFunctionPtr variables_fcn_ptr, const EquationsFunctionPtr equations_fcn_ptr)
-      : equations_fcn_ptr(equations_fcn_ptr)
+  SystemFunction(const EquationsFunctionPtr& fcn_ptr, const std::vector<Tree>& inputs, const int n_outputs)
+      : equations_fcn_ptr(fcn_ptr), Function(inputs, n_outputs)
   {
-    SystemVariablesHandler svh;
-    variables_fcn_ptr(svh);
 
-    this->states_struct = svh.getStates();
-    this->algvars_struct = svh.getAlgebraics();
-    this->controls_struct = svh.getControls();
-    this->parameters_struct = svh.getParameters();
-
-    int sx = this->states_struct.size();
-    int sz = this->algvars_struct.size();
-    int su = this->controls_struct.size();
-    int sp = this->parameters_struct.size();
-
-    equations_fcn = Function(this, {sx,sz,su,sp}, 2);
-  }
-
-  void evaluate(const Matrix& x, const Matrix& z, const Matrix& u, const Matrix& p, Matrix& diff_out, Matrix& implicit_out)
-  {
-    std::vector<Matrix> inputs = {x,z,u,p};
-    std::vector<Matrix> outputs;
-    outputs = this->equations_fcn.evaluate(inputs);
-    diff_out = outputs[0];
-    implicit_out = outputs[1];
   }
 
   std::vector<Matrix> fcnEvaluate(const std::vector<Matrix>& args) const override
@@ -177,17 +146,17 @@ public:
     ValueStorage p_vs(parameters);
 
     SystemEquationsHandler eh;
-    TreeTensor x = TreeTensor(this->states_struct, x_vs);
-    TreeTensor z = TreeTensor(this->algvars_struct, z_vs);
-    TreeTensor u = TreeTensor(this->controls_struct, u_vs);
-    TreeTensor p = TreeTensor(this->parameters_struct, p_vs);
+    TreeTensor x = TreeTensor(this->input_structs[0], x_vs);
+    TreeTensor z = TreeTensor(this->input_structs[1], z_vs);
+    TreeTensor u = TreeTensor(this->input_structs[2], u_vs);
+    TreeTensor p = TreeTensor(this->input_structs[3], p_vs);
 
     this->equations_fcn_ptr(eh, x, z, u, p);
 
     // Concatenate differential equation in the same order as the states
     //
     Matrix diff_eq = Matrix::Zero(0,1);
-    for (auto& kv : this->states_struct.branches())
+    for (auto& kv : this->input_structs[0].branches())
     {
       std::string id = kv.first;
       assertEqual(eh.sys_eq.differential.eq[id].length(), 1, "Support for matrix (2-dimensional) variables and equations only.");
@@ -215,13 +184,43 @@ public:
   }
 
 private:
-  Tree states_struct;
-  Tree algvars_struct;
-  Tree controls_struct;
-  Tree parameters_struct;
-
   EquationsFunctionPtr equations_fcn_ptr;
-  Function equations_fcn;
+  std::vector<Tree> input_structs;
+};
+
+
+typedef SystemVariablesHandler SVH;
+typedef SystemEquationsHandler SEH;
+typedef TreeTensor TT;
+
+class System
+{
+public:
+
+  System(const VariablesFunctionPtr variables_fcn_ptr, const EquationsFunctionPtr equations_fcn_ptr)
+  {
+    SystemVariablesHandler svh;
+    variables_fcn_ptr(svh);
+
+    system_fcn = SystemFunction({svh.getStates(),svh.getAlgebraics(),svh.getControls(),svh.getParameters()}, 2);
+  }
+
+  void evaluate(const Matrix& x, const Matrix& z, const Matrix& u, const Matrix& p, Matrix& diff_out, Matrix& implicit_out)
+  {
+    std::vector<Matrix> inputs = {x,z,u,p};
+    std::vector<Matrix> outputs;
+    outputs = this->equations_fcn.evaluate(inputs);
+    diff_out = outputs[0];
+    implicit_out = outputs[1];
+  }
+
+  std::vector<Matrix> fcnEvaluate(const std::vector<Matrix>& args) const override
+  {
+
+  }
+
+private:
+  SystemFunction system_fcn;
 };
 
 } // namespace ocl
