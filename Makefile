@@ -44,12 +44,13 @@ GTEST_SRCS_ = $(GTEST_PATH)/src/*.cc $(GTEST_PATH)/src/*.h $(GTEST_HEADERS)
 
 TEST_HEADERS = $(TEST)/test_casadi.h $(TEST)/test_matrix.h $(TEST)/test_tensor.h \
                $(TEST)/test_tree.h $(TEST)/test_tree_tensor.h $(TEST)/test_sym_matrix.h \
-							 $(TEST)/test_system.h 
+							 $(TEST)/test_system.h
 COMMON_HEADERS = $(SRC)/utils/exceptions.h $(SRC)/utils/typedefs.h $(SRC)/utils/testing.h $(SRC)/utils/slicing.h $(SRC)/utils/assertions.h
 TENSOR_HEADERS = $(SRC)/tensor/casadi.h $(SRC)/tensor/functions.h \
  					       $(SRC)/tensor/matrix.h  $(SRC)/tensor/tree.h \
 								 $(SRC)/tensor/tensor.h $(SRC)/tensor/tree_builder.h \
 								 $(SRC)/tensor/tree_tensor.h $(SRC)/tensor/value_storage.h
+CORE_HEADERS = $(SRC)/function_interface.h $(SRC)/system.h
 
 all: $(BIN)/main_test
 playbox: $(BIN)/tensor_playbox
@@ -82,7 +83,7 @@ $(BIN)/tensor_playbox : $(OBJ)/tensor_playbox.o
 	$(CXX) $(LDFLAGS) -L$(CASADI_LIB_PATH) $^ -lcasadi -o $@
 
 #  compiles main test program
-$(OBJ)/main_test.o : $(TEST)/main_test.cc $(TEST_HEADERS) $(TENSOR_HEADERS) $(COMMON_HEADERS) $(GTEST_HEADERS)
+$(OBJ)/main_test.o : $(TEST)/main_test.cc $(TEST_HEADERS) $(TENSOR_HEADERS) $(COMMON_HEADERS) $(GTEST_HEADERS) $(CORE_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 # links test program

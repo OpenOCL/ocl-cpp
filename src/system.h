@@ -17,7 +17,7 @@
 
 #include "utils/typedefs.h"
 #include "tensor/tree_tensor.h"
-#include "Function.h"
+#include "function_interface.h"
 
 namespace ocl {
 
@@ -128,10 +128,7 @@ class SystemFunction : public FunctionInterface
 {
 public:
   SystemFunction(const EquationsFunctionPtr& fcn_ptr, const std::vector<Tree>& inputs, const int n_outputs)
-      : equations_fcn_ptr(fcn_ptr), Function(inputs, n_outputs)
-  {
-
-  }
+      : FunctionInterface(inputs, n_outputs), equations_fcn_ptr(fcn_ptr), input_structs(inputs) { }
 
   std::vector<Matrix> fcnEvaluate(const std::vector<Matrix>& args) const override
   {
@@ -197,26 +194,22 @@ class System
 {
 public:
 
-  System(const VariablesFunctionPtr variables_fcn_ptr, const EquationsFunctionPtr equations_fcn_ptr)
-  {
+  static std::vector<Tree> setupVariables(const VariablesFunctionPtr variables_fcn_ptr) {
     SystemVariablesHandler svh;
     variables_fcn_ptr(svh);
-
-    system_fcn = SystemFunction({svh.getStates(),svh.getAlgebraics(),svh.getControls(),svh.getParameters()}, 2);
+    return {svh.getStates(),svh.getAlgebraics(),svh.getControls(),svh.getParameters()};
   }
+
+  System(const VariablesFunctionPtr variables_fcn_ptr, const EquationsFunctionPtr equations_fcn_ptr)
+      : system_fcn(equations_fcn_ptr, System::setupVariables(variables_fcn_ptr), 2) { }
 
   void evaluate(const Matrix& x, const Matrix& z, const Matrix& u, const Matrix& p, Matrix& diff_out, Matrix& implicit_out)
   {
     std::vector<Matrix> inputs = {x,z,u,p};
     std::vector<Matrix> outputs;
-    outputs = this->equations_fcn.evaluate(inputs);
+    outputs = this->system_fcn.evaluate(inputs);
     diff_out = outputs[0];
     implicit_out = outputs[1];
-  }
-
-  std::vector<Matrix> fcnEvaluate(const std::vector<Matrix>& args) const override
-  {
-
   }
 
 private:
