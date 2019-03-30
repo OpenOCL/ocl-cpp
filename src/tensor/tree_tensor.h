@@ -183,6 +183,8 @@ private:
 
 }; // class TreeTensor
 
+// define Tensor constructor with TreeTensor
+inline Tensor::Tensor(const TreeTensor& tt) { *this = tt.value(); }
 
 static inline Tensor uplus(const TreeTensor& tt) { return ocl::uplus(tt.value()); }
 static inline Tensor uminus(const TreeTensor& tt) { return ocl::uminus(tt.value()); }

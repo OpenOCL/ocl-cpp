@@ -61,10 +61,10 @@ void eq01Particle(ocl::SEH& eh, const ocl::TT& x, const ocl::TT& z, const ocl::T
 {
   ocl::Tensor g = 9.8;
 
-  ocl::Tensor x_p = x.get("p").value();
-  ocl::Tensor x_v = x.get("v").value();
+  ocl::Tensor x_p = x.get("p");
+  ocl::Tensor x_v = x.get("v");
 
-  ocl::Tensor u_F = u.get("F").value();
+  ocl::Tensor u_F = u.get("F");
 
   auto a = -g + u_F;
 

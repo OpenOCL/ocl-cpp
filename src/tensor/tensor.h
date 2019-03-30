@@ -23,6 +23,9 @@
 
 namespace ocl
 {
+  
+// declare TreeTensor for the TreeTensor constructor
+class TreeTensor;
 
 // Tensor class
 class Tensor : public Slicable
@@ -44,6 +47,9 @@ public:
   Tensor(const Matrix& m) { this->insert(m); }
 
   Tensor(const std::vector<Matrix>& m) : data(m) { }
+
+  // this constructor is implemented in tree_tensor.h
+  Tensor(const TreeTensor& tt);
 
   // size of either first or second dimension
   virtual int size(const int dim) const {
